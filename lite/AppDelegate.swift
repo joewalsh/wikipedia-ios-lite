@@ -1,21 +1,20 @@
-//
-//  AppDelegate.swift
-//  lite
-//
-//  Created by Joe Walsh on 12/6/18.
-//  Copyright © 2018 Wikimedia Foundation. All rights reserved.
-//
-
 import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    let session: Session = Session()
+    let navigationDelegate: WikipediaArticleNavigationDelegate = WikipediaArticleNavigationDelegate()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        window = UIWindow(frame: UIScreen.main.bounds)
+        let vc = WebViewController(session: session, url: URL(string:"https://en.wikipedia.org/api/rest_v1/page/mobile-html/Dog")!, navigationDelegate: navigationDelegate)
+        let nc = UINavigationController(rootViewController: vc)
+        window?.rootViewController = nc
+        window?.makeKeyAndVisible()
+        
         return true
     }
 
