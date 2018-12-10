@@ -1,28 +1,12 @@
 import UIKit
 import WebKit
 
-extension URL {
-    var appSchemeArticleURL: URL? {
-        guard host?.hasSuffix("wikipedia.org") ?? false else {
-            return nil
-        }
-        
-        guard pathComponents.count > 1, pathComponents[1] == "wiki", let title = pathComponents.last?.trimmingCharacters(in: WikipediaArticleNavigationDelegate.slashCharacterSet) else {
-            return nil
-        }
-        
-        guard var adjustedComponents = URLComponents(url: self, resolvingAgainstBaseURL: false) else {
-            return nil
-        }
-        
-        adjustedComponents.path = ["", "api", "rest_v1", "page", "mobile-html", title].joined(separator: "/")
-        
-        return adjustedComponents.url
-    }
-}
-
 class WikipediaArticleNavigationDelegate: NSObject, WKNavigationDelegate {
-    let configuration = Configuration.current
+    let configuration: Configuration
+    
+    required init(configuration: Configuration) {
+        self.configuration = configuration
+    }
     
     static let slashCharacterSet: CharacterSet = {
         return CharacterSet(charactersIn: "/")

@@ -5,17 +5,24 @@ import WebKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    
+    let configuration = Configuration.current
+    
     lazy var session: Session = {
         assert(Thread.isMainThread)
         return Session()
     }()
+    
     lazy var schemeHandler: SchemeHandler = {
         assert(Thread.isMainThread)
         return SchemeHandler(scheme: "app", session: session)
     }()
     
-    let navigationDelegate: WikipediaArticleNavigationDelegate = WikipediaArticleNavigationDelegate()
-
+    lazy var navigationDelegate: WikipediaArticleNavigationDelegate = {
+        assert(Thread.isMainThread)
+        return WikipediaArticleNavigationDelegate(configuration: configuration)
+    }()
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         URLCache.shared = PermanentlyPersistableURLCache(memoryCapacity: 4 * 1024 * 1024, diskCapacity: 20 * 1024 * 1024, diskPath: nil)
         // Override point for customization after application launch.
@@ -23,8 +30,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let config = WKWebViewConfiguration()
         config.setURLSchemeHandler(schemeHandler, forURLScheme: schemeHandler.scheme)
-        let url = URL(string:"\(schemeHandler.scheme)://en.wikipedia.org/api/rest_v1/page/mobile-html/Dog")!
+        let articleURL = URL(string:"https://en.wikipedia.org/wiki/Dog")!
+        let url = configuration.mobileAppsServicesArticleURLForArticle(with: articleURL, scheme: schemeHandler.scheme)!
         let vc = WebViewController(url: url, configuration: config, navigationDelegate: navigationDelegate)
+        vc.webView.backgroundColor = .red
+        vc.webView.scrollView.backgroundColor = .red
+        vc.view.backgroundColor = .red
         let nc = UINavigationController(rootViewController: vc)
         nc.setNavigationBarHidden(true, animated: false)
         window?.rootViewController = nc

@@ -30,7 +30,11 @@ extension SchemeHandler: WKURLSchemeHandler {
             urlSchemeTask.didFailWithError(SchemeHandlerError.invalidParameters)
             return
         }
-        components.scheme = "https"
+        #if WMF_LOCAL
+        components.scheme = components.host == "localhost" ? "http" : "https"
+        #else
+        components.scheme =  "https"
+        #endif
         guard let url = components.url else {
             return
         }
