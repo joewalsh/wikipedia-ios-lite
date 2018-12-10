@@ -1,17 +1,32 @@
 import UIKit
+import WebKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    let session: Session = Session()
+    lazy var session: Session = {
+        assert(Thread.isMainThread)
+        return Session()
+    }()
+    lazy var schemeHandler: SchemeHandler = {
+        assert(Thread.isMainThread)
+        return SchemeHandler(scheme: "app", session: session)
+    }()
+    
     let navigationDelegate: WikipediaArticleNavigationDelegate = WikipediaArticleNavigationDelegate()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        URLCache.shared = PermanentlyPersistableURLCache(memoryCapacity: 4 * 1024 * 1024, diskCapacity: 20 * 1024 * 1024, diskPath: nil)
         // Override point for customization after application launch.
         window = UIWindow(frame: UIScreen.main.bounds)
-        let vc = WebViewController(session: session, url: URL(string:"https://en.wikipedia.org/api/rest_v1/page/mobile-html/Dog")!, navigationDelegate: navigationDelegate)
+        
+        let config = WKWebViewConfiguration()
+        config.setURLSchemeHandler(schemeHandler, forURLScheme: schemeHandler.scheme)
+        let url = URL(string:"\(schemeHandler.scheme)://en.wikipedia.org/api/rest_v1/page/mobile-html/Dog")!
+        let vc = WebViewController(url: url, configuration: config, navigationDelegate: navigationDelegate)
         let nc = UINavigationController(rootViewController: vc)
+        nc.setNavigationBarHidden(true, animated: false)
         window?.rootViewController = nc
         window?.makeKeyAndVisible()
         

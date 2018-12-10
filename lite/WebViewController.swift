@@ -2,15 +2,13 @@ import UIKit
 import WebKit
 
 class WebViewController: UIViewController {
-    let session: Session
-    let schemeHandler: SchemeHandler
+    let configuration: WKWebViewConfiguration
     let url: URL
     weak var navigationDelegate: WKNavigationDelegate?
     
-    required init(session: Session, url: URL, navigationDelegate: WKNavigationDelegate?) {
-        self.session = session
-        self.schemeHandler = SchemeHandler(scheme: "app", session: session)
+    required init(url: URL, configuration: WKWebViewConfiguration = WKWebViewConfiguration(), navigationDelegate: WKNavigationDelegate?) {
         self.url = url
+        self.configuration = configuration
         self.navigationDelegate = navigationDelegate
         super.init(nibName: nil, bundle: nil)
     }
@@ -20,9 +18,7 @@ class WebViewController: UIViewController {
     }
     
     lazy var webView: WKWebView = {
-        let config = WKWebViewConfiguration()
-        config.setURLSchemeHandler(schemeHandler, forURLScheme: schemeHandler.scheme)
-        let webView = WKWebView(frame: .zero, configuration: config)
+        let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = navigationDelegate
         return webView
     }()
@@ -30,16 +26,7 @@ class WebViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addConstrainedSubview(webView)
-        
-        guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
-            return
-        }
-        components.scheme = schemeHandler.scheme
-        guard let schemeURL = components.url else {
-            return
-        }
-        
-        let request = URLRequest(url: schemeURL)
+        let request = URLRequest(url: url)
         webView.load(request)
     }
 
