@@ -14,7 +14,6 @@
 		D8C271ED21B961C300BFD1BD /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C271EC21B961C300BFD1BD /* Session.swift */; };
 		D8C271EF21B961D100BFD1BD /* SchemeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C271EE21B961D100BFD1BD /* SchemeHandler.swift */; };
 		D8C271F121B9623600BFD1BD /* UIView+ConstrainedSubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C271F021B9623600BFD1BD /* UIView+ConstrainedSubview.swift */; };
-		D8C271F321B9755700BFD1BD /* WikipediaArticleNavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C271F221B9755700BFD1BD /* WikipediaArticleNavigationDelegate.swift */; };
 		D8C271F521BAA40E00BFD1BD /* PermanentlyPersistableURLCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C271F421BAA40D00BFD1BD /* PermanentlyPersistableURLCache.swift */; };
 		D8C271F921BAAFCB00BFD1BD /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C271F821BAAFCB00BFD1BD /* Configuration.swift */; };
 		D8C271FB21BAAFFA00BFD1BD /* URLComponents+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C271FA21BAAFFA00BFD1BD /* URLComponents+Extensions.swift */; };
@@ -32,7 +31,6 @@
 		D8C271EC21B961C300BFD1BD /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		D8C271EE21B961D100BFD1BD /* SchemeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemeHandler.swift; sourceTree = "<group>"; };
 		D8C271F021B9623600BFD1BD /* UIView+ConstrainedSubview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+ConstrainedSubview.swift"; sourceTree = "<group>"; };
-		D8C271F221B9755700BFD1BD /* WikipediaArticleNavigationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WikipediaArticleNavigationDelegate.swift; sourceTree = "<group>"; };
 		D8C271F421BAA40D00BFD1BD /* PermanentlyPersistableURLCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermanentlyPersistableURLCache.swift; sourceTree = "<group>"; };
 		D8C271F821BAAFCB00BFD1BD /* Configuration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		D8C271FA21BAAFFA00BFD1BD /* URLComponents+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URLComponents+Extensions.swift"; sourceTree = "<group>"; };
@@ -77,7 +75,6 @@
 				D8C271FA21BAAFFA00BFD1BD /* URLComponents+Extensions.swift */,
 				D8C271F821BAAFCB00BFD1BD /* Configuration.swift */,
 				D8C271EA21B9618400BFD1BD /* WebViewController.swift */,
-				D8C271F221B9755700BFD1BD /* WikipediaArticleNavigationDelegate.swift */,
 				D8C271EC21B961C300BFD1BD /* Session.swift */,
 				D8C271EE21B961D100BFD1BD /* SchemeHandler.swift */,
 				D8C271F021B9623600BFD1BD /* UIView+ConstrainedSubview.swift */,
@@ -166,7 +163,6 @@
 				D8C271EF21B961D100BFD1BD /* SchemeHandler.swift in Sources */,
 				D8C271F521BAA40E00BFD1BD /* PermanentlyPersistableURLCache.swift in Sources */,
 				D8C271FF21BAB05600BFD1BD /* CharacterSet+Extensions.swift in Sources */,
-				D8C271F321B9755700BFD1BD /* WikipediaArticleNavigationDelegate.swift in Sources */,
 				D8C271FD21BAB01400BFD1BD /* String+Domains.swift in Sources */,
 				D8C271EB21B9618400BFD1BD /* WebViewController.swift in Sources */,
 				D8C271F921BAAFCB00BFD1BD /* Configuration.swift in Sources */,
