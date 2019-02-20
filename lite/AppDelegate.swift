@@ -18,11 +18,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return SchemeHandler(scheme: "app", session: session)
     }()
     
-    lazy var navigationDelegate: WikipediaArticleNavigationDelegate = {
-        assert(Thread.isMainThread)
-        return WikipediaArticleNavigationDelegate(configuration: configuration)
-    }()
-    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         URLCache.shared = PermanentlyPersistableURLCache(memoryCapacity: 4 * 1024 * 1024, diskCapacity: 20 * 1024 * 1024, diskPath: nil)
         // Override point for customization after application launch.
@@ -32,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         config.setURLSchemeHandler(schemeHandler, forURLScheme: schemeHandler.scheme)
         let articleURL = URL(string:"https://en.wikipedia.org/wiki/Dog")!
         let url = configuration.mobileAppsServicesArticleURLForArticle(with: articleURL, scheme: schemeHandler.scheme)!
-        let vc = WebViewController(url: url, configuration: config, navigationDelegate: navigationDelegate)
+        let vc = WebViewController(url: url, configuration: config)
         vc.webView.backgroundColor = .red
         vc.webView.scrollView.backgroundColor = .red
         vc.view.backgroundColor = .red
