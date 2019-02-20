@@ -32,7 +32,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         vc.webView.scrollView.backgroundColor = .red
         vc.view.backgroundColor = .red
         let nc = UINavigationController(rootViewController: vc)
-        nc.setNavigationBarHidden(true, animated: false)
         window?.rootViewController = nc
         window?.makeKeyAndVisible()
         
