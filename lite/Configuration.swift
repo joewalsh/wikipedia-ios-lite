@@ -101,13 +101,17 @@ public class Configuration: NSObject {
         let builder = mobileAppsServicesAPIURLComponentsBuilderForHost(host)
         return builder.components(byAppending: pathComponents)
     }
+
+    static let slashCharacterSet: CharacterSet = {
+        return CharacterSet(charactersIn: "/")
+    }()
     
     func mobileAppsServicesArticleURLForArticle(with url: URL, scheme: String) -> URL? {
         guard url.host?.hasSuffix("wikipedia.org") ?? false else {
             return nil
         }
         
-        guard url.pathComponents.count > 1, url.pathComponents[1] == "wiki", let title = url.pathComponents.last?.trimmingCharacters(in: WikipediaArticleNavigationDelegate.slashCharacterSet) else {
+        guard url.pathComponents.count > 1, url.pathComponents[1] == "wiki", let title = url.pathComponents.last?.trimmingCharacters(in: Configuration.slashCharacterSet) else {
             return nil
         }
         
