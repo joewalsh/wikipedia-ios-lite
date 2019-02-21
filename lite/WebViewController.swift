@@ -45,28 +45,24 @@ extension WebViewController: WKNavigationDelegate {
         }
 
         let pathComponents = url.pathComponents
-        guard pathComponents.count > 1, pathComponents[1] == "wiki", let title = pathComponents.last?.trimmingCharacters(in: Configuration.slashCharacterSet) else {
+        guard pathComponents.count > 1, pathComponents[1] == "wiki" else {
             decisionHandler(.allow)
             return
         }
 
-        guard var adjustedComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+        guard let scheme = url.scheme else {
             decisionHandler(.allow)
             return
         }
 
-        adjustedComponents.path = ["", "api", "rest_v1", "page", "mobile-html", title].joined(separator: "/")
-
-        guard let adjustedURL = adjustedComponents.url else {
+        guard let adjustedURL = Configuration.current.mobileAppsServicesArticleURLForArticle(with: url, scheme: scheme) else {
             decisionHandler(.allow)
             return
         }
 
         decisionHandler(.cancel)
 
-        var adjustedRequest = navigationAction.request
-        adjustedRequest.url = adjustedURL
-        let webViewController = WebViewController.init(url: adjustedURL, configuration: configuration)
+        let webViewController = WebViewController(url: adjustedURL, configuration: configuration)
         navigationController?.pushViewController(webViewController, animated: true)
     }
 }
