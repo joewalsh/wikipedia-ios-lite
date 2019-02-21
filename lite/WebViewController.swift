@@ -4,11 +4,13 @@ import WebKit
 class WebViewController: UIViewController {
     let configuration: WKWebViewConfiguration
     let url: URL
+    let fetcher: ArticleFetcher
     weak var navigationDelegate: WKNavigationDelegate?
     
-    required init(url: URL, configuration: WKWebViewConfiguration = WKWebViewConfiguration()) {
+    required init(url: URL, configuration: WKWebViewConfiguration = WKWebViewConfiguration(), fetcher: ArticleFetcher) {
         self.url = url
         self.configuration = configuration
+        self.fetcher = fetcher
         super.init(nibName: nil, bundle: nil)
         self.navigationDelegate = self
     }
@@ -62,7 +64,7 @@ extension WebViewController: WKNavigationDelegate {
 
         decisionHandler(.cancel)
 
-        let webViewController = WebViewController(url: adjustedURL, configuration: configuration)
+        let webViewController = WebViewController(url: adjustedURL, configuration: configuration, fetcher: fetcher)
         navigationController?.pushViewController(webViewController, animated: true)
     }
 }

@@ -27,7 +27,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         config.setURLSchemeHandler(schemeHandler, forURLScheme: schemeHandler.scheme)
         let articleURL = URL(string:"https://en.wikipedia.org/wiki/Dog")!
         let url = configuration.mobileAppsServicesArticleURLForArticle(with: articleURL, scheme: schemeHandler.scheme)!
-        let vc = WebViewController(url: url, configuration: config)
+        let fetcher = ArticleFetcher(session: session, configuration: configuration)
+        let vc = WebViewController(url: url, configuration: config, fetcher: fetcher)
         vc.webView.backgroundColor = .red
         vc.webView.scrollView.backgroundColor = .red
         vc.view.backgroundColor = .red
