@@ -54,10 +54,14 @@ class ExploreTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
-        let articleTitle = article(at: indexPath)?.title
-        cell.textLabel?.text = articleTitle
+        let article = self.article(at: indexPath)
+        cell.textLabel?.text = article?.title
         let saveButton = UIButton()
-        saveButton.setImage(UIImage(named: "save"), for: .normal)
+        if let url = article?.url {
+            let isCached = articlesController.cacheController.isCached(url: url)
+            let imageName = isCached ? "save-filled" : "save"
+            saveButton.setImage(UIImage(named: imageName), for: .normal)
+        }
         saveButton.imageView?.contentMode = .scaleAspectFit
         saveButton.tag = indexPath.row
         saveButton.addTarget(self, action: #selector(toggleArticleSavedState), for: .touchUpInside)
