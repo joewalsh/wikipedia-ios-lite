@@ -11,9 +11,9 @@ final class ArticlesController: NSObject {
     }
 
     func toggleCache(for articleURL: URL) {
-        let isCached = cacheController.isCached(url: articleURL)
+        let isCached = cacheController.isCached(articleURL)
         if isCached {
-            cacheController.removeCachedArticleData(articleURL: articleURL)
+            cacheController.removeCachedArticleData(for: articleURL)
         } else {
             fetcher.downloadHTMLAndSaveToFile(for: articleURL) { error, fileURL in
                 if let error = error {
