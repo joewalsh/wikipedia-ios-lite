@@ -19,7 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }()
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        URLCache.shared = PermanentlyPersistableURLCache(memoryCapacity: 4 * 1024 * 1024, diskCapacity: 20 * 1024 * 1024, diskPath: nil)
+        let persistentURLCache = PermanentlyPersistableURLCache(memoryCapacity: 4 * 1024 * 1024, diskCapacity: 20 * 1024 * 1024, diskPath: nil)
+        URLCache.shared = persistentURLCache
 
         window = UIWindow(frame: UIScreen.main.bounds)
 
@@ -28,6 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         explore.schemeHandler = schemeHandler
         let articleFetcher = ArticleFetcher(session: session, configuration: configuration)
         let articleCacheController = ArticleCacheController()
+        persistentURLCache.delegate = articleCacheController
         explore.articlesController = ArticlesController(fetcher: articleFetcher, cacheController: articleCacheController)
         explore.tabBarItem = UITabBarItem(title: "Explore", image: UIImage(named: "explore"), tag: 0)
 

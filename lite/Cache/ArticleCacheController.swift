@@ -90,3 +90,11 @@ class ArticleCacheController: NSObject {
         return persistentContainer.newBackgroundContext()
     }()
 }
+
+extension ArticleCacheController: PermanentlyPersistableURLCacheDelegate {
+    func permanentlyPersistedData(for url: URL) -> Data? {
+        assert(!Thread.isMainThread)
+        let cachedFileURL = cacheFileURL(for: url)
+        return fileManager.contents(atPath: cachedFileURL.path)
+    }
+}
