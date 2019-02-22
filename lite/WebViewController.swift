@@ -29,8 +29,13 @@ class WebViewController: UIViewController {
         webView.backgroundColor = .red
         webView.scrollView.backgroundColor = .red
         view.backgroundColor = .red
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "close"), style: .plain, target: self, action: #selector(dismissAnimated))
         let request = URLRequest(url: url)
         webView.load(request)
+    }
+
+    @objc private func dismissAnimated() {
+        dismiss(animated: true)
     }
 
 }
