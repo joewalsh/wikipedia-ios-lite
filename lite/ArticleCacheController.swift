@@ -61,7 +61,8 @@ class ArticleCacheController: NSObject {
         return cacheURL.appendingPathComponent(key, isDirectory: false)
     }
 
-    func isCached(url: URL) -> Bool {
-        return fileManager.fileExists(atPath: cacheFilePath(for: url))
+    func isCached(_ articleURL: URL) -> Bool {
+        return fileManager.fileExists(atPath: cacheFilePath(for: articleURL))
+    }
     }
 }
