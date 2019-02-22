@@ -26,6 +26,9 @@ class WebViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addConstrainedSubview(webView)
+        webView.backgroundColor = .red
+        webView.scrollView.backgroundColor = .red
+        view.backgroundColor = .red
         let request = URLRequest(url: url)
         webView.load(request)
     }
