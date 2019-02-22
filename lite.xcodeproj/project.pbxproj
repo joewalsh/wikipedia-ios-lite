@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		7A0C5471221F49DC002642A9 /* Fetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0C5470221F49DC002642A9 /* Fetcher.swift */; };
+		7A0C5484221F6E32002642A9 /* ExploreTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0C5482221F6E32002642A9 /* ExploreTableViewController.swift */; };
+		7A0C5485221F6E32002642A9 /* ExploreTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A0C5483221F6E32002642A9 /* ExploreTableViewController.xib */; };
 		7A484278221F36C8003AEC93 /* ArticleFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A484277221F36C8003AEC93 /* ArticleFetcher.swift */; };
 		D8C271D921B9612500BFD1BD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C271D821B9612500BFD1BD /* AppDelegate.swift */; };
 		D8C271E021B9612600BFD1BD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D8C271DF21B9612600BFD1BD /* Assets.xcassets */; };
@@ -25,6 +27,8 @@
 
 /* Begin PBXFileReference section */
 		7A0C5470221F49DC002642A9 /* Fetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Fetcher.swift; path = "/Users/nharateh/Developer/wikipedia-ios-lite/lite/Fetcher.swift"; sourceTree = "<absolute>"; };
+		7A0C5482221F6E32002642A9 /* ExploreTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreTableViewController.swift; sourceTree = "<group>"; };
+		7A0C5483221F6E32002642A9 /* ExploreTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExploreTableViewController.xib; sourceTree = "<group>"; };
 		7A484277221F36C8003AEC93 /* ArticleFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleFetcher.swift; sourceTree = "<group>"; };
 		D8C271D521B9612500BFD1BD /* lite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = lite.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8C271D821B9612500BFD1BD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -54,6 +58,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7A0C5486221F6E37002642A9 /* Throwaway */ = {
+			isa = PBXGroup;
+			children = (
+				7A0C5482221F6E32002642A9 /* ExploreTableViewController.swift */,
+				7A0C5483221F6E32002642A9 /* ExploreTableViewController.xib */,
+			);
+			name = Throwaway;
+			path = "New Group";
+			sourceTree = "<group>";
+		};
 		D8C271CC21B9612500BFD1BD = {
 			isa = PBXGroup;
 			children = (
@@ -81,6 +95,7 @@
 				D8C271EA21B9618400BFD1BD /* WebViewController.swift */,
 				7A484277221F36C8003AEC93 /* ArticleFetcher.swift */,
 				7A0C5470221F49DC002642A9 /* Fetcher.swift */,
+				7A0C5486221F6E37002642A9 /* Throwaway */,
 				D8C271EC21B961C300BFD1BD /* Session.swift */,
 				D8C271EE21B961D100BFD1BD /* SchemeHandler.swift */,
 				D8C271F021B9623600BFD1BD /* UIView+ConstrainedSubview.swift */,
@@ -151,6 +166,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A0C5485221F6E32002642A9 /* ExploreTableViewController.xib in Resources */,
 				D8C271E321B9612600BFD1BD /* LaunchScreen.storyboard in Resources */,
 				D8C271E021B9612600BFD1BD /* Assets.xcassets in Resources */,
 			);
@@ -165,6 +181,7 @@
 			files = (
 				D8C271F121B9623600BFD1BD /* UIView+ConstrainedSubview.swift in Sources */,
 				D8C271D921B9612500BFD1BD /* AppDelegate.swift in Sources */,
+				7A0C5484221F6E32002642A9 /* ExploreTableViewController.swift in Sources */,
 				D8C271FB21BAAFFA00BFD1BD /* URLComponents+Extensions.swift in Sources */,
 				7A484278221F36C8003AEC93 /* ArticleFetcher.swift in Sources */,
 				D8C271EF21B961D100BFD1BD /* SchemeHandler.swift in Sources */,
