@@ -1,5 +1,5 @@
 import Foundation
-
+import CoreData
 
 class ArticleCacheController: NSObject {
     static let articleCacheWasUpdatedNotification = Notification.Name("ArticleCachWasUpdated")
@@ -75,4 +75,18 @@ class ArticleCacheController: NSObject {
             fatalError(error.localizedDescription)
         }
     }
+
+    private lazy var persistentContainer: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: "Cache")
+        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+            if let error = error {
+                fatalError(error.localizedDescription)
+            }
+        })
+        return container
+    }()
+
+    private lazy var backgroundContext: NSManagedObjectContext = {
+        return persistentContainer.newBackgroundContext()
+    }()
 }
