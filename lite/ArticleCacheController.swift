@@ -42,17 +42,14 @@ class ArticleCacheController: NSObject {
     }
 
     func removeCachedArticleData(articleURL: URL) {
-        let cachedArticleURL = cacheFileURL(for: articleURL)
-        do {
-            try fileManager.removeItem(at: cachedArticleURL)
-
-            let userInfo: [String: Any] = [
-                ArticleCacheController.articleCacheWasUpdatedArticleURLKey: articleURL,
-                ArticleCacheController.articleCacheWasUpdatedIsCachedKey: false
-            ]
-            NotificationCenter.default.post(name: ArticleCacheController.articleCacheWasUpdatedNotification, object: nil, userInfo: userInfo)
-        } catch let error {
-            fatalError(error.localizedDescription)
+        dispatchQueue.async(flags: .barrier) {
+            let cachedArticleURL = self.cacheFileURL(for: articleURL)
+            do {
+                try self.fileManager.removeItem(at: cachedArticleURL)
+                self.postArticleCacheUpdatedNotification(for: articleURL, cached: false)
+            } catch let error {
+                fatalError(error.localizedDescription)
+            }
         }
     }
 
