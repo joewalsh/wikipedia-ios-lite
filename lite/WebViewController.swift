@@ -62,7 +62,7 @@ extension WebViewController: WKNavigationDelegate {
 
         decisionHandler(.cancel)
 
-        let webViewController = WebViewController(url: adjustedURL, configuration: configuration, fetcher: fetcher)
+        let webViewController = WebViewController(url: adjustedURL, configuration: configuration)
         navigationController?.pushViewController(webViewController, animated: true)
     }
 }
