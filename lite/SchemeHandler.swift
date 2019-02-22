@@ -38,23 +38,23 @@ extension SchemeHandler: WKURLSchemeHandler {
         guard let url = components.url else {
             return
         }
-        request.url = url
-        let callback = Callback(
-            response: { response in
-                urlSchemeTask.didReceive(response)
-            },
-            data: { data in
-                urlSchemeTask.didReceive(data)
-            },
-            success: {
-                urlSchemeTask.didFinish()
-            },
-            failure: { error in
+
+        let task = session.session.dataTask(with: url) { (data, response, error) in
+            if let error = error {
                 urlSchemeTask.didFailWithError(error)
+            } else if let response = response {
+                urlSchemeTask.didReceive(response)
+                if let data = data {
+                    urlSchemeTask.didReceive(data)
+                }
+                urlSchemeTask.didFinish()
+            } else {
+                urlSchemeTask.didFailWithError(Fetcher.unexpectedResponseError)
             }
-        )
-            
-        let task = session.executeDataTaskWith(request, callback: callback)
+        }
+
+        task.resume()
+
         queue.async(flags: .barrier) {
             self.tasks[urlSchemeTask.request] = task
         }
