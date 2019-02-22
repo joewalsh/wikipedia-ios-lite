@@ -11,6 +11,11 @@ class ExploreTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
+        NotificationCenter.default.addObserver(self, selector: #selector(articleCacheWasUpdated(_:)), name: ArticleCacheController.articleCacheWasUpdatedNotification, object: nil)
+    }
+
+    @objc private func articleCacheWasUpdated(_ notification: Notification) {
+        tableView.reloadData()
     }
 
     private struct Article {
