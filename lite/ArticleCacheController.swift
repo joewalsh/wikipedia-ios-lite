@@ -6,6 +6,8 @@ class ArticleCacheController: NSObject {
     static let articleCacheWasUpdatedArticleURLKey = "ArticleCachWasUpdatedArticleURLKey"
     static let articleCacheWasUpdatedIsCachedKey = "ArticleCachWasUpdatedIsCachedKey"
 
+    let dispatchQueue = DispatchQueue(label: "ArticleCacheControllerDispatchQueue", qos: .default, attributes: [.concurrent], autoreleaseFrequency: .workItem, target: nil)
+
     let cacheURL: URL
     let fileManager = FileManager.default
 
