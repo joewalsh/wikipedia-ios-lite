@@ -26,16 +26,10 @@ class ArticleCacheController: NSObject {
         }
     }
 
-    func cacheArticle(articleURL: URL, data: Data) {
-        // move to bg
-        let path = cacheFilePath(for: articleURL)
-        let cached = (data as NSData).write(toFile: path, atomically: true)
-        assert(cached)
         let userInfo: [String: Any] = [
             ArticleCacheController.articleCacheWasUpdatedArticleURLKey: articleURL,
             ArticleCacheController.articleCacheWasUpdatedIsCachedKey: cached
         ]
-        NotificationCenter.default.post(name: ArticleCacheController.articleCacheWasUpdatedNotification, object: nil, userInfo: userInfo)
     }
 
     func cachedArticleData(articleURL: URL) -> Data? {
