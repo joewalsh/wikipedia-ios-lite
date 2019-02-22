@@ -36,11 +36,6 @@ class ArticleCacheController: NSObject {
         }
     }
 
-    func cachedArticleData(articleURL: URL) -> Data? {
-        print(articleURL)
-        return nil
-    }
-
     func removeCachedArticleData(articleURL: URL) {
         dispatchQueue.async(flags: .barrier) {
             let cachedArticleURL = self.cacheFileURL(for: articleURL)
