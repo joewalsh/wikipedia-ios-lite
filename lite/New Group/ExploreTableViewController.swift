@@ -57,8 +57,8 @@ class ExploreTableViewController: UITableViewController {
         let article = self.article(at: indexPath)
         cell.textLabel?.text = article?.title
         let saveButton = UIButton()
-        if let url = article?.url {
-            let isCached = articlesController.cacheController.isCached(url: url)
+        if let articleURL = article?.url {
+            let isCached = articlesController.cacheController.isCached(articleURL)
             let imageName = isCached ? "save-filled" : "save"
             saveButton.setImage(UIImage(named: imageName), for: .normal)
         }
