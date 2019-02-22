@@ -6,6 +6,7 @@ class ExploreTableViewController: UITableViewController {
 
     var configuration: Configuration!
     var schemeHandler: SchemeHandler!
+    var articlesController: ArticlesController!
 
     override func viewDidLoad() {
         super.viewDidLoad()

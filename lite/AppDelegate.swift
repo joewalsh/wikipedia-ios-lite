@@ -26,6 +26,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let explore = ExploreTableViewController()
         explore.configuration = configuration
         explore.schemeHandler = schemeHandler
+        let articleFetcher = ArticleFetcher(session: session, configuration: configuration)
+        let articleCacheController = ArticleCacheController()
+        explore.articlesController = ArticlesController(fetcher: articleFetcher, cacheController: articleCacheController)
         explore.tabBarItem = UITabBarItem(title: "Explore", image: UIImage(named: "explore"), tag: 0)
 
         let saved = UIViewController()
