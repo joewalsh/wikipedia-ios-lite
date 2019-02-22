@@ -64,5 +64,15 @@ class ArticleCacheController: NSObject {
     func isCached(_ articleURL: URL) -> Bool {
         return fileManager.fileExists(atPath: cacheFilePath(for: articleURL))
     }
+
+    func moveArticleHTMLFileToCache(fileURL: URL, withContentsOf articleURL: URL) {
+        assert(!Thread.isMainThread)
+        do {
+            let newFileURL = cacheFileURL(for: articleURL)
+            try fileManager.moveItem(at: fileURL, to: newFileURL)
+            postArticleCacheUpdatedNotification(for: articleURL, cached: true)
+        } catch let error {
+            fatalError(error.localizedDescription)
+        }
     }
 }
