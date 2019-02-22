@@ -20,20 +20,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         URLCache.shared = PermanentlyPersistableURLCache(memoryCapacity: 4 * 1024 * 1024, diskCapacity: 20 * 1024 * 1024, diskPath: nil)
-        // Override point for customization after application launch.
+
         window = UIWindow(frame: UIScreen.main.bounds)
-        
-        let config = WKWebViewConfiguration()
-        config.setURLSchemeHandler(schemeHandler, forURLScheme: schemeHandler.scheme)
-        let articleURL = URL(string:"https://en.wikipedia.org/wiki/Dog")!
-        let url = configuration.mobileAppsServicesArticleURLForArticle(with: articleURL, scheme: schemeHandler.scheme)!
-        let fetcher = ArticleFetcher(session: session, configuration: configuration)
-        let vc = WebViewController(url: url, configuration: config, fetcher: fetcher)
-        vc.webView.backgroundColor = .red
-        vc.webView.scrollView.backgroundColor = .red
-        vc.view.backgroundColor = .red
-        let nc = UINavigationController(rootViewController: vc)
-        window?.rootViewController = nc
+
+        let explore = ExploreTableViewController()
+        explore.configuration = configuration
+        explore.schemeHandler = schemeHandler
+        explore.tabBarItem = UITabBarItem(title: "Explore", image: UIImage(named: "explore"), tag: 0)
+
+        let saved = UIViewController()
+        saved.tabBarItem = UITabBarItem(title: "Saved", image: UIImage(named: "saved"), tag: 1)
+
+        let tabBarController = UITabBarController()
+        tabBarController.viewControllers = [explore, saved]
+
+        window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
         
         return true
