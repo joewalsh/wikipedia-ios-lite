@@ -23,7 +23,7 @@ public class Session: NSObject {
         session = URLSession(configuration: sessionConfiguration, delegate: sessionDelegate, delegateQueue: sessionDelegate.delegateQueue)
     }
     
-    func executeDataTaskWith(_ request: URLRequest, callback: Callback) -> URLSessionTask {
+    @discardableResult func executeDataTaskWith(_ request: URLRequest, callback: Callback) -> URLSessionTask {
         let task = session.dataTask(with: request)
         sessionDelegate.addCallback(callback: callback, for: task)
         task.resume()
