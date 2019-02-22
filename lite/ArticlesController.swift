@@ -15,16 +15,15 @@ final class ArticlesController: NSObject {
         if isCached {
             cacheController.removeCachedArticleData(articleURL: articleURL)
         } else {
-            let callback = Callback(response: { (response) in
-                //
-            }, data: { (data) in
-                self.cacheController.cacheArticle(articleURL: articleURL, data: data)
-            }, success: {
-                //
-            }) { (error) in
-                fatalError(error.localizedDescription)
+            fetcher.downloadHTMLAndSaveToFile(for: articleURL) { error, fileURL in
+                if let error = error {
+                    fatalError(error.localizedDescription)
+                }
+                guard let fileURL = fileURL else {
+                    fatalError()
+                }
+                self.cacheController.moveArticleHTMLFileToCache(fileURL: fileURL, withContentsOf: articleURL)
             }
-            fetcher.fetchHTML(for: articleURL, callback: callback)
         }
     }
 }
