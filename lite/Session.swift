@@ -20,6 +20,10 @@ public class Session: NSObject {
         sessionConfiguration = URLSessionConfiguration.default
         session = URLSession(configuration: sessionConfiguration)
     }
+
+    func downloadTask(with url: URL, completionHandler: @escaping (URL?, URLResponse?, Error?) -> Void) -> URLSessionDownloadTask {
+        return session.downloadTask(with: url, completionHandler: completionHandler)
+    }
 }
 
 public enum RequestError: LocalizedError {

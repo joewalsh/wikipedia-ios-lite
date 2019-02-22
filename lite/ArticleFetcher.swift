@@ -3,7 +3,7 @@ import Foundation
 class ArticleFetcher: Fetcher {
 
     func downloadHTMLAndSaveToFile(for articleURL: URL, completion: @escaping (Error?, URL?) -> Void) {
-        session.session.downloadTask(with: articleURL) { (fileURL, response, error) in
+        session.downloadTask(with: articleURL) { (fileURL, response, error) in
             if let error = error {
                 completion(error, nil)
                 return
