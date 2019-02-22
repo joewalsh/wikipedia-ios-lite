@@ -26,10 +26,14 @@ class ArticleCacheController: NSObject {
         }
     }
 
+    private func postArticleCacheUpdatedNotification(for articleURL: URL, cached: Bool) {
         let userInfo: [String: Any] = [
             ArticleCacheController.articleCacheWasUpdatedArticleURLKey: articleURL,
             ArticleCacheController.articleCacheWasUpdatedIsCachedKey: cached
         ]
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: ArticleCacheController.articleCacheWasUpdatedNotification, object: nil, userInfo: userInfo)
+        }
     }
 
     func cachedArticleData(articleURL: URL) -> Data? {
