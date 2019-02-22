@@ -36,11 +36,11 @@ class ArticleCacheController: NSObject {
         }
     }
 
-    func removeCachedArticleData(articleURL: URL) {
+    func removeCachedArticleData(for articleURL: URL) {
         dispatchQueue.async(flags: .barrier) {
-            let cachedArticleURL = self.cacheFileURL(for: articleURL)
+            let cachedFileURL = self.cacheFileURL(for: articleURL)
             do {
-                try self.fileManager.removeItem(at: cachedArticleURL)
+                try self.fileManager.removeItem(at: cachedFileURL)
                 self.postArticleCacheUpdatedNotification(for: articleURL, cached: false)
             } catch let error {
                 fatalError(error.localizedDescription)
