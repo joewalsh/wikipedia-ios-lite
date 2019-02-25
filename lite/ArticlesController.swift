@@ -21,13 +21,30 @@ final class ArticlesController: NSObject {
             downloadArticleResourceAndCache(.mobileHTML, for: articleURL)
             downloadArticleResourceAndCache(.references, for: articleURL)
             downloadArticleResourceAndCache(.sections, for: articleURL)
+            // media response needs to be decoded to cache individual files
+            fetcher.getMedia(for: articleURL) { data, response, error in
                 if let error = error {
                     fatalError(error.localizedDescription)
                 }
-                guard let fileURL = fileURL else {
-                    fatalError()
+                guard let response = response as? HTTPURLResponse else {
+                    assertionFailure("Expected HTTP response")
+                    return
                 }
-                self.cacheController.moveArticleHTMLFileToCache(fileURL: fileURL, withContentsOf: articleURL)
+                guard response.statusCode == 200 else {
+                    assertionFailure("Expected 200 status code, got \(response.statusCode)")
+                    return
+                }
+                guard let data = data else {
+                    assertionFailure("Expected data, got nil")
+                    return
+                }
+                let decoder = JSONDecoder()
+                let media = try? decoder.decode(Media.self, from: data)
+                print(media)
+            }
+        }
+    }
+
     private func downloadArticleResourceAndCache(_ resource: Configuration.MobileAppsServices.Page.Resource, for articleURL: URL) {
         fetcher.downloadArticleResource(resource, for: articleURL) { error, temporaryFileURL, resourceURL in
             if let error = error {
@@ -41,6 +58,7 @@ final class ArticlesController: NSObject {
             }
         }
     }
+}
 
 private struct Media: Decodable {
     let revision: String?
