@@ -222,5 +222,9 @@ extension ArticleCacheController: PermanentlyPersistableURLCacheDelegate {
         assert(!Thread.isMainThread)
         let cachedFileURL = cacheFileURL(for: url)
         return fileManager.contents(atPath: cachedFileURL.path)
+        guard let cachedFilePath = fileURL(for: url)?.path else {
+            return nil
+        }
+        return fileManager.contents(atPath: cachedFilePath)
     }
 }
