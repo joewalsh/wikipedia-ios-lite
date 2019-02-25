@@ -136,6 +136,11 @@ class ArticleCacheController: NSObject {
             fatalError(error.localizedDescription)
         }
     }
+
+    private func cacheGroup(for articleURL: URL, in moc: NSManagedObjectContext) -> CacheGroup? {
+        let key = CacheGroup.key(for: articleURL)
+        return cacheGroup(with: key, in: moc)
+    }
 }
 
 extension ArticleCacheController: PermanentlyPersistableURLCacheDelegate {
