@@ -17,7 +17,10 @@ final class ArticlesController: NSObject {
             print("ArticlesController: cache for \(articleURL) exists, removing")
             cacheController.removeCachedArticle(with: articleURL)
         } else {
-            fetcher.downloadHTMLAndSaveToFile(for: articleURL) { error, fileURL in
+            print("ArticlesController: cache for \(articleURL) doesn't exist, fetching")
+            downloadArticleResourceAndCache(.mobileHTML, for: articleURL)
+            downloadArticleResourceAndCache(.references, for: articleURL)
+            downloadArticleResourceAndCache(.sections, for: articleURL)
                 if let error = error {
                     fatalError(error.localizedDescription)
                 }
