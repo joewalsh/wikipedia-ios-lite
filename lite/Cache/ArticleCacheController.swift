@@ -45,14 +45,17 @@ class ArticleCacheController: NSObject {
         }
     }
 
-    func removeCachedArticleData(for articleURL: URL) {
+    func removeCachedArticle(with articleURL: URL) {
         dispatchQueue.async(flags: .barrier) {
-            let cachedFileURL = self.cacheFileURL(for: articleURL)
+            guard let cachedFileURL = self.fileURL(for: articleURL) else {
+                return
+            }
             do {
                 try self.fileManager.removeItem(at: cachedFileURL)
-                self.postArticleCacheUpdatedNotification(for: articleURL, cached: false)
-            } catch let error {
-                fatalError(error.localizedDescription)
+            } catch let error as NSError {
+                if error.code == NSFileWriteFileExistsError {
+                    return
+                } else { fatalError(error.localizedDescription) }
             }
         }
     }
