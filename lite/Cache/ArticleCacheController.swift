@@ -71,7 +71,9 @@ class ArticleCacheController: NSObject {
     }
 
     func isCached(_ articleURL: URL) -> Bool {
-        return fileManager.fileExists(atPath: cacheFilePath(for: articleURL))
+        assert(Thread.isMainThread)
+        let isCached = cacheGroup(for: articleURL, in: viewContext) != nil
+        return isCached
     }
 
     func moveArticleHTMLFileToCache(fileURL: URL, withContentsOf articleURL: URL) {
