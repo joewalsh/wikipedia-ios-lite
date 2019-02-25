@@ -151,6 +151,17 @@ class ArticleCacheController: NSObject {
         print("ArticleCacheController: Created cache group with key: \(key)")
         return group
     }
+
+    private func createCacheItem(with key: String, in moc: NSManagedObjectContext) -> CacheItem? {
+        guard let entity = NSEntityDescription.entity(forEntityName: "CacheItem", in: moc) else {
+            return nil
+        }
+        let item = CacheItem(entity: entity, insertInto: moc)
+        item.key = key
+        item.date = NSDate()
+        print("ArticleCacheController: Created cache item with key: \(key)")
+        return item
+    }
 }
 
 extension ArticleCacheController: PermanentlyPersistableURLCacheDelegate {
