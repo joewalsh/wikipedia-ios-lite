@@ -118,19 +118,16 @@ public class Configuration: NSObject {
     }
     
     func mobileAppsServicesArticleURLForArticle(with url: URL, scheme: String) -> URL? {
+    func mobileAppsServicesArticleTitle(from url: URL) -> String? {
         guard url.host?.hasSuffix("wikipedia.org") ?? false else {
             return nil
         }
-        
+
         guard url.pathComponents.count > 1, url.pathComponents[1] == "wiki", let title = url.pathComponents.last?.trimmingCharacters(in: Configuration.slashCharacterSet) else {
             return nil
         }
-        
-        var components = mobileAppsServicesAPIURLComponentsForHost(url.host, appending: ["page", "mobile-html", title])
-        
-        components.scheme = scheme
-        
-        return components.url
+
+        return title
     }
     
     @objc(mediaWikiAPIURLComponentsForHost:withQueryParameters:)
