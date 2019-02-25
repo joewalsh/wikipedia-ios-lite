@@ -14,15 +14,23 @@ class ArticleFetcher: Fetcher {
             return Configuration.Scheme.https
         }
     }
+
+    func downloadArticleResource(_ resource: Configuration.MobileAppsServices.Page.Resource, for articleURL: URL, completion: @escaping DownloadCompletion) {
+        guard let url = configuration.mobileAppsServicesArticleResourceURLForArticle(with: articleURL, scheme: scheme, resource: resource) else {
+            completion(Fetcher.invalidParametersError, nil, nil)
+            return
+        }
+
+        session.downloadTask(with: url) { (fileURL, response, error) in
             if let error = error {
-                completion(error, nil)
+                completion(error, nil, url)
                 return
             }
             guard let fileURL = fileURL, response != nil else {
-                completion(Fetcher.unexpectedResponseError, nil)
+                completion(Fetcher.unexpectedResponseError, nil, url)
                 return
             }
-            completion(nil, fileURL)
+            completion(nil, fileURL, url)
         }.resume()
     }
 }
