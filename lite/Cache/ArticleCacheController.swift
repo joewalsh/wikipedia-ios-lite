@@ -46,16 +46,38 @@ class ArticleCacheController: NSObject {
     }
 
     func removeCachedArticle(with articleURL: URL) {
+        let context = backgroundContext
         dispatchQueue.async(flags: .barrier) {
-            guard let cachedFileURL = self.fileURL(for: articleURL) else {
-                return
-            }
-            do {
-                try self.fileManager.removeItem(at: cachedFileURL)
-            } catch let error as NSError {
-                if error.code == NSFileWriteFileExistsError {
+            context.perform {
+                guard let group = self.cacheGroup(for: articleURL, in: context) else {
+                    assertionFailure("Cache group for \(articleURL) doesn't exist")
                     return
-                } else { fatalError(error.localizedDescription) }
+                }
+                guard let cacheItems = group.cacheItems as? Set<CacheItem> else {
+                    assertionFailure("Cache group for \(articleURL) has no cache items")
+                    return
+                }
+                for cacheItem in cacheItems {
+                    let key = cacheItem.key
+                    guard let pathComponent = key?.sha256() ?? key else {
+                        assertionFailure("cacheItem has no key")
+                        continue
+                    }
+                    let cachedFileURL = self.cacheURL.appendingPathComponent(pathComponent, isDirectory: false)
+                    do {
+                        try self.fileManager.removeItem(at: cachedFileURL)
+                        context.delete(cacheItem)
+                    } catch let error as NSError {
+                        if error.code == NSFileWriteFileExistsError {
+                            return
+                        } else {
+                            fatalError(error.localizedDescription)
+                        }
+                    }
+                }
+                // TODO: check if items were really deleted
+                context.delete(group)
+                self.save(moc: context)
             }
         }
     }
