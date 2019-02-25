@@ -254,7 +254,7 @@ class ArticleCacheController: NSObject {
     // MARK: Media
 
     func cacheMedia(_ media: ArticleFetcher.Media) {
-        print(media)
+        //print(media)
     }
 }
 

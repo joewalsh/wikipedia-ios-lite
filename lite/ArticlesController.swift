@@ -25,7 +25,7 @@ final class ArticlesController: NSObject {
             // should be separated?
             fetcher.getMedia(for: articleURL) { error, media in
                 assert(error == nil)
-                print(media)
+                //print(media)
             }
         }
     }
