@@ -105,6 +105,17 @@ public class Configuration: NSObject {
     static let slashCharacterSet: CharacterSet = {
         return CharacterSet(charactersIn: "/")
     }()
+
+    struct MobileAppsServices {
+        struct Page {
+            enum Resource: String {
+                case mobileHTML = "mobile-html"
+                case media
+                case references
+                case sections = "mobile-sections"
+            }
+        }
+    }
     
     func mobileAppsServicesArticleURLForArticle(with url: URL, scheme: String) -> URL? {
         guard url.host?.hasSuffix("wikipedia.org") ?? false else {
