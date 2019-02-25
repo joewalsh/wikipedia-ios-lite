@@ -176,6 +176,19 @@ class ArticleCacheController: NSObject {
             fatalError(error.localizedDescription)
         }
     }
+
+    enum Result {
+        case alreadyCached
+        case needsFetch
+    }
+
+    func updateCacheGroup(for articleURL: URL, completion: @escaping (Result) -> Void) {
+        let context = backgroundContext
+        context.perform {
+            completion(.needsFetch)
+        }
+    }
+
     func addCacheItemToCacheGroup(for articleURL: URL, cacheItemKey: String) {
         let context = backgroundContext
         context.perform {
