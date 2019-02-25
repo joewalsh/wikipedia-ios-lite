@@ -11,14 +11,14 @@ import Foundation
 import CoreData
 
 
-extension Item {
+extension CacheItem {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<Item> {
-        return NSFetchRequest<Item>(entityName: "Item")
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<CacheItem> {
+        return NSFetchRequest<CacheItem>(entityName: "CacheItem")
     }
 
     @NSManaged public var key: String?
     @NSManaged public var date: NSDate?
-    @NSManaged public var groups: Group?
+    @NSManaged public var cacheGroups: CacheGroup?
 
 }

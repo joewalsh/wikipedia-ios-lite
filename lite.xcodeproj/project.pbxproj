@@ -15,10 +15,10 @@
 		7A218CF022203D39007C33E1 /* Cache.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7A218CEE22203D39007C33E1 /* Cache.xcdatamodeld */; };
 		7A47956E2220B9CC00E989AD /* String+SHA256.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A47956D2220B9CC00E989AD /* String+SHA256.swift */; };
 		7A484278221F36C8003AEC93 /* ArticleFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A484277221F36C8003AEC93 /* ArticleFetcher.swift */; };
-		7A4BF0612220722D00AE76A1 /* Item+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4BF05D2220722D00AE76A1 /* Item+CoreDataClass.swift */; };
-		7A4BF0622220722D00AE76A1 /* Item+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4BF05E2220722D00AE76A1 /* Item+CoreDataProperties.swift */; };
-		7A4BF0632220722D00AE76A1 /* Group+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4BF05F2220722D00AE76A1 /* Group+CoreDataClass.swift */; };
-		7A4BF0642220722D00AE76A1 /* Group+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4BF0602220722D00AE76A1 /* Group+CoreDataProperties.swift */; };
+		7A4BF0612220722D00AE76A1 /* CacheItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4BF05D2220722D00AE76A1 /* CacheItem+CoreDataClass.swift */; };
+		7A4BF0622220722D00AE76A1 /* CacheItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4BF05E2220722D00AE76A1 /* CacheItem+CoreDataProperties.swift */; };
+		7A4BF0632220722D00AE76A1 /* CacheGroup+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4BF05F2220722D00AE76A1 /* CacheGroup+CoreDataClass.swift */; };
+		7A4BF0642220722D00AE76A1 /* CacheGroup+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4BF0602220722D00AE76A1 /* CacheGroup+CoreDataProperties.swift */; };
 		D8C271D921B9612500BFD1BD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C271D821B9612500BFD1BD /* AppDelegate.swift */; };
 		D8C271E021B9612600BFD1BD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D8C271DF21B9612600BFD1BD /* Assets.xcassets */; };
 		D8C271E321B9612600BFD1BD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8C271E121B9612600BFD1BD /* LaunchScreen.storyboard */; };
@@ -42,10 +42,10 @@
 		7A218CEF22203D39007C33E1 /* Cache.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Cache.xcdatamodel; sourceTree = "<group>"; };
 		7A47956D2220B9CC00E989AD /* String+SHA256.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+SHA256.swift"; sourceTree = "<group>"; };
 		7A484277221F36C8003AEC93 /* ArticleFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleFetcher.swift; sourceTree = "<group>"; };
-		7A4BF05D2220722D00AE76A1 /* Item+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Item+CoreDataClass.swift"; sourceTree = "<group>"; };
-		7A4BF05E2220722D00AE76A1 /* Item+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Item+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		7A4BF05F2220722D00AE76A1 /* Group+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Group+CoreDataClass.swift"; sourceTree = "<group>"; };
-		7A4BF0602220722D00AE76A1 /* Group+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Group+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		7A4BF05D2220722D00AE76A1 /* CacheItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CacheItem+CoreDataClass.swift"; sourceTree = "<group>"; };
+		7A4BF05E2220722D00AE76A1 /* CacheItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CacheItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		7A4BF05F2220722D00AE76A1 /* CacheGroup+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CacheGroup+CoreDataClass.swift"; sourceTree = "<group>"; };
+		7A4BF0602220722D00AE76A1 /* CacheGroup+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CacheGroup+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		D8C271D521B9612500BFD1BD /* lite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = lite.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8C271D821B9612500BFD1BD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D8C271DF21B9612600BFD1BD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -88,10 +88,10 @@
 			isa = PBXGroup;
 			children = (
 				7A0C548D221F9137002642A9 /* ArticleCacheController.swift */,
-				7A4BF05D2220722D00AE76A1 /* Item+CoreDataClass.swift */,
-				7A4BF05E2220722D00AE76A1 /* Item+CoreDataProperties.swift */,
-				7A4BF05F2220722D00AE76A1 /* Group+CoreDataClass.swift */,
-				7A4BF0602220722D00AE76A1 /* Group+CoreDataProperties.swift */,
+				7A4BF05D2220722D00AE76A1 /* CacheItem+CoreDataClass.swift */,
+				7A4BF05E2220722D00AE76A1 /* CacheItem+CoreDataProperties.swift */,
+				7A4BF05F2220722D00AE76A1 /* CacheGroup+CoreDataClass.swift */,
+				7A4BF0602220722D00AE76A1 /* CacheGroup+CoreDataProperties.swift */,
 				7A218CEE22203D39007C33E1 /* Cache.xcdatamodeld */,
 			);
 			path = Cache;
@@ -210,13 +210,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A4BF0612220722D00AE76A1 /* Item+CoreDataClass.swift in Sources */,
+				7A4BF0612220722D00AE76A1 /* CacheItem+CoreDataClass.swift in Sources */,
 				D8C271F121B9623600BFD1BD /* UIView+ConstrainedSubview.swift in Sources */,
 				D8C271D921B9612500BFD1BD /* AppDelegate.swift in Sources */,
 				7A0C5484221F6E32002642A9 /* ExploreTableViewController.swift in Sources */,
 				D8C271FB21BAAFFA00BFD1BD /* URLComponents+Extensions.swift in Sources */,
 				7A484278221F36C8003AEC93 /* ArticleFetcher.swift in Sources */,
-				7A4BF0622220722D00AE76A1 /* Item+CoreDataProperties.swift in Sources */,
+				7A4BF0622220722D00AE76A1 /* CacheItem+CoreDataProperties.swift in Sources */,
 				7A47956E2220B9CC00E989AD /* String+SHA256.swift in Sources */,
 				D8C271EF21B961D100BFD1BD /* SchemeHandler.swift in Sources */,
 				7A0C5471221F49DC002642A9 /* Fetcher.swift in Sources */,
@@ -226,9 +226,9 @@
 				7A0C548E221F9137002642A9 /* ArticleCacheController.swift in Sources */,
 				D8C271FD21BAB01400BFD1BD /* String+Domains.swift in Sources */,
 				D8C271EB21B9618400BFD1BD /* WebViewController.swift in Sources */,
-				7A4BF0632220722D00AE76A1 /* Group+CoreDataClass.swift in Sources */,
+				7A4BF0632220722D00AE76A1 /* CacheGroup+CoreDataClass.swift in Sources */,
 				D8C271F921BAAFCB00BFD1BD /* Configuration.swift in Sources */,
-				7A4BF0642220722D00AE76A1 /* Group+CoreDataProperties.swift in Sources */,
+				7A4BF0642220722D00AE76A1 /* CacheGroup+CoreDataProperties.swift in Sources */,
 				7A218CF022203D39007C33E1 /* Cache.xcdatamodeld in Sources */,
 				D8C271ED21B961C300BFD1BD /* Session.swift in Sources */,
 			);
