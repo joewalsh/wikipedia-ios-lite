@@ -233,8 +233,6 @@ class ArticleCacheController: NSObject {
 extension ArticleCacheController: PermanentlyPersistableURLCacheDelegate {
     func permanentlyPersistedData(for url: URL) -> Data? {
         assert(!Thread.isMainThread)
-        let cachedFileURL = cacheFileURL(for: url)
-        return fileManager.contents(atPath: cachedFileURL.path)
         guard let cachedFilePath = fileURL(for: url)?.path else {
             return nil
         }
