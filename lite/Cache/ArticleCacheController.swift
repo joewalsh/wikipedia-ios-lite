@@ -60,17 +60,8 @@ class ArticleCacheController: NSObject {
         }
     }
 
-    private func cacheKey(for url: URL) -> String {
-        return url.path.replacingOccurrences(of: "/", with: "_")
     }
 
-    private func cacheFilePath(for url: URL) -> String {
-        return cacheFileURL(for: url).path
-    }
-
-    private func cacheFileURL(for url: URL) -> URL {
-        let key = cacheKey(for: url)
-        return cacheURL.appendingPathComponent(key, isDirectory: false)
     }
 
     func isCached(_ articleURL: URL) -> Bool {
