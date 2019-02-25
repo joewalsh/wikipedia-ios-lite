@@ -3,8 +3,6 @@ import CoreData
 
 class ArticleCacheController: NSObject {
     static let articleCacheWasUpdatedNotification = Notification.Name("ArticleCachWasUpdated")
-    static let articleCacheWasUpdatedArticleURLKey = "ArticleCachWasUpdatedArticleURLKey"
-    static let articleCacheWasUpdatedIsCachedKey = "ArticleCachWasUpdatedIsCachedKey"
 
     let dispatchQueue = DispatchQueue(label: "ArticleCacheControllerDispatchQueue", qos: .default, attributes: [.concurrent], autoreleaseFrequency: .workItem, target: nil)
 
