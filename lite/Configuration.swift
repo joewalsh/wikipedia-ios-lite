@@ -117,7 +117,15 @@ public class Configuration: NSObject {
         }
     }
     
-    func mobileAppsServicesArticleURLForArticle(with url: URL, scheme: String) -> URL? {
+    func mobileAppsServicesArticleResourceURLForArticle(with url: URL, scheme: String, resource: MobileAppsServices.Page.Resource) -> URL? {
+        guard let title = mobileAppsServicesArticleTitle(from: url) else {
+            return nil
+        }
+        var components = mobileAppsServicesAPIURLComponentsForHost(url.host, appending: ["page", resource.rawValue, title])
+        components.scheme = scheme
+        return components.url
+    }
+
     func mobileAppsServicesArticleTitle(from url: URL) -> String? {
         guard url.host?.hasSuffix("wikipedia.org") ?? false else {
             return nil
