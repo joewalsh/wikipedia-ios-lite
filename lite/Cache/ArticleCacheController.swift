@@ -127,6 +127,15 @@ class ArticleCacheController: NSObject {
             fatalError(error.localizedDescription)
         }
     }
+
+    private func allCacheGroups(in moc: NSManagedObjectContext) -> [CacheGroup] {
+        let fetchRequest: NSFetchRequest<CacheGroup> = CacheGroup.fetchRequest()
+        do {
+            return try moc.fetch(fetchRequest)
+        } catch let error {
+            fatalError(error.localizedDescription)
+        }
+    }
 }
 
 extension ArticleCacheController: PermanentlyPersistableURLCacheDelegate {
