@@ -162,6 +162,20 @@ class ArticleCacheController: NSObject {
         print("ArticleCacheController: Created cache item with key: \(key)")
         return item
     }
+
+    private func cacheItem(with key: String, in moc: NSManagedObjectContext) -> CacheItem? {
+        let fetchRequest: NSFetchRequest<CacheItem> = CacheItem.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "key == %@", key)
+        fetchRequest.fetchLimit = 1
+        do {
+            guard let item = try moc.fetch(fetchRequest).first else {
+                return nil
+            }
+            return item
+        } catch let error {
+            fatalError(error.localizedDescription)
+        }
+    }
 }
 
 extension ArticleCacheController: PermanentlyPersistableURLCacheDelegate {
