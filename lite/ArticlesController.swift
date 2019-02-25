@@ -25,7 +25,19 @@ final class ArticlesController: NSObject {
                     fatalError()
                 }
                 self.cacheController.moveArticleHTMLFileToCache(fileURL: fileURL, withContentsOf: articleURL)
+    private func downloadArticleResourceAndCache(_ resource: Configuration.MobileAppsServices.Page.Resource, for articleURL: URL) {
+        fetcher.downloadArticleResource(resource, for: articleURL) { error, temporaryFileURL, resourceURL in
+            if let error = error {
+                fatalError(error.localizedDescription)
             }
+            guard let temporaryFileURL = temporaryFileURL, let resourceURL = resourceURL else {
+                fatalError()
+            }
+            self.cacheController.moveTemporaryFileToCache(temporaryFileURL: temporaryFileURL, withContentsOf: resourceURL) { error, key in
+                self.cacheController.addCacheItemToCacheGroup(for: articleURL, cacheItemKey: key)
+            }
+        }
+    }
         }
     }
 }
