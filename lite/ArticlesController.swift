@@ -41,6 +41,62 @@ final class ArticlesController: NSObject {
             }
         }
     }
+
+private struct Media: Decodable {
+    let revision: String?
+    let tid: String?
+    let items: [Item]?
+
+    struct Item: Decodable {
+        let sectionID: UInt?
+        let type: String?
+        let caption: Info?
+        let showInGallery: Bool?
+        let titles: Titles?
+        let thumbnail: Image?
+        let original: Image?
+        let filePage: String?
+        let artist: Info?
+        let credit: Info?
+        let license: License?
+        let description: Info?
+
+        enum CodingKeys: String, CodingKey {
+            case sectionID = "section_id"
+            case type
+            case caption
+            case showInGallery
+            case titles
+            case thumbnail
+            case original
+            case filePage = "file_page"
+            case artist
+            case credit
+            case license
+            case description
+        }
+
+        struct Info: Decodable {
+            let html: String?
+            let text: String?
+        }
+
+        struct Titles: Decodable {
+            let canonical: String?
+            let normalized: String?
+            let display: String?
+        }
+
+        struct Image: Decodable {
+            let source: String?
+            let width: UInt?
+            let height: UInt?
+            let mime: String?
+        }
+
+        struct License: Decodable {
+            let type: String?
+            let code: String?
         }
     }
 }
