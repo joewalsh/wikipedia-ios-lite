@@ -94,6 +94,7 @@
 				7A4BF05E2220722D00AE76A1 /* CacheItem+CoreDataProperties.swift */,
 				7A4BF05F2220722D00AE76A1 /* CacheGroup+CoreDataClass.swift */,
 				7A4BF0602220722D00AE76A1 /* CacheGroup+CoreDataProperties.swift */,
+				7A47956D2220B9CC00E989AD /* String+SHA256.swift */,
 				7A218CEE22203D39007C33E1 /* Cache.xcdatamodeld */,
 				7AC09D232224565700099FDB /* URL+KeyComponents.swift */,
 			);
