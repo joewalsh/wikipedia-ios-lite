@@ -31,11 +31,11 @@ class ExploreTableViewController: UITableViewController {
         
     private lazy var articles: [Article] = {
         return [
-            Article(title: "Dog", configuration: configuration, scheme: schemeHandler.scheme),
-            Article(title: "Wolf", configuration: configuration, scheme: schemeHandler.scheme),
-            Article(title: "Cat", configuration: configuration, scheme: schemeHandler.scheme),
-            Article(title: "Panda", configuration: configuration, scheme: schemeHandler.scheme),
-            Article(title: "Unicorn", configuration: configuration, scheme: schemeHandler.scheme)
+            Article(title: "Dog"),
+            Article(title: "Wolf"),
+            Article(title: "Cat"),
+            Article(title: "Panda"),
+            Article(title: "Unicorn")
         ]
     }()
 
