@@ -11,9 +11,11 @@ final class ArticlesController: NSObject {
     }
 
     func toggleCache(for articleURL: URL) {
+        print("ArticlesController: toggled cache for \(articleURL)")
         let isCached = cacheController.isCached(articleURL)
         if isCached {
-            cacheController.removeCachedArticleData(for: articleURL)
+            print("ArticlesController: cache for \(articleURL) exists, removing")
+            cacheController.removeCachedArticle(with: articleURL)
         } else {
             fetcher.downloadHTMLAndSaveToFile(for: articleURL) { error, fileURL in
                 if let error = error {
