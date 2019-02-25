@@ -71,12 +71,7 @@ class ExploreTableViewController: UITableViewController {
 
     @objc private func toggleArticleSavedState(_ sender: UIButton) {
         let articleURL = articles[sender.tag].url
-        var components = URLComponents.init(url: articleURL, resolvingAgainstBaseURL: true)
-        components?.scheme = Configuration.Stage.current == .local ? "http" : "https"
-        guard let adjustedArticleURL = components?.url else {
-            return
-        }
-        articlesController.toggleCache(for: adjustedArticleURL)
+        articlesController.toggleCache(for: articleURL)
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
