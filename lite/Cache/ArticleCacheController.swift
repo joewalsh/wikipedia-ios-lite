@@ -22,6 +22,9 @@ class ArticleCacheController: NSObject {
         } catch let error {
             fatalError(error.localizedDescription)
         }
+        super.init()
+        NotificationCenter.default.addObserver(self, selector: #selector(backgroundContextDidSave(_:)), name: NSNotification.Name.NSManagedObjectContextDidSave, object: self.backgroundContext)
+        NotificationCenter.default.addObserver(self, selector: #selector(viewContextDidSave), name: NSNotification.Name.NSManagedObjectContextDidSave, object: self.viewContext)
     }
 
     private func postArticleCacheUpdatedNotification(for articleURL: URL, cached: Bool) {
@@ -29,6 +32,16 @@ class ArticleCacheController: NSObject {
             ArticleCacheController.articleCacheWasUpdatedArticleURLKey: articleURL,
             ArticleCacheController.articleCacheWasUpdatedIsCachedKey: cached
         ]
+    @objc private func backgroundContextDidSave(_ notification: NSNotification) {
+        let context = viewContext
+        context.performAndWait {
+            self.save(moc: context)
+        }
+    }
+
+    @objc private func viewContextDidSave(_ notification: NSNotification) {
+        self.postArticleCacheUpdatedNotification()
+    }
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: ArticleCacheController.articleCacheWasUpdatedNotification, object: nil, userInfo: userInfo)
         }
