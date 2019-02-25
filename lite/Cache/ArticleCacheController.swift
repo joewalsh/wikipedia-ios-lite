@@ -19,6 +19,7 @@ class ArticleCacheController: NSObject {
         cacheURL = documentsURL.appendingPathComponent("Article Cache", isDirectory: true)
         do {
             try fileManager.createDirectory(at: cacheURL, withIntermediateDirectories: true, attributes: nil)
+            print("Created Article Cache directory: \(cacheURL)")
         } catch let error {
             fatalError(error.localizedDescription)
         }
