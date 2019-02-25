@@ -196,6 +196,14 @@ class ArticleCacheController: NSObject {
             self.save(moc: context)
         }
     }
+
+    func fetchOrCreateCacheGroup(with key: String, in moc: NSManagedObjectContext) -> CacheGroup? {
+        return cacheGroup(with: key, in: moc) ?? createCacheGroup(with: key, in: moc)
+    }
+
+    func fetchOrCreateCacheItem(with key: String, in moc: NSManagedObjectContext) -> CacheItem? {
+        return cacheItem(with: key, in: moc) ?? createCacheItem(with: key, in: moc)
+    }
 }
 
 extension ArticleCacheController: PermanentlyPersistableURLCacheDelegate {
