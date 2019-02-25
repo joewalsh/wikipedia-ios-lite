@@ -6,6 +6,14 @@ class ArticleFetcher: Fetcher {
 
     func downloadHTMLAndSaveToFile(for articleURL: URL, completion: @escaping (Error?, URL?) -> Void) {
         session.downloadTask(with: articleURL) { (fileURL, response, error) in
+    private var scheme: String {
+        switch Configuration.Stage.current {
+        case .local:
+            return Configuration.Scheme.http
+        default:
+            return Configuration.Scheme.https
+        }
+    }
             if let error = error {
                 completion(error, nil)
                 return
