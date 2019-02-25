@@ -22,11 +22,10 @@ class ExploreTableViewController: UITableViewController {
         let title: String
         let url: URL
 
-        init(title: String, configuration: Configuration, scheme: String) {
+        init(title: String) {
             self.title = title
-            let urlString = "https://en.wikipedia.org/wiki/\(title)"
-            let url = URL(string: urlString)!
-            self.url = configuration.mobileAppsServicesArticleURLForArticle(with: url, scheme: scheme)!
+            let urlString = "app://en.wikipedia.org/wiki/\(title)"
+            self.url = URL(string: urlString)!
         }
     }
         
