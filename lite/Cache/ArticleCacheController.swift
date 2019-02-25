@@ -76,13 +76,16 @@ class ArticleCacheController: NSObject {
         return isCached
     }
 
-    func moveArticleHTMLFileToCache(fileURL: URL, withContentsOf articleURL: URL) {
+    func moveTemporaryFileToCache(temporaryFileURL: URL, withContentsOf url: URL, completion: @escaping (Error?, String) -> Void) {
         assert(!Thread.isMainThread)
+        let key = CacheItem.key(for: url)
         do {
-            let newFileURL = cacheFileURL(for: articleURL)
-            try fileManager.moveItem(at: fileURL, to: newFileURL)
-            postArticleCacheUpdatedNotification(for: articleURL, cached: true)
+            let keyHash = key.sha256()
+            let newFileURL = cacheURL.appendingPathComponent(keyHash ?? key, isDirectory: false)
+            try fileManager.moveItem(at: temporaryFileURL, to: newFileURL)
+            completion(nil, key) // hashed key is only for files, core data uses regular keys
         } catch let error {
+            completion(error, key)
             fatalError(error.localizedDescription)
         }
     }
