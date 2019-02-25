@@ -113,6 +113,20 @@ class ArticleCacheController: NSObject {
         let viewContext = persistentContainer.viewContext
         return viewContext
     }()
+
+    private func cacheGroup(with key: String, in moc: NSManagedObjectContext) -> CacheGroup? {
+        let fetchRequest: NSFetchRequest<CacheGroup> = CacheGroup.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "key == %@", key)
+        fetchRequest.fetchLimit = 1
+        do {
+            guard let group = try moc.fetch(fetchRequest).first else {
+                return nil
+            }
+            return group
+        } catch let error {
+            fatalError(error.localizedDescription)
+        }
+    }
 }
 
 extension ArticleCacheController: PermanentlyPersistableURLCacheDelegate {
