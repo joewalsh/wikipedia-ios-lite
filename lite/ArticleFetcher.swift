@@ -32,8 +32,90 @@ class ArticleFetcher: Fetcher {
         }.resume()
     }
 
-    func getMedia(for articleURL: URL, completion: @escaping (Data?, URLResponse?, Error?) -> Void) {
+    struct Media: Decodable {
+        let revision: String?
+        let tid: String?
+        let items: [Item]?
+
+        struct Item: Decodable {
+            let sectionID: UInt?
+            let type: String?
+            let caption: Info?
+            let showInGallery: Bool?
+            let titles: Titles?
+            let thumbnail: Image?
+            let original: Image?
+            let filePage: String?
+            let artist: Info?
+            let credit: Info?
+            let license: License?
+            let description: Info?
+
+            enum CodingKeys: String, CodingKey {
+                case sectionID = "section_id"
+                case type
+                case caption
+                case showInGallery
+                case titles
+                case thumbnail
+                case original
+                case filePage = "file_page"
+                case artist
+                case credit
+                case license
+                case description
+            }
+
+            struct Info: Decodable {
+                let html: String?
+                let text: String?
+            }
+
+            struct Titles: Decodable {
+                let canonical: String?
+                let normalized: String?
+                let display: String?
+            }
+
+            struct Image: Decodable {
+                let source: String?
+                let width: UInt?
+                let height: UInt?
+                let mime: String?
+            }
+
+            struct License: Decodable {
+                let type: String?
+                let code: String?
+            }
+        }
+    }
+
+    func getMedia(for articleURL: URL, completion: @escaping (Error?, Media?) -> Void) {
         let url = configuration.mobileAppsServicesArticleResourceURLForArticle(with: articleURL, scheme: scheme, resource: .media)!
-        session.session.dataTask(with: url, completionHandler: completion).resume()
+        session.session.dataTask(with: url) { data, response, error in
+            if let error = error {
+                assertionFailure(error.localizedDescription)
+                completion(error, nil)
+            }
+            guard let response = response as? HTTPURLResponse else {
+                assertionFailure("Expected HTTP response")
+                completion(Fetcher.unexpectedResponseError, nil)
+                return
+            }
+            guard response.statusCode == 200 else {
+                assertionFailure("Expected 200 status code, got \(response.statusCode)")
+                completion(Fetcher.unexpectedResponseError, nil)
+                return
+            }
+            guard let data = data else {
+                assertionFailure("Expected data, got nil")
+                completion(Fetcher.noNewDataError, nil)
+                return
+            }
+            let decoder = JSONDecoder()
+            let media = try? decoder.decode(Media.self, from: data)
+            completion(nil, media)
+        }.resume()
     }
 }
