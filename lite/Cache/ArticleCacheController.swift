@@ -176,6 +176,26 @@ class ArticleCacheController: NSObject {
             fatalError(error.localizedDescription)
         }
     }
+    func addCacheItemToCacheGroup(for articleURL: URL, cacheItemKey: String) {
+        let context = backgroundContext
+        context.perform {
+            let cacheGroupKey = CacheGroup.key(for: articleURL)
+            guard
+                let group = self.fetchOrCreateCacheGroup(with: cacheGroupKey, in: context),
+                let item = self.fetchOrCreateCacheItem(with: cacheItemKey, in: context)
+            else {
+                return
+            }
+            if group.cacheItems != nil {
+                print("ArticleCacheController: adding cache item with key \(item.key!) to cache group with key \(group.key!)")
+                group.addToCacheItems(item)
+            } else {
+                print("ArticleCacheController: adding first cache item with key \(item.key!) to cache group with key \(group.key!)")
+                group.cacheItems = NSSet(object: item)
+            }
+            self.save(moc: context)
+        }
+    }
 }
 
 extension ArticleCacheController: PermanentlyPersistableURLCacheDelegate {
