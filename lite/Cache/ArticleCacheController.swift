@@ -100,8 +100,18 @@ class ArticleCacheController: NSObject {
         return container
     }()
 
+    // write only
     private lazy var backgroundContext: NSManagedObjectContext = {
-        return persistentContainer.newBackgroundContext()
+        let backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        backgroundContext.parent = viewContext
+        backgroundContext.mergePolicy = NSMergePolicy.mergeByPropertyStoreTrump
+        return backgroundContext
+    }()
+
+    // read only
+    private lazy var viewContext: NSManagedObjectContext = {
+        let viewContext = persistentContainer.viewContext
+        return viewContext
     }()
 }
 
