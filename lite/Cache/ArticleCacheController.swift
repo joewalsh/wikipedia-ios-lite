@@ -204,6 +204,17 @@ class ArticleCacheController: NSObject {
     func fetchOrCreateCacheItem(with key: String, in moc: NSManagedObjectContext) -> CacheItem? {
         return cacheItem(with: key, in: moc) ?? createCacheItem(with: key, in: moc)
     }
+
+    private func save(moc: NSManagedObjectContext) {
+        guard moc.hasChanges else {
+            return
+        }
+        do {
+            try moc.save()
+        } catch let error {
+            fatalError("Error saving cache moc: \(error)")
+        }
+    }
 }
 
 extension ArticleCacheController: PermanentlyPersistableURLCacheDelegate {
