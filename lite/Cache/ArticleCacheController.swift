@@ -250,6 +250,12 @@ class ArticleCacheController: NSObject {
             fatalError("Error saving cache moc: \(error)")
         }
     }
+
+    // MARK: Media
+
+    func cacheMedia(_ media: ArticleFetcher.Media) {
+        print(media)
+    }
 }
 
 extension ArticleCacheController: PermanentlyPersistableURLCacheDelegate {
