@@ -31,4 +31,9 @@ class ArticleFetcher: Fetcher {
             completion(nil, fileURL, url)
         }.resume()
     }
+
+    func getMedia(for articleURL: URL, completion: @escaping (Data?, URLResponse?, Error?) -> Void) {
+        let url = configuration.mobileAppsServicesArticleResourceURLForArticle(with: articleURL, scheme: scheme, resource: .media)!
+        session.session.dataTask(with: url, completionHandler: completion).resume()
+    }
 }
