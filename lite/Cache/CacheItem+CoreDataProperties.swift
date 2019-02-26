@@ -1,12 +1,3 @@
-//
-//  Item+CoreDataProperties.swift
-//  lite
-//
-//  Created by Natalia Harateh on 2/22/19.
-//  Copyright © 2019 Wikimedia Foundation. All rights reserved.
-//
-//
-
 import Foundation
 import CoreData
 
@@ -17,8 +8,25 @@ extension CacheItem {
         return NSFetchRequest<CacheItem>(entityName: "CacheItem")
     }
 
-    @NSManaged public var key: String?
     @NSManaged public var date: NSDate?
-    @NSManaged public var cacheGroups: CacheGroup?
+    @NSManaged public var key: String?
+    @NSManaged public var cacheGroups: NSSet?
+
+}
+
+// MARK: Generated accessors for cacheGroups
+extension CacheItem {
+
+    @objc(addCacheGroupsObject:)
+    @NSManaged public func addToCacheGroups(_ value: CacheGroup)
+
+    @objc(removeCacheGroupsObject:)
+    @NSManaged public func removeFromCacheGroups(_ value: CacheGroup)
+
+    @objc(addCacheGroups:)
+    @NSManaged public func addToCacheGroups(_ values: NSSet)
+
+    @objc(removeCacheGroups:)
+    @NSManaged public func removeFromCacheGroups(_ values: NSSet)
 
 }

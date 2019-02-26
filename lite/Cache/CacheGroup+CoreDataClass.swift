@@ -3,5 +3,5 @@ import CoreData
 
 @objc(CacheGroup)
 public class CacheGroup: NSManagedObject {
-    
+
 }
