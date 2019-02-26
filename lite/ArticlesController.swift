@@ -31,9 +31,15 @@ final class ArticlesController: NSObject {
                     return
                 }
                 self.cacheController.cacheMedia(media, for: articleURL) { imageURL, imageKey in
-                    if let url = imageURL, let key = imageKey {
-                        self.fetcher.downloadImage(url) { error, fileURL in
-                            print(fileURL)
+                    if let imageURL = imageURL, let imageKey = imageKey {
+                        self.fetcher.downloadImage(imageURL) { error, fileURL in
+                            if let error = error {
+                                assertionFailure(error.localizedDescription)
+                            }
+                            guard let fileURL = fileURL else {
+                                fatalError()
+                            }
+                            self.cacheController.moveTemporaryFileToCache(temporaryFileURL: fileURL, key: imageKey)
                         }
                     }
                 }
@@ -50,6 +56,9 @@ final class ArticlesController: NSObject {
                 fatalError()
             }
             self.cacheController.moveTemporaryFileToCache(temporaryFileURL: temporaryFileURL, withContentsOf: resourceURL) { error, key in
+                guard let key = key else {
+                    fatalError()
+                }
                 self.cacheController.addCacheItemToCacheGroup(for: articleURL, cacheItemKey: key)
             }
         }
