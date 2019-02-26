@@ -221,13 +221,7 @@ class ArticleCacheController: NSObject {
             else {
                 return
             }
-            if group.cacheItems != nil {
-                print("ArticleCacheController: adding cache item with key \(item.key!) to cache group with key \(group.key!)")
-                group.addToCacheItems(item)
-            } else {
-                print("ArticleCacheController: adding first cache item with key \(item.key!) to cache group with key \(group.key!)")
-                group.cacheItems = NSSet(object: item)
-            }
+            group.addToCacheItems(item)
             self.save(moc: context)
         }
     }
@@ -253,8 +247,57 @@ class ArticleCacheController: NSObject {
 
     // MARK: Media
 
-    func cacheMedia(_ media: ArticleFetcher.Media) {
-        //print(media)
+    func cacheMedia(_ media: ArticleFetcher.Media, for articleURL: URL, completion: @escaping (URL?, String?) -> Void) {
+        guard let items = media.items, !items.isEmpty else {
+            print("No images to cache for \(articleURL), returning")
+            completion(nil, nil)
+            return
+        }
+        let context = backgroundContext
+        context.perform {
+            let key = CacheGroup.key(for: articleURL)
+            guard let group = self.fetchOrCreateCacheGroup(with: key, in: context) else {
+                assertionFailure("Couldn't fetch or create cache group for \(articleURL)")
+                completion(nil, nil)
+                return
+            }
+
+            for item in items {
+                if let (url, key) = self.cacheImage(item.original, with: item.titles, group: group, in: context) {
+                    completion(url, key)
+                }
+                if let (url, key) = self.cacheImage(item.thumbnail, with: item.titles, group: group, in: context) {
+                    completion(url, key)
+                }
+            }
+            self.save(moc: context)
+        }
+    }
+
+    private func cacheImage(_ image: ArticleFetcher.Media.Item.Image?, with titles: ArticleFetcher.Media.Item.Titles?, group: CacheGroup, in moc: NSManagedObjectContext) -> (URL, String)? {
+        guard
+            let image = image,
+            let source = image.source,
+            let url = URL(string: source),
+            let host = url.host
+        else {
+            assertionFailure("Couldn't cache image; image is nil or some properties are missing")
+            return nil
+        }
+
+        let name = titles?.canonical ?? titles?.normalized ?? url.lastPathComponent
+
+        let key: String
+        if let width = image.width {
+            key = "\(host)__media__\(name)__\(width)"
+        } else {
+            key = "\(host)__media_\(name)"
+        }
+
+        let item = self.fetchOrCreateCacheItem(with: key, in: moc)
+        item?.addToCacheGroups(group)
+
+        return (url, key)
     }
 }
 

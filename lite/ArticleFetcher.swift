@@ -19,7 +19,7 @@ class ArticleFetcher: Fetcher {
             return
         }
 
-        session.downloadTask(with: url) { (fileURL, response, error) in
+        session.downloadTask(with: url) { fileURL, response, error in
             if let error = error {
                 completion(error, nil, url)
                 return
@@ -29,6 +29,20 @@ class ArticleFetcher: Fetcher {
                 return
             }
             completion(nil, fileURL, url)
+        }.resume()
+    }
+
+    func downloadImage(_ url: URL, completion: @escaping (Error?, URL?) -> Void) {
+        session.downloadTask(with: url) { fileURL, response, error in
+            if let error = error {
+                completion(error, nil)
+                return
+            }
+            guard let fileURL = fileURL, response != nil else {
+                completion(Fetcher.unexpectedResponseError, nil)
+                return
+            }
+            completion(nil, fileURL)
         }.resume()
     }
 

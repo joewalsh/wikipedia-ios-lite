@@ -24,8 +24,19 @@ final class ArticlesController: NSObject {
             // media response needs to be decoded to cache individual files
             // should be separated?
             fetcher.getMedia(for: articleURL) { error, media in
-                assert(error == nil)
-                //print(media)
+                if let error = error {
+                    assertionFailure(error.localizedDescription)
+                }
+                guard let media = media else {
+                    return
+                }
+                self.cacheController.cacheMedia(media, for: articleURL) { imageURL, imageKey in
+                    if let url = imageURL, let key = imageKey {
+                        self.fetcher.downloadImage(url) { error, fileURL in
+                            print(fileURL)
+                        }
+                    }
+                }
             }
         }
     }
