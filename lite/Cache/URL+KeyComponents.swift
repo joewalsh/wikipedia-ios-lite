@@ -77,4 +77,29 @@ private extension URL {
         }
         return pathComponent(at: pathComponents.indices.endIndex - 2)
     }
+
+    var imageWidth: UInt? {
+        guard host == "upload.wikimedia.org" else {
+            return nil
+        }
+        guard pathComponents.contains("thumb") else {
+            return nil
+        }
+        guard let pxRange = lastPathComponent.range(of: "px-") else {
+            return nil
+        }
+        let width = lastPathComponent[..<pxRange.lowerBound]
+        return UInt(width)
+    }
+
+    var imageName: String? {
+        guard host == "upload.wikimedia.org" else {
+            return nil
+        }
+        if let pxRange = lastPathComponent.range(of: "px-") {
+            return String(lastPathComponent[pxRange.upperBound..<lastPathComponent.endIndex])
+        } else {
+            return lastPathComponent
+        }
+    }
 }
