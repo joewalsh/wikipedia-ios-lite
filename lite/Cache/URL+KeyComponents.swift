@@ -50,8 +50,9 @@ private extension URL {
         }
         if let pageResource = pageResource {
             return [normalizedHost, pageResource, title]
+        } else if host == "upload.wikimedia.org", let imageName = imageName, let imageWidth = imageWidth {
+            return [normalizedHost, imageName, String(imageWidth)]
         } else {
-            //print("Warning: returning keyComponents without a pageResource: \([normalizedHost, title])")
             return [normalizedHost, title]
         }
     }
