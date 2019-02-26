@@ -98,16 +98,27 @@ class ArticleCacheController: NSObject {
         return isCached
     }
 
-    func moveTemporaryFileToCache(temporaryFileURL: URL, withContentsOf url: URL, completion: @escaping (Error?, String) -> Void) {
+    func moveTemporaryFileToCache(temporaryFileURL: URL, withContentsOf url: URL, completion: @escaping (Error?, String?) -> Void) {
         assert(!Thread.isMainThread)
-        let key = CacheItem.key(for: url)
         do {
-            let keyHash = key.sha256()
-            let newFileURL = cacheURL.appendingPathComponent(keyHash ?? key, isDirectory: false)
+            let key = CacheItem.key(for: url)
+            let pathComponent = key.sha256() ?? key
+            let newFileURL = cacheURL.appendingPathComponent(pathComponent, isDirectory: false)
             try fileManager.moveItem(at: temporaryFileURL, to: newFileURL)
             completion(nil, key) // hashed key is only for files, core data uses regular keys
         } catch let error {
-            completion(error, key)
+            completion(error, nil)
+            fatalError(error.localizedDescription)
+        }
+    }
+
+    func moveTemporaryFileToCache(temporaryFileURL: URL, key: String) {
+        assert(!Thread.isMainThread)
+        do {
+            let pathComponent = key.sha256() ?? key
+            let newFileURL = cacheURL.appendingPathComponent(pathComponent, isDirectory: false)
+            try fileManager.moveItem(at: temporaryFileURL, to: newFileURL)
+        } catch let error {
             fatalError(error.localizedDescription)
         }
     }
@@ -263,10 +274,10 @@ class ArticleCacheController: NSObject {
             }
 
             for item in items {
-                if let (url, key) = self.cacheImage(item.original, with: item.titles, group: group, in: context) {
+                if let (url, key) = self.cacheImage(item.original, with: item.titles, includeWidth: false, group: group, in: context) {
                     completion(url, key)
                 }
-                if let (url, key) = self.cacheImage(item.thumbnail, with: item.titles, group: group, in: context) {
+                if let (url, key) = self.cacheImage(item.thumbnail, with: item.titles, includeWidth: true, group: group, in: context) {
                     completion(url, key)
                 }
             }
@@ -274,30 +285,27 @@ class ArticleCacheController: NSObject {
         }
     }
 
-    private func cacheImage(_ image: ArticleFetcher.Media.Item.Image?, with titles: ArticleFetcher.Media.Item.Titles?, group: CacheGroup, in moc: NSManagedObjectContext) -> (URL, String)? {
+    private func cacheImage(_ image: ArticleFetcher.Media.Item.Image?, with titles: ArticleFetcher.Media.Item.Titles?, includeWidth: Bool, group: CacheGroup, in moc: NSManagedObjectContext) -> (URL, String)? {
         guard
             let image = image,
             let source = image.source,
-            let url = URL(string: source),
-            let host = url.host
+            let url = URL(string: source)
         else {
             assertionFailure("Couldn't cache image; image is nil or some properties are missing")
             return nil
         }
 
-        let name = titles?.canonical ?? titles?.normalized ?? url.lastPathComponent
+        let key = CacheItem.key(for: url)
 
-        let key: String
-        if let width = image.width {
-            key = "\(host)__media__\(name)__\(width)"
+        if let item = self.cacheItem(with: key, in: moc) {
+            item.addToCacheGroups(group)
+            return nil
+        } else if let item = self.createCacheItem(with: key, in: moc) {
+            item.addToCacheGroups(group)
+            return (url, key)
         } else {
-            key = "\(host)__media_\(name)"
+            return nil
         }
-
-        let item = self.fetchOrCreateCacheItem(with: key, in: moc)
-        item?.addToCacheGroups(group)
-
-        return (url, key)
     }
 }
 
