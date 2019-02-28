@@ -369,14 +369,14 @@ class ArticleCacheController: NSObject {
     func cacheData(for articleURL: URL) {
         for data in ArticleFetcher.Data.allCases {
             fetcher.downloadData(data, for: articleURL) { error, cssURL, temporaryFileURL, mimeType in
-                self.handleDownloadCSSCompletion(articleURL: articleURL, error: error, cssURL: cssURL, temporaryFileURL: temporaryFileURL, mimeType: mimeType)
+                self.handleDataDownloadCompletion(articleURL: articleURL, error: error, cssURL: cssURL, temporaryFileURL: temporaryFileURL, mimeType: mimeType)
             }
         }
     }
 
-    private func handleDownloadCSSCompletion(articleURL: URL, error: Error?, cssURL: URL?, temporaryFileURL: URL?, mimeType: String?) {
+    private func handleDataDownloadCompletion(articleURL: URL, error: Error?, cssURL: URL?, temporaryFileURL: URL?, mimeType: String?) {
         if let error = error {
-            assertionFailure(error.localizedDescription)
+            print(error.localizedDescription)
             return
         }
         guard let cssURL = cssURL else {
