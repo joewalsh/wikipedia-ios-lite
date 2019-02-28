@@ -71,8 +71,8 @@ class ArticleCacheController: NSObject {
                         try self.fileManager.removeItem(at: cachedFileURL)
                         context.delete(cacheItem)
                     } catch let error as NSError {
-                        if error.code == NSFileWriteFileExistsError {
-                            return
+                        if error.code == NSURLErrorFileDoesNotExist || error.code == NSFileNoSuchFileError {
+                            context.delete(cacheItem)
                         } else {
                             fatalError(error.localizedDescription)
                         }
