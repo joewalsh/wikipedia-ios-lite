@@ -58,6 +58,22 @@ class ArticleFetcher: Fetcher {
         }.resume()
     }
 
+    private func handleDownloadTaskCompletion(url: URL, fileURL: URL?, response: URLResponse?, error: Error?, completion: @escaping DownloadCompletion) {
+        if let error = error {
+            completion(error, url, nil, nil)
+            return
+        }
+        guard let fileURL = fileURL, let response = response else {
+            completion(Fetcher.unexpectedResponseError, url, nil, nil)
+            return
+        }
+        if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
+            completion(Fetcher.unexpectedResponseError, url, nil, nil)
+            return
+        }
+        completion(nil, url, fileURL, response.mimeType)
+    }
+
     // MARK: Media
 
     struct Media: Decodable {
