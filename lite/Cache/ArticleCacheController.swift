@@ -100,31 +100,6 @@ class ArticleCacheController: NSObject {
         return isCached
     }
 
-    func moveTemporaryFileToCache(temporaryFileURL: URL, withContentsOf url: URL, completion: @escaping (Error?, String?) -> Void) {
-        assert(!Thread.isMainThread)
-        do {
-            let key = CacheItem.key(for: url)
-            let pathComponent = key.sha256() ?? key
-            let newFileURL = cacheURL.appendingPathComponent(pathComponent, isDirectory: false)
-            try fileManager.moveItem(at: temporaryFileURL, to: newFileURL)
-            completion(nil, key) // hashed key is only for files, core data uses regular keys
-        } catch let error {
-            completion(error, nil)
-            fatalError(error.localizedDescription)
-        }
-    }
-
-    func moveTemporaryFileToCache(temporaryFileURL: URL, key: String) {
-        assert(!Thread.isMainThread)
-        do {
-            let pathComponent = key.sha256() ?? key
-            let newFileURL = cacheURL.appendingPathComponent(pathComponent, isDirectory: false)
-            try fileManager.moveItem(at: temporaryFileURL, to: newFileURL)
-        } catch let error {
-            fatalError(error.localizedDescription)
-        }
-    }
-
     private lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "Cache")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
@@ -281,6 +256,35 @@ class ArticleCacheController: NSObject {
                 }
                 if let (url, key) = self.cacheImage(item.thumbnail, with: item.titles, includeWidth: true, group: group, in: context) {
                     completion(url, key)
+    // MARK: Moving files
+
+    private enum FileMoveResult {
+        case exists
+        case success
+        case error(Error)
+    }
+
+    private func moveFile(from fileURL: URL, toNewFileWithKey key: String, hashed: Bool = true, mimeType: String?, completion: @escaping (FileMoveResult) -> Void) {
+        do {
+            let pathComponent = hashed ? key.sha256() ?? key : key
+            let newFileURL = cacheURL.appendingPathComponent(pathComponent, isDirectory: false)
+            try self.fileManager.moveItem(at: fileURL, to: newFileURL)
+            if let mimeType = mimeType {
+                fileManager.setValue(mimeType, forExtendedFileAttributeNamed: WMFExtendedFileAttributeNameMIMEType, forFileAtPath: newFileURL.path)
+            }
+            completion(.success)
+        } catch let error as NSError {
+            if error.domain == NSCocoaErrorDomain, error.code == NSFileWriteFileExistsError {
+                completion(.exists)
+            } else {
+                print("Error moving file: \(error.localizedDescription)")
+                completion(.error(error))
+            }
+        } catch let error {
+            print("Error moving file: \(error.localizedDescription)")
+            completion(.error(error))
+        }
+    }
                 }
             }
             self.save(moc: context)
