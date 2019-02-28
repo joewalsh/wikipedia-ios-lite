@@ -115,24 +115,52 @@ public class Configuration: NSObject {
                 case sections = "mobile-sections"
             }
         }
-        struct Data {
+        enum Data {
+            case css(CSS)
+            case js(JS)
+
+            var rawValue: String {
+                switch self {
+                case .css(_):
+                    return "css"
+                case .js(_):
+                    return "javascript"
+                }
+            }
+
+            var associatedRawValue: String {
+                switch self {
+                case .css(let css):
+                    return css.rawValue
+                case .js(let js):
+                    return js.rawValue
+                }
+            }
+
             enum CSS: String, CaseIterable {
                 case site
                 case base
                 case pagelib
-
-                var isGlobal: Bool {
-                    return self != .site
-                }
             }
             enum JS: String, CaseIterable {
                 case pagelib
             }
+
+            static var allCases: [Data] {
+                var all: [Data] = []
+                for css in CSS.allCases {
+                    all.append(Data.css(css))
+                }
+                for js in JS.allCases {
+                    all.append(Data.js(js))
+                }
+                return all
+            }
         }
     }
 
-    func mobileAppsServicesArticleCSSURLForArticle(with url: URL, css: MobileAppsServices.Data.CSS, scheme: String) -> URL? {
-        var components = mobileAppsServicesAPIURLComponentsForHost(url.host, appending: ["data", "css", "mobile", css.rawValue])
+    func mobileAppsServicesArticleDataURLForArticle(with url: URL, data: MobileAppsServices.Data, scheme: String) -> URL? {
+        var components = mobileAppsServicesAPIURLComponentsForHost(url.host, appending: ["data", data.rawValue, "mobile", data.associatedRawValue])
         components.scheme = scheme
         return components.url
     }
