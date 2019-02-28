@@ -2,6 +2,7 @@ import Foundation
 
 class ArticleFetcher: Fetcher {
     typealias Resource = Configuration.MobileAppsServices.Page.Resource
+    typealias Data = Configuration.MobileAppsServices.Data
     typealias CSS = Configuration.MobileAppsServices.Data.CSS
     typealias RequestURL = URL
     typealias TemporaryFileURL = URL
@@ -26,35 +27,19 @@ class ArticleFetcher: Fetcher {
         }
 
         session.downloadTask(with: url) { fileURL, response, error in
-            if let error = error {
-                completion(error, url, nil, response?.mimeType)
-                return
-            }
-            guard let fileURL = fileURL, response != nil else {
-                completion(Fetcher.unexpectedResponseError, url, nil, response?.mimeType)
-                return
-            }
-            completion(nil, url, fileURL, response?.mimeType)
+            self.handleDownloadTaskCompletion(url: url, fileURL: fileURL, response: response, error: error, completion: completion)
         }.resume()
     }
 
     // MARK: Data
 
-    func downloadCSS(_ css: CSS, for articleURL: URL, completion: @escaping DownloadCompletion) {
-        guard let url = configuration.mobileAppsServicesArticleCSSURLForArticle(with: articleURL, css: css, scheme: scheme) else {
+    func downloadData(_ data: Data, for articleURL: URL, completion: @escaping DownloadCompletion) {
+        guard let url = configuration.mobileAppsServicesArticleDataURLForArticle(with: articleURL, data: data, scheme: scheme) else {
             completion(Fetcher.invalidParametersError, nil, nil, nil)
             return
         }
         session.downloadTask(with: url) { fileURL, response, error in
-            if let error = error {
-                completion(error, url, nil, response?.mimeType)
-                return
-            }
-            guard let fileURL = fileURL, response != nil else {
-                completion(Fetcher.unexpectedResponseError, nil, url, response?.mimeType)
-                return
-            }
-            completion(nil, url, fileURL, response?.mimeType)
+            self.handleDownloadTaskCompletion(url: url, fileURL: fileURL, response: response, error: error, completion: completion)
         }.resume()
     }
 
@@ -167,17 +152,9 @@ class ArticleFetcher: Fetcher {
         }.resume()
     }
 
-    func downloadImage(_ url: URL, completion: @escaping (Error?, URL?, String?) -> Void) {
+    func downloadImage(_ url: URL, completion: @escaping DownloadCompletion) {
         session.downloadTask(with: url) { fileURL, response, error in
-            if let error = error {
-                completion(error, nil, response?.mimeType)
-                return
-            }
-            guard let fileURL = fileURL, response != nil else {
-                completion(Fetcher.unexpectedResponseError, nil, response?.mimeType)
-                return
-            }
-            completion(nil, fileURL, response?.mimeType)
-            }.resume()
+            self.handleDownloadTaskCompletion(url: url, fileURL: fileURL, response: response, error: error, completion: completion)
+        }.resume()
     }
 }
