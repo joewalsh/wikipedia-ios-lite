@@ -68,6 +68,7 @@ class ArticleCacheController: NSObject {
                     }
                     let cachedFileURL = self.cacheURL.appendingPathComponent(pathComponent, isDirectory: false)
                     do {
+                        #warning("Don't delete files if they're linked to a different group")
                         try self.fileManager.removeItem(at: cachedFileURL)
                         context.delete(cacheItem)
                     } catch let error as NSError {
