@@ -194,32 +194,6 @@ class ArticleCacheController: NSObject {
         }
     }
 
-    enum Result {
-        case alreadyCached
-        case needsFetch
-    }
-
-    func updateCacheGroup(for articleURL: URL, completion: @escaping (Result) -> Void) {
-        let context = backgroundContext
-        context.perform {
-            completion(.needsFetch)
-        }
-    }
-
-    func addCacheItemToCacheGroup(for articleURL: URL, cacheItemKey: String) {
-        let context = backgroundContext
-        context.perform {
-            let cacheGroupKey = CacheGroup.key(for: articleURL)
-            guard
-                let group = self.fetchOrCreateCacheGroup(with: cacheGroupKey, in: context),
-                let item = self.fetchOrCreateCacheItem(with: cacheItemKey, in: context)
-            else {
-                return
-            }
-            group.addToCacheItems(item)
-            self.save(moc: context)
-        }
-    }
 
     func fetchOrCreateCacheGroup(with key: String, in moc: NSManagedObjectContext) -> CacheGroup? {
         return cacheGroup(with: key, in: moc) ?? createCacheGroup(with: key, in: moc)
