@@ -136,8 +136,12 @@ class ArticleFetcher: Fetcher {
                 return
             }
             let decoder = JSONDecoder()
-            let media = try? decoder.decode(Media.self, from: data)
-            completion(nil, media)
+            do {
+                let media = try decoder.decode(Media.self, from: data)
+                completion(nil, media)
+            } catch let error {
+                completion(error, nil)
+            }
         }.resume()
     }
 }
