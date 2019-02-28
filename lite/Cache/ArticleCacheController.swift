@@ -180,6 +180,8 @@ class ArticleCacheController: NSObject {
         return item
     }
 
+    // MARK: Cache items
+
     private func cacheItem(with key: String, in moc: NSManagedObjectContext) -> CacheItem? {
         let fetchRequest: NSFetchRequest<CacheItem> = CacheItem.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "key == %@", key)
@@ -194,6 +196,7 @@ class ArticleCacheController: NSObject {
         }
     }
 
+    // MARK: Fetch or create
 
     func fetchOrCreateCacheGroup(with key: String, in moc: NSManagedObjectContext) -> CacheGroup? {
         return cacheGroup(with: key, in: moc) ?? createCacheGroup(with: key, in: moc)
@@ -202,6 +205,8 @@ class ArticleCacheController: NSObject {
     func fetchOrCreateCacheItem(with key: String, in moc: NSManagedObjectContext) -> CacheItem? {
         return cacheItem(with: key, in: moc) ?? createCacheItem(with: key, in: moc)
     }
+
+    // MARK: Saving context
 
     private func save(moc: NSManagedObjectContext) {
         guard moc.hasChanges else {
