@@ -21,20 +21,20 @@ class ArticleFetcher: Fetcher {
 
     func downloadResource(_ resource: Resource, for articleURL: URL, completion: @escaping DownloadCompletion) {
         guard let url = configuration.mobileAppsServicesArticleResourceURLForArticle(with: articleURL, scheme: scheme, resource: resource) else {
-            completion(Fetcher.invalidParametersError, nil, nil)
+            completion(Fetcher.invalidParametersError, nil, nil, nil)
             return
         }
 
         session.downloadTask(with: url) { fileURL, response, error in
             if let error = error {
-                completion(error, nil, url)
+                completion(error, url, nil, response?.mimeType)
                 return
             }
             guard let fileURL = fileURL, response != nil else {
-                completion(Fetcher.unexpectedResponseError, nil, url)
+                completion(Fetcher.unexpectedResponseError, url, nil, response?.mimeType)
                 return
             }
-            completion(nil, fileURL, url)
+            completion(nil, url, fileURL, response?.mimeType)
         }.resume()
     }
 
