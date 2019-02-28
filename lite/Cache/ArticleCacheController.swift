@@ -151,16 +151,6 @@ class ArticleCacheController: NSObject {
         }
     }
 
-    #warning("TODO: Remove")
-    private func allCacheGroups(in moc: NSManagedObjectContext) -> [CacheGroup] {
-        let fetchRequest: NSFetchRequest<CacheGroup> = CacheGroup.fetchRequest()
-        do {
-            return try moc.fetch(fetchRequest)
-        } catch let error {
-            fatalError(error.localizedDescription)
-        }
-    }
-
     private func createCacheGroup(with key: String, in moc: NSManagedObjectContext) -> CacheGroup? {
         guard let entity = NSEntityDescription.entity(forEntityName: "CacheGroup", in: moc) else {
             return nil
