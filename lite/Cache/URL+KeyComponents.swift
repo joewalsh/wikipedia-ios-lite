@@ -54,11 +54,13 @@ private extension URL {
             return [normalizedHost, imageName, String(imageWidth)]
         } else if isCSSResource {
             switch title {
-            case "site":
+            case "site": // site-specific
                 return [normalizedHost, title, "css"]
-            default:
+            default: // global
                 return [title, "css"]
             }
+        } else if isJSResource { // global
+            return [title, "js"]
         } else {
             return [normalizedHost, title]
         }
@@ -81,6 +83,10 @@ private extension URL {
 
     var isCSSResource: Bool {
         return pathComponents.contains("css")
+    }
+
+    var isJSResource: Bool {
+        return pathComponents.contains("javascript")
     }
 
     var pageResource: String? {
