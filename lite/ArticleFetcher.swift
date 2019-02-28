@@ -144,4 +144,18 @@ class ArticleFetcher: Fetcher {
             }
         }.resume()
     }
+
+    func downloadImage(_ url: URL, completion: @escaping (Error?, URL?, String?) -> Void) {
+        session.downloadTask(with: url) { fileURL, response, error in
+            if let error = error {
+                completion(error, nil, response?.mimeType)
+                return
+            }
+            guard let fileURL = fileURL, response != nil else {
+                completion(Fetcher.unexpectedResponseError, nil, response?.mimeType)
+                return
+            }
+            completion(nil, fileURL, response?.mimeType)
+            }.resume()
+    }
 }
