@@ -52,6 +52,8 @@ class ArticleFetcher: Fetcher {
         }.resume()
     }
 
+    // MARK: Media
+
     struct Media: Decodable {
         let revision: String?
         let tid: String?
