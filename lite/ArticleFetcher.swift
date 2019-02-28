@@ -38,17 +38,23 @@ class ArticleFetcher: Fetcher {
         }.resume()
     }
 
-    func downloadImage(_ url: URL, completion: @escaping (Error?, URL?) -> Void) {
+    // MARK: Data
+
+    func downloadCSS(_ css: CSS, for articleURL: URL, completion: @escaping DownloadCompletion) {
+        guard let url = configuration.mobileAppsServicesArticleCSSURLForArticle(with: articleURL, css: css, scheme: scheme) else {
+            completion(Fetcher.invalidParametersError, nil, nil, nil)
+            return
+        }
         session.downloadTask(with: url) { fileURL, response, error in
             if let error = error {
-                completion(error, nil)
+                completion(error, nil, url, response?.mimeType)
                 return
             }
             guard let fileURL = fileURL, response != nil else {
-                completion(Fetcher.unexpectedResponseError, nil)
+                completion(Fetcher.unexpectedResponseError, nil, url, response?.mimeType)
                 return
             }
-            completion(nil, fileURL)
+            completion(nil, fileURL, url, response?.mimeType)
         }.resume()
     }
 
