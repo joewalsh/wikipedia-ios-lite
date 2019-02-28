@@ -333,7 +333,7 @@ class ArticleCacheController: NSObject {
             group.addToCacheItems(cacheItem)
             save(moc: context)
         } else {
-            self.fetcher.downloadImage(url) { error, temporaryFileURL, mimeType in
+            self.fetcher.downloadImage(url) { error, _, temporaryFileURL, mimeType in
                 guard let temporaryFileURL = temporaryFileURL else {
                     return
                 }
