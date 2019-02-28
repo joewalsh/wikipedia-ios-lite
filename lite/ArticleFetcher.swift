@@ -2,7 +2,11 @@ import Foundation
 
 class ArticleFetcher: Fetcher {
     typealias Resource = Configuration.MobileAppsServices.Page.Resource
-    typealias DownloadCompletion = (Error?, URL?, URL?) -> Void
+    typealias CSS = Configuration.MobileAppsServices.Data.CSS
+    typealias RequestURL = URL
+    typealias TemporaryFileURL = URL
+    typealias MIMEType = String
+    typealias DownloadCompletion = (Error?, RequestURL?, TemporaryFileURL?, MIMEType?) -> Void
 
     private var scheme: String {
         switch Configuration.Stage.current {
