@@ -47,14 +47,14 @@ class ArticleFetcher: Fetcher {
         }
         session.downloadTask(with: url) { fileURL, response, error in
             if let error = error {
-                completion(error, nil, url, response?.mimeType)
+                completion(error, url, nil, response?.mimeType)
                 return
             }
             guard let fileURL = fileURL, response != nil else {
                 completion(Fetcher.unexpectedResponseError, nil, url, response?.mimeType)
                 return
             }
-            completion(nil, fileURL, url, response?.mimeType)
+            completion(nil, url, fileURL, response?.mimeType)
         }.resume()
     }
 
