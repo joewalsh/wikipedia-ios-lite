@@ -128,6 +128,13 @@ class ArticleCacheController: NSObject {
         return viewContext
     }()
 
+    // MARK: Cache groups
+
+    private func cacheGroup(for articleURL: URL, in moc: NSManagedObjectContext) -> CacheGroup? {
+        let key = CacheGroup.key(for: articleURL)
+        return cacheGroup(with: key, in: moc)
+    }
+
     private func cacheGroup(with key: String, in moc: NSManagedObjectContext) -> CacheGroup? {
         let fetchRequest: NSFetchRequest<CacheGroup> = CacheGroup.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "key == %@", key)
@@ -149,11 +156,6 @@ class ArticleCacheController: NSObject {
         } catch let error {
             fatalError(error.localizedDescription)
         }
-    }
-
-    private func cacheGroup(for articleURL: URL, in moc: NSManagedObjectContext) -> CacheGroup? {
-        let key = CacheGroup.key(for: articleURL)
-        return cacheGroup(with: key, in: moc)
     }
 
     private func createCacheGroup(with key: String, in moc: NSManagedObjectContext) -> CacheGroup? {
