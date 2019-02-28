@@ -376,46 +376,52 @@ class ArticleCacheController: NSObject {
 
     #warning("TODO: Check if files/cache items exist before downloading")
     func cacheCSS(for articleURL: URL) {
-        fetcher.downloadCSS(.site, for: articleURL) { error, cssURL, temporaryFileURL, mimeType in
-            if let error = error {
-                assertionFailure(error.localizedDescription)
+        for css in Configuration.MobileAppsServices.Data.CSS.allCases {
+            fetcher.downloadCSS(css, for: articleURL) { error, cssURL, temporaryFileURL, mimeType in
+                self.handleDownloadCSSCompletion(articleURL: articleURL, error: error, cssURL: cssURL, temporaryFileURL: temporaryFileURL, mimeType: mimeType)
+            }
+        }
+    }
+
+    private func handleDownloadCSSCompletion(articleURL: URL, error: Error?, cssURL: URL?, temporaryFileURL: URL?, mimeType: String?) {
+        if let error = error {
+            assertionFailure(error.localizedDescription)
+            return
+        }
+        guard let cssURL = cssURL else {
+            assertionFailure("No cssURL; won't be able to construct cache key")
+            return
+        }
+        guard let temporaryFileURL = temporaryFileURL else {
+            return
+        }
+
+        var createItem = true
+        let key = CacheItem.key(for: cssURL)
+
+        self.moveFile(from: temporaryFileURL, toNewFileWithKey: key, mimeType: mimeType) { result in
+            switch result {
+            case .error(_):
+                createItem = false
+            default:
+                break
+            }
+        }
+
+        let context = self.backgroundContext
+        context.perform {
+            guard createItem else {
                 return
             }
-            guard let cssURL = cssURL else {
-                assertionFailure("No cssURL; won't be able to construct cache key")
-                return
-            }
-            guard let temporaryFileURL = temporaryFileURL else {
+            guard let group = self.fetchOrCreateCacheGroup(with: CacheGroup.key(for: articleURL), in: context) else {
                 return
             }
 
-            var createItem = true
-            let key = CacheItem.key(for: cssURL)
-
-            self.moveFile(from: temporaryFileURL, toNewFileWithKey: key, mimeType: mimeType) { result in
-                switch result {
-                case .error(_):
-                    createItem = false
-                default:
-                    break
-                }
+            guard let item = self.fetchOrCreateCacheItem(with: key, in: context) else {
+                return
             }
-
-            let context = self.backgroundContext
-            context.perform {
-                guard createItem else {
-                    return
-                }
-                guard let group = self.fetchOrCreateCacheGroup(with: CacheGroup.key(for: articleURL), in: context) else {
-                    return
-                }
-
-                guard let item = self.fetchOrCreateCacheItem(with: key, in: context) else {
-                    return
-                }
-                group.addToCacheItems(item)
-                self.save(moc: context)
-            }
+            group.addToCacheItems(item)
+            self.save(moc: context)
         }
     }
 }
