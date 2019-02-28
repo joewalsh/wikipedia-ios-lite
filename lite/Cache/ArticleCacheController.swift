@@ -375,9 +375,19 @@ class ArticleCacheController: NSObject {
 }
 
 extension ArticleCacheController: PermanentlyPersistableURLCacheDelegate {
-    func permanentlyPersistedData(for url: URL) -> Data? {
+    func permanentlyPersistedResponse(for url: URL) -> CachedURLResponse? {
         assert(!Thread.isMainThread)
-        guard let cachedFilePath = fileURL(for: url)?.path else {
+        guard
+            let cachedFilePath = fileURL(for: url)?.path,
+            let data = fileManager.contents(atPath: cachedFilePath)
+        else {
+            print("ArticleCacheController: no persisted data for \(url), returning nil")
+            return nil
+        }
+        let mimeType = fileManager.getValueForExtendedFileAttributeNamed(WMFExtendedFileAttributeNameMIMEType, forFileAtPath: cachedFilePath)
+        let response = URLResponse(url: url, mimeType: mimeType, expectedContentLength: data.count, textEncodingName: nil)
+        return CachedURLResponse(response: response, data: data)
+    }
 private extension FileManager {
     func setValue(_ value: String, forExtendedFileAttributeNamed attributeName: String, forFileAtPath path: String) {
         let attributeNamePointer = (attributeName as NSString).utf8String
