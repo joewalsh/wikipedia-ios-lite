@@ -313,8 +313,27 @@ extension ArticleCacheController: PermanentlyPersistableURLCacheDelegate {
     func permanentlyPersistedData(for url: URL) -> Data? {
         assert(!Thread.isMainThread)
         guard let cachedFilePath = fileURL(for: url)?.path else {
+private extension FileManager {
+    func setValue(_ value: String, forExtendedFileAttributeNamed attributeName: String, forFileAtPath path: String) {
+        let attributeNamePointer = (attributeName as NSString).utf8String
+        let pathPointer = (path as NSString).fileSystemRepresentation
+        let valuePointer = (value as NSString).utf8String
+
+        let result = setxattr(pathPointer, attributeNamePointer, valuePointer, strlen(valuePointer), 0, 0)
+        assert(result != -1)
+    }
+
+    func getValueForExtendedFileAttributeNamed(_ attributeName: String, forFileAtPath path: String) -> String? {
+        let name = (attributeName as NSString).utf8String
+        let path = (path as NSString).fileSystemRepresentation
+
+        let bufferLength = getxattr(path, name, nil, 0, 0, 0)
+
+        guard bufferLength != -1, let buffer = malloc(bufferLength) else {
             return nil
         }
-        return fileManager.contents(atPath: cachedFilePath)
+
+        let readLen = getxattr(path, name, buffer, bufferLength, 0, 0)
+        return String(bytesNoCopy: buffer, length: readLen, encoding: .utf8, freeWhenDone: true)
     }
 }
