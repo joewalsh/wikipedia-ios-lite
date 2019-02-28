@@ -363,12 +363,12 @@ class ArticleCacheController: NSObject {
         }
     }
 
-    // MARK: CSS (Update when real endpoints are available)
+    // MARK: CSS & JS (Update when real endpoints are available)
 
     #warning("TODO: Check if files/cache items exist before downloading")
-    func cacheCSS(for articleURL: URL) {
-        for css in Configuration.MobileAppsServices.Data.CSS.allCases {
-            fetcher.downloadCSS(css, for: articleURL) { error, cssURL, temporaryFileURL, mimeType in
+    func cacheData(for articleURL: URL) {
+        for data in ArticleFetcher.Data.allCases {
+            fetcher.downloadData(data, for: articleURL) { error, cssURL, temporaryFileURL, mimeType in
                 self.handleDownloadCSSCompletion(articleURL: articleURL, error: error, cssURL: cssURL, temporaryFileURL: temporaryFileURL, mimeType: mimeType)
             }
         }
