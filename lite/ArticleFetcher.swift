@@ -17,7 +17,9 @@ class ArticleFetcher: Fetcher {
         }
     }
 
-    func downloadArticleResource(_ resource: Configuration.MobileAppsServices.Page.Resource, for articleURL: URL, completion: @escaping DownloadCompletion) {
+    // MARK: Resources
+
+    func downloadResource(_ resource: Resource, for articleURL: URL, completion: @escaping DownloadCompletion) {
         guard let url = configuration.mobileAppsServicesArticleResourceURLForArticle(with: articleURL, scheme: scheme, resource: resource) else {
             completion(Fetcher.invalidParametersError, nil, nil)
             return
