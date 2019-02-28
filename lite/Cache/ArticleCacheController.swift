@@ -388,6 +388,8 @@ extension ArticleCacheController: PermanentlyPersistableURLCacheDelegate {
         let response = URLResponse(url: url, mimeType: mimeType, expectedContentLength: data.count, textEncodingName: nil)
         return CachedURLResponse(response: response, data: data)
     }
+}
+
 private extension FileManager {
     func setValue(_ value: String, forExtendedFileAttributeNamed attributeName: String, forFileAtPath path: String) {
         let attributeNamePointer = (attributeName as NSString).utf8String
