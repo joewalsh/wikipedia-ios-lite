@@ -149,6 +149,7 @@ class ArticleCacheController: NSObject {
         }
     }
 
+    #warning("TODO: Remove")
     private func allCacheGroups(in moc: NSManagedObjectContext) -> [CacheGroup] {
         let fetchRequest: NSFetchRequest<CacheGroup> = CacheGroup.fetchRequest()
         do {
