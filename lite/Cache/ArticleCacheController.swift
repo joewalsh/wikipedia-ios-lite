@@ -297,9 +297,32 @@ class ArticleCacheController: NSObject {
             completion(.error(error))
         }
     }
+
+    // MARK: Media
+
+    func cacheMedia(for articleURL: URL) {
+        fetcher.getMedia(for: articleURL) { error, media in
+            if let error = error {
+                print("ArticleCacheController: Failed to get media for \(articleURL) because of \(error.localizedDescription)")
+                return
+            }
+            guard
+                let items = media?.items,
+                !items.isEmpty
+            else {
+                return
+            }
+            let context = self.backgroundContext
+            context.perform {
+                for item in items {
+                    if let original = item.original {
+                        self.cacheImage(original, for: articleURL, in: context)
+                    }
+                    if let thumbnail = item.thumbnail {
+                        self.cacheImage(thumbnail, for: articleURL, in: context)
+                    }
                 }
             }
-            self.save(moc: context)
         }
     }
 
