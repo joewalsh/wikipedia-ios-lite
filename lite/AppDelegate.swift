@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         explore.configuration = configuration
         explore.schemeHandler = schemeHandler
         let articleFetcher = ArticleFetcher(session: session, configuration: configuration)
-        let articleCacheController = ArticleCacheController()
+        let articleCacheController = ArticleCacheController(fetcher: articleFetcher)
         persistentURLCache.delegate = articleCacheController
         explore.articlesController = ArticlesController(fetcher: articleFetcher, cacheController: articleCacheController)
         explore.tabBarItem = UITabBarItem(title: "Explore", image: UIImage(named: "explore"), tag: 0)
