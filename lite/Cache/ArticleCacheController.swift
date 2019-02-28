@@ -6,10 +6,11 @@ class ArticleCacheController: NSObject {
 
     let dispatchQueue = DispatchQueue(label: "ArticleCacheControllerDispatchQueue", qos: .default, attributes: [.concurrent], autoreleaseFrequency: .workItem, target: nil)
 
+    let fetcher: ArticleFetcher
     let cacheURL: URL
     let fileManager = FileManager.default
 
-    override init() {
+    init(fetcher: ArticleFetcher) {
         guard
             let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last
         else {
@@ -23,6 +24,7 @@ class ArticleCacheController: NSObject {
         } catch let error {
             fatalError(error.localizedDescription)
         }
+        self.fetcher = fetcher
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(backgroundContextDidSave(_:)), name: NSNotification.Name.NSManagedObjectContextDidSave, object: self.backgroundContext)
         NotificationCenter.default.addObserver(self, selector: #selector(viewContextDidSave), name: NSNotification.Name.NSManagedObjectContextDidSave, object: self.viewContext)
