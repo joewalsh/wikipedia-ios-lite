@@ -219,29 +219,55 @@ class ArticleCacheController: NSObject {
         }
     }
 
-    // MARK: Media
+    // Media: Article resources
 
-    func cacheMedia(_ media: ArticleFetcher.Media, for articleURL: URL, completion: @escaping (URL?, String?) -> Void) {
-        guard let items = media.items, !items.isEmpty else {
-            print("No images to cache for \(articleURL), returning")
-            completion(nil, nil)
-            return
-        }
-        let context = backgroundContext
-        context.perform {
-            let key = CacheGroup.key(for: articleURL)
-            guard let group = self.fetchOrCreateCacheGroup(with: key, in: context) else {
-                assertionFailure("Couldn't fetch or create cache group for \(articleURL)")
-                completion(nil, nil)
+    #warning("TODO: Check if file/cache item exists before downloading")
+    func cacheResource(_ resource: Configuration.MobileAppsServices.Page.Resource, for articleURL: URL) {
+        fetcher.downloadResource(resource, for: articleURL) { error, resourceURL, temporaryFileURL, mimeType in
+            if let error = error {
+                assertionFailure("Failed to download resource for \(articleURL); \(error.localizedDescription)")
+                return
+            }
+            guard let temporaryFileURL = temporaryFileURL else {
+                assertionFailure("Failed to download the contents of \(articleURL)")
                 return
             }
 
-            for item in items {
-                if let (url, key) = self.cacheImage(item.original, with: item.titles, includeWidth: false, group: group, in: context) {
-                    completion(url, key)
+            guard let resourceURL = resourceURL else {
+                assertionFailure("Failed to get resourceURL needed to construct cache item key")
+                return
+            }
+
+            var createItem = true
+            let key = CacheItem.key(for: resourceURL)
+
+            self.moveFile(from: temporaryFileURL, toNewFileWithKey: key, mimeType: mimeType) { result in
+                switch result {
+                case .error(_):
+                    createItem = false
+                default:
+                    break
                 }
-                if let (url, key) = self.cacheImage(item.thumbnail, with: item.titles, includeWidth: true, group: group, in: context) {
-                    completion(url, key)
+            }
+
+            let context = self.backgroundContext
+            context.perform {
+                guard createItem else {
+                    return
+                }
+                guard let group = self.fetchOrCreateCacheGroup(with: CacheGroup.key(for: articleURL), in: context) else {
+                    return
+                }
+
+                guard let item = self.fetchOrCreateCacheItem(with: key, in: context) else {
+                    return
+                }
+                group.addToCacheItems(item)
+                self.save(moc: context)
+            }
+        }
+    }
+
     // MARK: Moving files
 
     private enum FileMoveResult {
