@@ -133,7 +133,7 @@ class ArticleFetcher: Fetcher {
                 return
             }
             guard response.statusCode == 200 else {
-                assertionFailure("Expected 200 status code, got \(response.statusCode)")
+                print("Expected 200 status code, got \(response.statusCode)")
                 completion(Fetcher.unexpectedResponseError, nil)
                 return
             }
