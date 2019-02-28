@@ -326,26 +326,50 @@ class ArticleCacheController: NSObject {
         }
     }
 
-    private func cacheImage(_ image: ArticleFetcher.Media.Item.Image?, with titles: ArticleFetcher.Media.Item.Titles?, includeWidth: Bool, group: CacheGroup, in moc: NSManagedObjectContext) -> (URL, String)? {
+    private func cacheImage(_ image: ArticleFetcher.Media.Item.Image, for articleURL: URL, in context: NSManagedObjectContext) {
         guard
-            let image = image,
             let source = image.source,
-            let url = URL(string: source)
+            let url = URL(string: source),
+            let group = self.fetchOrCreateCacheGroup(with: CacheGroup.key(for: articleURL), in: context)
         else {
-            assertionFailure("Couldn't cache image; image is nil or some properties are missing")
-            return nil
+            return
         }
 
         let key = CacheItem.key(for: url)
 
-        if let item = self.cacheItem(with: key, in: moc) {
-            item.addToCacheGroups(group)
-            return nil
-        } else if let item = self.createCacheItem(with: key, in: moc) {
-            item.addToCacheGroups(group)
-            return (url, key)
+        if let cacheItem = cacheItem(with: key, in: context) {
+            group.addToCacheItems(cacheItem)
+            save(moc: context)
         } else {
-            return nil
+            self.fetcher.downloadImage(url) { error, temporaryFileURL, mimeType in
+                guard let temporaryFileURL = temporaryFileURL else {
+                    return
+                }
+
+                var createItem = true
+
+                self.moveFile(from: temporaryFileURL, toNewFileWithKey: key, mimeType: mimeType) { result in
+                    switch result {
+                    case .error(let error):
+                        createItem = false
+                        print("Error moving file: \(error.localizedDescription)")
+                    default:
+                        break
+                    }
+                }
+
+                guard createItem else {
+                    return
+                }
+                guard let item = self.fetchOrCreateCacheItem(with: key, in: context) else {
+                    return
+                }
+
+                group.addToCacheItems(item)
+                self.save(moc: context)
+            }
+        }
+    }
         }
     }
 }
