@@ -217,7 +217,7 @@ class ArticleCacheController: NSObject {
     func cacheResource(_ resource: Configuration.MobileAppsServices.Page.Resource, for articleURL: URL) {
         fetcher.downloadResource(resource, for: articleURL) { error, resourceURL, temporaryFileURL, mimeType in
             if let error = error {
-                assertionFailure("Failed to download resource for \(articleURL); \(error.localizedDescription)")
+                print("Failed to download resource for \(articleURL); \(error.localizedDescription)")
                 return
             }
             guard let temporaryFileURL = temporaryFileURL else {
