@@ -115,6 +115,26 @@ public class Configuration: NSObject {
                 case sections = "mobile-sections"
             }
         }
+        struct Data {
+            enum CSS: String, CaseIterable {
+                case site
+                case base
+                case pagelib
+
+                var isGlobal: Bool {
+                    return self != .site
+                }
+            }
+            enum JS: String, CaseIterable {
+                case pagelib
+            }
+        }
+    }
+
+    func mobileAppsServicesArticleCSSURLForArticle(with url: URL, css: MobileAppsServices.Data.CSS, scheme: String) -> URL? {
+        var components = mobileAppsServicesAPIURLComponentsForHost(url.host, appending: ["data", "css", "mobile", css.rawValue])
+        components.scheme = scheme
+        return components.url
     }
     
     func mobileAppsServicesArticleResourceURLForArticle(with url: URL, scheme: String, resource: MobileAppsServices.Page.Resource) -> URL? {
