@@ -22,7 +22,7 @@ final class ArticlesController: NSObject {
             cacheController.cacheResource(.references, for: articleURL)
             cacheController.cacheResource(.sections, for: articleURL)
             cacheController.cacheMedia(for: articleURL)
-            cacheController.cacheCSS(for: articleURL)
+            cacheController.cacheData(for: articleURL)
         }
     }
 }
