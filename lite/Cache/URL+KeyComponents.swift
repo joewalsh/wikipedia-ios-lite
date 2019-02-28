@@ -52,6 +52,13 @@ private extension URL {
             return [normalizedHost, pageResource, title]
         } else if host == "upload.wikimedia.org", let imageName = imageName, let imageWidth = imageWidth {
             return [normalizedHost, imageName, String(imageWidth)]
+        } else if isCSSResource {
+            switch title {
+            case "site":
+                return [normalizedHost, title, "css"]
+            default:
+                return [title, "css"]
+            }
         } else {
             return [normalizedHost, title]
         }
@@ -72,6 +79,10 @@ private extension URL {
         return pathComponent(at: pathComponents.indices.endIndex - 3) == "page"
     }
 
+    var isCSSResource: Bool {
+        return pathComponents.contains("css")
+    }
+
     var pageResource: String? {
         guard isPageResource else {
             return nil
@@ -79,8 +90,9 @@ private extension URL {
         return pathComponent(at: pathComponents.indices.endIndex - 2)
     }
 
+    #warning("TODO: Update to use logic from WMFImageURLParsing")
     var imageWidth: UInt? {
-        guard host == "upload.wikimedia.org" else {
+        guard isImage else {
             return nil
         }
         guard pathComponents.contains("thumb") else {
@@ -94,7 +106,7 @@ private extension URL {
     }
 
     var imageName: String? {
-        guard host == "upload.wikimedia.org" else {
+        guard isImage else {
             return nil
         }
         if let pxRange = lastPathComponent.range(of: "px-") {
@@ -102,5 +114,9 @@ private extension URL {
         } else {
             return lastPathComponent
         }
+    }
+
+    var isImage: Bool {
+        return host == "upload.wikimedia.org"
     }
 }
