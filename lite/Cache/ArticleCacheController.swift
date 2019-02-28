@@ -110,7 +110,9 @@ class ArticleCacheController: NSObject {
         return container
     }()
 
-    // write only
+
+    // MARK: Background context - write only
+
     private lazy var backgroundContext: NSManagedObjectContext = {
         let backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         backgroundContext.parent = viewContext
@@ -118,7 +120,9 @@ class ArticleCacheController: NSObject {
         return backgroundContext
     }()
 
-    // read only
+
+    // MARK: View context - read only
+
     private lazy var viewContext: NSManagedObjectContext = {
         let viewContext = persistentContainer.viewContext
         return viewContext
