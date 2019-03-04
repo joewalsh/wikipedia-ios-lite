@@ -60,7 +60,7 @@ class ArticleCacheController: NSObject {
                     assertionFailure("Cache group for \(articleURL) has no cache items")
                     return
                 }
-                for cacheItem in cacheItems {
+                for cacheItem in cacheItems where cacheItem.cacheGroups?.count == 1 {
                     let key = cacheItem.key
                     guard let pathComponent = key?.sha256() ?? key else {
                         assertionFailure("cacheItem has no key")
@@ -68,7 +68,6 @@ class ArticleCacheController: NSObject {
                     }
                     let cachedFileURL = self.cacheURL.appendingPathComponent(pathComponent, isDirectory: false)
                     do {
-                        #warning("Don't delete files if they're linked to a different group")
                         try self.fileManager.removeItem(at: cachedFileURL)
                         context.delete(cacheItem)
                     } catch let error as NSError {
@@ -79,7 +78,6 @@ class ArticleCacheController: NSObject {
                         }
                     }
                 }
-                // TODO: check if items were really deleted
                 context.delete(group)
                 self.save(moc: context)
             }
