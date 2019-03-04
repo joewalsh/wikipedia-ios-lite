@@ -114,7 +114,7 @@ private extension URL {
 
     #warning("TODO: Update to use logic from WMFImageURLParsing")
     var imageWidth: UInt? {
-        guard isImage else {
+        guard isImageURL else {
             return nil
         }
         guard pathComponents.contains("thumb") else {
@@ -126,8 +126,10 @@ private extension URL {
         let width = lastPathComponent[..<pxRange.lowerBound]
         return UInt(width)
     }
+}
 
-    var isImage: Bool {
+extension URL {
+    var isImageURL: Bool {
         return host == "upload.wikimedia.org"
     }
 }
