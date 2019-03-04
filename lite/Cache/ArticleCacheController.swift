@@ -92,8 +92,7 @@ class ArticleCacheController: NSObject {
 
     func isCached(_ articleURL: URL) -> Bool {
         assert(Thread.isMainThread)
-        let isCached = cacheGroup(for: articleURL, in: viewContext) != nil
-        return isCached
+        return cacheGroup(for: articleURL, in: viewContext) != nil
     }
 
     private lazy var persistentContainer: NSPersistentContainer = {
