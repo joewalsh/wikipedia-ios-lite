@@ -90,8 +90,8 @@ class ArticleCacheController: NSObject {
         return fileURL(for: url)?.path
     }
 
-    private func fileURL(for url: URL) -> URL? {
-        let key = CacheItem.key(for: url)
+    private func fileURL(for url: URL, includingVariantIfAvailable: Bool = true) -> URL? {
+        let key = CacheItem.key(for: url, includingVariantIfAvailable: includingVariantIfAvailable)
         let pathComponent = key.sha256() ?? key
         return cacheURL.appendingPathComponent(pathComponent, isDirectory: false)
     }
