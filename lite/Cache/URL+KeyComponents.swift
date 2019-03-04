@@ -96,6 +96,17 @@ private extension URL {
         return pathComponent(at: pathComponents.indices.endIndex - 2)
     }
 
+    var imageName: String? {
+        guard isImageURL else {
+            return nil
+        }
+        if let pxRange = lastPathComponent.range(of: "px-") {
+            return String(lastPathComponent[pxRange.upperBound..<lastPathComponent.endIndex])
+        } else {
+            return lastPathComponent
+        }
+    }
+
     #warning("TODO: Update to use logic from WMFImageURLParsing")
     var imageWidth: UInt? {
         guard isImage else {
@@ -109,17 +120,6 @@ private extension URL {
         }
         let width = lastPathComponent[..<pxRange.lowerBound]
         return UInt(width)
-    }
-
-    var imageName: String? {
-        guard isImage else {
-            return nil
-        }
-        if let pxRange = lastPathComponent.range(of: "px-") {
-            return String(lastPathComponent[pxRange.upperBound..<lastPathComponent.endIndex])
-        } else {
-            return lastPathComponent
-        }
     }
 
     var isImage: Bool {
