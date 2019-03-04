@@ -35,7 +35,7 @@ private extension URL {
         return pathComponents[index]
     }
 
-    var keyComponents: [String]? {
+    func keyComponents(includingVariant: Bool = true) -> [String]? {
         guard let title = pathComponents.last?.precomposedStringWithCanonicalMapping else {
             assertionFailure("Can't create key components without a title")
             return nil
@@ -48,10 +48,15 @@ private extension URL {
             assertionFailure("Can't create key components without a normalized host")
             return nil
         }
+
         if let pageResource = pageResource {
             return [normalizedHost, pageResource, title]
-        } else if host == "upload.wikimedia.org", let imageName = imageName, let imageWidth = imageWidth {
-            return [normalizedHost, imageName, String(imageWidth)]
+        } else if isImageURL, let imageName = imageName {
+            if includingVariant, let imageWidth = imageWidth {
+                return [normalizedHost, imageName, String(imageWidth)]
+            } else {
+                return [normalizedHost, imageName]
+            }
         } else if isCSSResource {
             switch title {
             case "site": // site-specific
