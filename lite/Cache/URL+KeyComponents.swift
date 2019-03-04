@@ -2,7 +2,7 @@ import Foundation
 
 extension CacheGroup {
     static func key(for url: URL) -> String {
-        guard let keyComponents = url.keyComponents else {
+        guard let keyComponents = url.keyComponents() else {
             return url.absoluteString.precomposedStringWithCanonicalMapping
         }
         let keyComponentsCount = keyComponents.count
