@@ -19,8 +19,8 @@ extension CacheGroup {
 }
 
 extension CacheItem {
-    static func key(for url: URL) -> String {
-        guard let keyComponents = url.keyComponents else {
+    static func key(for url: URL, includingVariantIfAvailable includingVariant: Bool = true) -> String {
+        guard let keyComponents = url.keyComponents(includingVariant: includingVariant) else {
             return url.absoluteString.precomposedStringWithCanonicalMapping
         }
         return keyComponents.joined(separator: "__")
