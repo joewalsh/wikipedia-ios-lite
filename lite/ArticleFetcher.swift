@@ -18,6 +18,8 @@ class ArticleFetcher: Fetcher {
         }
     }
 
+    #warning("Add a method to fetch the latest version of article")
+
     // MARK: Resources
 
     func downloadResource(_ resource: Resource, for articleURL: URL, completion: @escaping DownloadCompletion) {
