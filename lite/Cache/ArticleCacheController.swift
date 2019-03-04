@@ -266,9 +266,9 @@ class ArticleCacheController: NSObject {
         case error(Error)
     }
 
-    private func moveFile(from fileURL: URL, toNewFileWithKey key: String, hashed: Bool = true, mimeType: String?, completion: @escaping (FileMoveResult) -> Void) {
+    private func moveFile(from fileURL: URL, toNewFileWithKey key: String, mimeType: String?, completion: @escaping (FileMoveResult) -> Void) {
         do {
-            let pathComponent = hashed ? key.sha256() ?? key : key
+            let pathComponent = key.sha256() ?? key
             let newFileURL = cacheURL.appendingPathComponent(pathComponent, isDirectory: false)
             try self.fileManager.moveItem(at: fileURL, to: newFileURL)
             if let mimeType = mimeType {
