@@ -428,6 +428,9 @@ extension ArticleCacheController: PermanentlyPersistableURLCacheDelegate {
             return nil
         }
         let mimeType = fileManager.getValueForExtendedFileAttributeNamed(WMFExtendedFileAttributeNameMIMEType, forFileAtPath: cachedFilePath)
+
+    private func cachedURLResponse(for url: URL, with data: Data, at filePath: String) -> CachedURLResponse {
+        let mimeType = fileManager.getValueForExtendedFileAttributeNamed(WMFExtendedFileAttributeNameMIMEType, forFileAtPath: filePath)
         let response = URLResponse(url: url, mimeType: mimeType, expectedContentLength: data.count, textEncodingName: nil)
         return CachedURLResponse(response: response, data: data)
     }
