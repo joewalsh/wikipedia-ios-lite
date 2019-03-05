@@ -52,6 +52,7 @@ class ArticleCacheController: NSObject {
         let context = backgroundContext
         dispatchQueue.async(flags: .barrier) {
             context.perform {
+                self.fetcher.cancelAllTasks(forGroupWithKey: articleURL.key)
                 guard let group = self.cacheGroup(for: articleURL, in: context) else {
                     assertionFailure("Cache group for \(articleURL) doesn't exist")
                     return
