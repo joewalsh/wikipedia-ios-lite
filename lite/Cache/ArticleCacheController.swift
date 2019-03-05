@@ -153,6 +153,8 @@ class ArticleCacheController: NSObject {
 
     private lazy var viewContext: NSManagedObjectContext = {
         let viewContext = persistentContainer.viewContext
+        viewContext.automaticallyMergesChangesFromParent = true
+        viewContext.mergePolicy = NSMergeByPropertyStoreTrumpMergePolicy
         return viewContext
     }()
 
