@@ -28,17 +28,9 @@ class ArticleCacheController: NSObject {
         self.fetcher = fetcher
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(backgroundContextDidSave(_:)), name: NSNotification.Name.NSManagedObjectContextDidSave, object: self.backgroundContext)
-        NotificationCenter.default.addObserver(self, selector: #selector(viewContextDidSave), name: NSNotification.Name.NSManagedObjectContextDidSave, object: self.viewContext)
     }
 
     @objc private func backgroundContextDidSave(_ notification: NSNotification) {
-        let context = viewContext
-        context.performAndWait {
-            self.save(moc: context)
-        }
-    }
-
-    @objc private func viewContextDidSave(_ notification: NSNotification) {
         self.postArticleCacheUpdatedNotification()
     }
 
@@ -66,7 +58,6 @@ class ArticleCacheController: NSObject {
                 self.deleteAllCacheEntities(in: context)
                 self.save(moc: context)
                 URLCache.shared.removeAllCachedResponses()
-                self.postArticleCacheUpdatedNotification()
             }
         }
     }
@@ -153,9 +144,7 @@ class ArticleCacheController: NSObject {
     // MARK: Background context - write only
 
     private lazy var backgroundContext: NSManagedObjectContext = {
-        let backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        backgroundContext.parent = viewContext
-        backgroundContext.mergePolicy = NSMergePolicy.mergeByPropertyStoreTrump
+        let backgroundContext = persistentContainer.newBackgroundContext()
         return backgroundContext
     }()
 
