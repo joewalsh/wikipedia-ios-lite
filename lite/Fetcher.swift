@@ -16,7 +16,7 @@ open class Fetcher: NSObject {
 
     public typealias CancellationKey = String
     
-    private var tasks = [String: URLSessionTask]()
+    private var tasks = [String: [String: URLSessionTask]]()
     private let semaphore = DispatchSemaphore.init(value: 1)
     
     @objc required public init(session: Session, configuration: Configuration) {
@@ -24,36 +24,60 @@ open class Fetcher: NSObject {
         self.configuration = configuration
     }
     
-    @objc(trackTask:forKey:)
-    public func track(task: URLSessionTask?, for key: String) {
+    @objc(trackTask:forGroupWithKey:withKey:)
+    public func track(task: URLSessionTask?, forGroupWithKey groupKey: String, taskKey: String) {
         guard let task = task else {
             return
         }
         semaphore.wait()
-        tasks[key] = task
+        if tasks[groupKey] == nil {
+            tasks[groupKey] = [taskKey: task]
+        } else {
+            var group = tasks[groupKey]
+            group?[taskKey] = task
+        }
+        print("Started tracking task for key: \(taskKey) in group with key: \(groupKey)")
         semaphore.signal()
     }
     
-    @objc(untrackTaskForKey:)
-    public func untrack(taskFor key: String) {
+    @objc(untrackTaskForGroupWithKey:taskKey:)
+    public func untrack(taskForGroupWithKey groupKey: String, taskKey: String) {
         semaphore.wait()
-        tasks.removeValue(forKey: key)
+        var group = tasks[groupKey]
+        group?.removeValue(forKey: taskKey)
+        semaphore.signal()
+    }
+
+    public func cancelAllTasks(forGroupWithKey groupKey: String) {
+        semaphore.wait()
+        guard let group = tasks[groupKey] else {
+            semaphore.signal()
+            return
+        }
+        print("Cancelling tasks for \(groupKey)")
+        for (_, task) in group {
+            task.cancel()
+        }
+        tasks.removeValue(forKey: groupKey)
         semaphore.signal()
     }
     
-    @objc(cancelTaskForKey:)
-    public func cancel(taskFor key: String) {
+    @objc(cancelTaskForGroupWithKey:taskKey:)
+    public func cancel(taskForGroupWithKey groupKey: String, taskKey: String) {
         semaphore.wait()
-        tasks[key]?.cancel()
-        tasks.removeValue(forKey: key)
+        var group = tasks[groupKey]
+        group?[taskKey]?.cancel()
+        group?.removeValue(forKey: taskKey)
         semaphore.signal()
     }
     
     @objc(cancelAllTasks)
     public func cancelAllTasks() {
         semaphore.wait()
-        for (_, task) in tasks {
-            task.cancel()
+        for values in tasks.values {
+            for (_, task) in values {
+                task.cancel()
+            }
         }
         tasks.removeAll(keepingCapacity: true)
         semaphore.signal()
