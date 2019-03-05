@@ -43,11 +43,15 @@ extension SchemeHandler: WKURLSchemeHandler {
             if let error = error {
                 urlSchemeTask.didFailWithError(error)
             } else if let response = response {
-                urlSchemeTask.didReceive(response)
-                if let data = data {
-                    urlSchemeTask.didReceive(data)
+                if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
+                    urlSchemeTask.didFailWithError(Fetcher.unexpectedResponseError)
+                } else {
+                    urlSchemeTask.didReceive(response)
+                    if let data = data {
+                        urlSchemeTask.didReceive(data)
+                    }
+                    urlSchemeTask.didFinish()
                 }
-                urlSchemeTask.didFinish()
             } else {
                 urlSchemeTask.didFailWithError(Fetcher.unexpectedResponseError)
             }
