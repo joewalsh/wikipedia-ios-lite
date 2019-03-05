@@ -476,6 +476,7 @@ extension ArticleCacheController: PermanentlyPersistableURLCacheDelegate {
         if let cachedFilePath = fileURL(for: url)?.path, let data = fileManager.contents(atPath: cachedFilePath) {
             return cachedURLResponse(for: url, with: data, at: cachedFilePath)
         } else if url.isImageURL, let cachedFilePath = fileURL(for: url, includingVariantIfAvailable: false)?.path, let data = fileManager.contents(atPath: cachedFilePath) {
+            #warning("Don't fall back on the original")
             return cachedURLResponse(for: url, with: data, at: cachedFilePath)
         } else {
             return nil
