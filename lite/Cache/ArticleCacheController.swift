@@ -48,6 +48,49 @@ class ArticleCacheController: NSObject {
         }
     }
 
+    func clearAll() {
+        let context = backgroundContext
+        dispatchQueue.async(flags: .barrier) {
+            context.perform {
+                self.fetcher.cancelAllTasks()
+                if let urls = try? self.fileManager.contentsOfDirectory(at: self.cacheURL, includingPropertiesForKeys: [.nameKey, .isDirectoryKey], options: .skipsHiddenFiles) {
+                    for url in urls {
+                        do {
+                            try self.fileManager.removeItem(at: url)
+                            print("Removed file at: \(url)")
+                        } catch let error {
+                            print("Failed to remove file at: \(url); \(error.localizedDescription)")
+                        }
+                    }
+                }
+                self.deleteAllCacheEntities(in: context)
+                self.save(moc: context)
+                URLCache.shared.removeAllCachedResponses()
+                self.postArticleCacheUpdatedNotification()
+            }
+        }
+    }
+    private func deleteAllCacheEntities(in context: NSManagedObjectContext) {
+        performBatchDeleteRequest(for: CacheGroup.fetchRequest(), in: context)
+        performBatchDeleteRequest(for: CacheItem.fetchRequest(), in: context)
+    }
+
+    private func performBatchDeleteRequest(for fetchRequest: NSFetchRequest<NSFetchRequestResult>, in context: NSManagedObjectContext) {
+        let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        batchDeleteRequest.resultType = .resultTypeObjectIDs
+        do {
+            let result = try context.execute(batchDeleteRequest) as? NSBatchDeleteResult
+            guard let deletedObjectIDs = result?.result as? [NSManagedObjectID] else {
+                return
+            }
+            let changes = [NSDeletedObjectsKey: deletedObjectIDs]
+            NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [context])
+        } catch let error {
+            #warning("TODO: Handle error")
+            assertionFailure("Batch delete failed with error: \(error)")
+        }
+    }
+
     func removeCachedArticle(with articleURL: URL) {
         let context = backgroundContext
         dispatchQueue.async(flags: .barrier) {
