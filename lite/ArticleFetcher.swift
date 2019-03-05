@@ -29,7 +29,7 @@ class ArticleFetcher: Fetcher {
         }
 
         let task = session.downloadTask(with: url) { fileURL, response, error in
-            self.handleDownloadTaskCompletion(url: url, fileURL: fileURL, response: response, error: error, completion: completion)
+            self.handleDownloadTaskCompletion(articleURL: articleURL, url: url, fileURL: fileURL, response: response, error: error, completion: completion)
         }
         track(task: task, forGroupWithKey: articleURL.key, taskKey: url.key)
         task.resume()
@@ -43,22 +43,25 @@ class ArticleFetcher: Fetcher {
             return
         }
         let task = session.downloadTask(with: url) { fileURL, response, error in
-            self.handleDownloadTaskCompletion(url: url, fileURL: fileURL, response: response, error: error, completion: completion)
+            self.handleDownloadTaskCompletion(articleURL: articleURL, url: url, fileURL: fileURL, response: response, error: error, completion: completion)
         }
         track(task: task, forGroupWithKey: articleURL.key, taskKey: url.key)
         task.resume()
     }
 
-    private func handleDownloadTaskCompletion(url: URL, fileURL: URL?, response: URLResponse?, error: Error?, completion: @escaping DownloadCompletion) {
+    private func handleDownloadTaskCompletion(articleURL: URL, url: URL, fileURL: URL?, response: URLResponse?, error: Error?, completion: @escaping DownloadCompletion) {
         if let error = error {
+            self.untrack(taskForGroupWithKey: articleURL.key, taskKey: url.key)
             completion(error, url, nil, nil)
             return
         }
         guard let fileURL = fileURL, let response = response else {
+            self.untrack(taskForGroupWithKey: articleURL.key, taskKey: url.key)
             completion(Fetcher.unexpectedResponseError, url, nil, nil)
             return
         }
         if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
+            self.untrack(taskForGroupWithKey: articleURL.key, taskKey: url.key)
             completion(Fetcher.unexpectedResponseError, url, nil, nil)
             return
         }
@@ -167,7 +170,7 @@ class ArticleFetcher: Fetcher {
 
     func downloadImage(_ url: URL, forArticleWithURL articleURL: URL, completion: @escaping DownloadCompletion) {
         let task = session.downloadTask(with: url) { fileURL, response, error in
-            self.handleDownloadTaskCompletion(url: url, fileURL: fileURL, response: response, error: error, completion: completion)
+            self.handleDownloadTaskCompletion(articleURL: articleURL, url: url, fileURL: fileURL, response: response, error: error, completion: completion)
         }
         track(task: task, forGroupWithKey: articleURL.key, taskKey: url.key)
         task.resume()
