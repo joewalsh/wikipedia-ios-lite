@@ -40,6 +40,9 @@ class ExploreTableViewController: UITableViewController {
     }()
 
     private func article(at indexPath: IndexPath) -> Article? {
+        guard articles.indices.contains(indexPath.row) else {
+            return nil
+        }
         return articles[indexPath.row]
     }
 
@@ -48,24 +51,28 @@ class ExploreTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return articles.count
+        return articles.count + 1
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
-        let article = self.article(at: indexPath)
-        cell.textLabel?.text = article?.title
-        let saveButton = UIButton()
-        if let articleURL = article?.url {
+        if let article = self.article(at: indexPath) {
+            cell.textLabel?.text = article.title
+            let saveButton = UIButton()
             let isCached = cacheController.isCached(article.url)
             let imageName = isCached ? "save-filled" : "save"
             saveButton.setImage(UIImage(named: imageName), for: .normal)
+            saveButton.imageView?.contentMode = .scaleAspectFit
+            saveButton.tag = indexPath.row
+            saveButton.addTarget(self, action: #selector(toggleArticleSavedState), for: .touchUpInside)
+            saveButton.sizeToFit()
+            cell.accessoryView = saveButton
+        } else {
+            cell.textLabel?.textAlignment = .center
+            cell.textLabel?.text = "Clear cache 🔥"
+            cell.textLabel?.textColor = UIColor.white
+            cell.backgroundColor = UIColor.red
         }
-        saveButton.imageView?.contentMode = .scaleAspectFit
-        saveButton.tag = indexPath.row
-        saveButton.addTarget(self, action: #selector(toggleArticleSavedState), for: .touchUpInside)
-        saveButton.sizeToFit()
-        cell.accessoryView = saveButton
         return cell
     }
 
@@ -75,16 +82,17 @@ class ExploreTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let articleURL = article(at: indexPath)?.url else {
-            return
+        if let articleURL = article(at: indexPath)?.url {
+            let webViewConfiguration = WKWebViewConfiguration()
+            webViewConfiguration.setURLSchemeHandler(schemeHandler, forURLScheme: schemeHandler.scheme)
+            let articleMobileHTMLURL = configuration.mobileAppsServicesArticleResourceURLForArticle(with: articleURL, scheme: schemeHandler.scheme, resource: .mobileHTML)!
+            let webViewController = WebViewController(url: articleMobileHTMLURL, configuration: webViewConfiguration)
+
+            let navigationController = UINavigationController(rootViewController: webViewController)
+            present(navigationController, animated: true)
+        } else {
+            cacheController.clearAll()
         }
-
-        let webViewConfiguration = WKWebViewConfiguration()
-        webViewConfiguration.setURLSchemeHandler(schemeHandler, forURLScheme: schemeHandler.scheme)
-        let articleMobileHTMLURL = configuration.mobileAppsServicesArticleResourceURLForArticle(with: articleURL, scheme: schemeHandler.scheme, resource: .mobileHTML)!
-        let webViewController = WebViewController(url: articleMobileHTMLURL, configuration: webViewConfiguration)
-
-        let navigationController = UINavigationController(rootViewController: webViewController)
-        present(navigationController, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
