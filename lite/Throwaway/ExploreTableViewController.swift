@@ -1,6 +1,10 @@
 import UIKit
 import WebKit
 
+private protocol Item {
+    var title: String { get }
+}
+
 class ExploreTableViewController: UITableViewController {
     private let reuseIdentifier = "👻"
 
@@ -8,17 +12,28 @@ class ExploreTableViewController: UITableViewController {
     var schemeHandler: SchemeHandler!
     var cacheController: ArticleCacheController!
 
+    var collapseTablesPreferenceObservation: NSKeyValueObservation?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
         NotificationCenter.default.addObserver(self, selector: #selector(articleCacheWasUpdated(_:)), name: ArticleCacheController.articleCacheWasUpdatedNotification, object: nil)
+
+        collapseTablesPreferenceObservation = UserDefaults.standard.observe(\.collapseTables, options: [.new]) { defaults, change in
+            self.tableView.reloadSections([SectionType.preferences.rawValue], with: .automatic)
+        }
+    }
+
+    deinit {
+        collapseTablesPreferenceObservation?.invalidate()
+        collapseTablesPreferenceObservation = nil
     }
 
     @objc private func articleCacheWasUpdated(_ notification: Notification) {
         tableView.reloadData()
     }
 
-    private struct Article {
+    private struct Article: Item {
         let title: String
         let url: URL
 
@@ -28,35 +43,90 @@ class ExploreTableViewController: UITableViewController {
             self.url = URL(string: urlString)!
         }
     }
-        
-    private lazy var articles: [Article] = {
-        return [
+
+    private struct Preference: Item {
+        let title: String
+        let titleColor: UIColor
+        let accessoryType: UITableViewCell.AccessoryType
+        let onSelection: () -> Void
+    }
+
+    enum SectionType: Int {
+        case article
+        case preferences
+    }
+
+    private struct Section {
+        let title: String?
+        let items: [Item]
+    }
+
+    private lazy var articleSection: Section = {
+        let articles = [
             Article(title: "Dog"),
             Article(title: "Wolf"),
             Article(title: "Cat"),
             Article(title: "Panda"),
             Article(title: "Unicorn")
         ]
+        return Section(title: nil, items: articles)
     }()
 
-    private func article(at indexPath: IndexPath) -> Article? {
-        guard articles.indices.contains(indexPath.row) else {
+    private var preferencesSection: Section {
+        let preferences = [
+            Preference(
+                title: "Clear cache",
+                titleColor: UIColor.red,
+                accessoryType: .none,
+                onSelection: { self.cacheController.clearAll() }),
+            Preference(
+                title: "Collapse tables",
+                titleColor: UIColor.black,
+                accessoryType: UserDefaults.standard.collapseTables ? .checkmark : .none,
+                onSelection: { UserDefaults.standard.collapseTables = !UserDefaults.standard.collapseTables }),
+            ]
+        return Section(title: "Preferences", items: preferences)
+    }
+
+    private var sections: [Section] {
+        var sections = [Section]()
+        sections.insert(articleSection, at: SectionType.article.rawValue)
+        sections.insert(preferencesSection, at: SectionType.preferences.rawValue)
+        return sections
+    }
+
+    private func item(at indexPath: IndexPath) -> Item? {
+        guard sections.indices.contains(indexPath.section) else {
             return nil
         }
-        return articles[indexPath.row]
+        let section = sections[indexPath.section]
+        guard section.items.indices.contains(indexPath.row) else {
+            return nil
+        }
+        return section.items[indexPath.row]
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return sections.count
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return articles.count + 1
+        return sections[section].items.count
+    }
+
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let section = sections[section]
+        return section.title
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
-        if let article = self.article(at: indexPath) {
+        guard let item = item(at: indexPath) else {
+            assertionFailure("No item at indexPath: \(indexPath)")
+            return cell
+        }
+        switch item {
+        case let article as Article:
             cell.textLabel?.text = article.title
             let saveButton = UIButton()
             let isCached = cacheController.isCached(article.url)
@@ -67,31 +137,46 @@ class ExploreTableViewController: UITableViewController {
             saveButton.addTarget(self, action: #selector(toggleArticleSavedState), for: .touchUpInside)
             saveButton.sizeToFit()
             cell.accessoryView = saveButton
-        } else {
-            cell.textLabel?.textAlignment = .center
-            cell.textLabel?.text = "Clear cache 🔥"
-            cell.textLabel?.textColor = UIColor.white
-            cell.backgroundColor = UIColor.red
+        case let preference as Preference:
+            cell.textLabel?.text = preference.title
+            cell.textLabel?.textColor = preference.titleColor
+            cell.accessoryType = preference.accessoryType
+        default:
+            assertionFailure("Unhandled type: \(item)")
+            break
         }
         return cell
     }
 
     @objc private func toggleArticleSavedState(_ sender: UIButton) {
-        let articleURL = articles[sender.tag].url
-        cacheController.toggleCache(for: articleURL)
+        let articleSection = sections[SectionType.article.rawValue]
+        guard
+            let article = articleSection.items[sender.tag] as? Article
+        else {
+            return
+        }
+        cacheController.toggleCache(for: article.url)
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let articleURL = article(at: indexPath)?.url {
+        guard let item = item(at: indexPath) else {
+            assertionFailure("No item at indexPath: \(indexPath)")
+            return
+        }
+        switch item {
+        case let article as Article:
             let webViewConfiguration = WKWebViewConfiguration()
             webViewConfiguration.setURLSchemeHandler(schemeHandler, forURLScheme: schemeHandler.scheme)
-            let articleMobileHTMLURL = configuration.mobileAppsServicesArticleResourceURLForArticle(with: articleURL, scheme: schemeHandler.scheme, resource: .mobileHTML)!
+            let articleMobileHTMLURL = configuration.mobileAppsServicesArticleResourceURLForArticle(with: article.url, scheme: schemeHandler.scheme, resource: .mobileHTML)!
             let webViewController = WebViewController(url: articleMobileHTMLURL, configuration: webViewConfiguration)
 
             let navigationController = UINavigationController(rootViewController: webViewController)
             present(navigationController, animated: true)
-        } else {
-            cacheController.clearAll()
+        case let preference as Preference:
+            preference.onSelection()
+        default:
+            assertionFailure("Unhandled type: \(item)")
+            break
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
