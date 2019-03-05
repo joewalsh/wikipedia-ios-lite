@@ -206,6 +206,22 @@ class ArticleCacheController: NSObject {
 
     // Media: Article resources
 
+    func toggleCache(for articleURL: URL) {
+        assert(Thread.isMainThread)
+        print("ArticlesController: toggled cache for \(articleURL)")
+        if isCached(articleURL) {
+            print("ArticlesController: cache for \(articleURL) exists, removing")
+            removeCachedArticle(with: articleURL)
+        } else {
+            print("ArticlesController: cache for \(articleURL) doesn't exist, fetching")
+            cacheResource(.mobileHTML, for: articleURL)
+            cacheResource(.references, for: articleURL)
+            cacheResource(.sections, for: articleURL)
+            cacheMedia(for: articleURL)
+            cacheData(for: articleURL)
+        }
+    }
+
     #warning("TODO: Check if file/cache item exists before downloading")
     func cacheResource(_ resource: Configuration.MobileAppsServices.Page.Resource, for articleURL: URL) {
         fetcher.downloadResource(resource, for: articleURL) { error, resourceURL, temporaryFileURL, mimeType in
