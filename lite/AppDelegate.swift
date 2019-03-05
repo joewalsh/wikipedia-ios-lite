@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let articleFetcher = ArticleFetcher(session: session, configuration: configuration)
         let articleCacheController = ArticleCacheController(fetcher: articleFetcher)
         persistentURLCache.delegate = articleCacheController
-        explore.articlesController = ArticlesController(fetcher: articleFetcher, cacheController: articleCacheController)
+        explore.cacheController = articleCacheController
         explore.tabBarItem = UITabBarItem(title: "Explore", image: UIImage(named: "explore"), tag: 0)
 
         let saved = UIViewController()

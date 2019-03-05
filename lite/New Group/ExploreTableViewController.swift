@@ -6,7 +6,7 @@ class ExploreTableViewController: UITableViewController {
 
     var configuration: Configuration!
     var schemeHandler: SchemeHandler!
-    var articlesController: ArticlesController!
+    var cacheController: ArticleCacheController!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,7 +57,7 @@ class ExploreTableViewController: UITableViewController {
         cell.textLabel?.text = article?.title
         let saveButton = UIButton()
         if let articleURL = article?.url {
-            let isCached = articlesController.cacheController.isCached(articleURL)
+            let isCached = cacheController.isCached(article.url)
             let imageName = isCached ? "save-filled" : "save"
             saveButton.setImage(UIImage(named: imageName), for: .normal)
         }
@@ -71,7 +71,7 @@ class ExploreTableViewController: UITableViewController {
 
     @objc private func toggleArticleSavedState(_ sender: UIButton) {
         let articleURL = articles[sender.tag].url
-        articlesController.toggleCache(for: articleURL)
+        cacheController.toggleCache(for: articleURL)
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
