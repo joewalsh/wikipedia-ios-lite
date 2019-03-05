@@ -28,9 +28,11 @@ class ArticleFetcher: Fetcher {
             return
         }
 
-        session.downloadTask(with: url) { fileURL, response, error in
+        let task = session.downloadTask(with: url) { fileURL, response, error in
             self.handleDownloadTaskCompletion(url: url, fileURL: fileURL, response: response, error: error, completion: completion)
-        }.resume()
+        }
+        track(task: task, forGroupWithKey: articleURL.key, taskKey: url.key)
+        task.resume()
     }
 
     // MARK: Data
@@ -40,9 +42,11 @@ class ArticleFetcher: Fetcher {
             completion(Fetcher.invalidParametersError, nil, nil, nil)
             return
         }
-        session.downloadTask(with: url) { fileURL, response, error in
+        let task = session.downloadTask(with: url) { fileURL, response, error in
             self.handleDownloadTaskCompletion(url: url, fileURL: fileURL, response: response, error: error, completion: completion)
-        }.resume()
+        }
+        track(task: task, forGroupWithKey: articleURL.key, taskKey: url.key)
+        task.resume()
     }
 
     private func handleDownloadTaskCompletion(url: URL, fileURL: URL?, response: URLResponse?, error: Error?, completion: @escaping DownloadCompletion) {
@@ -124,23 +128,27 @@ class ArticleFetcher: Fetcher {
 
     func getMedia(for articleURL: URL, completion: @escaping (Error?, Media?) -> Void) {
         let url = configuration.mobileAppsServicesArticleResourceURLForArticle(with: articleURL, scheme: scheme, resource: .media)!
-        session.session.dataTask(with: url) { data, response, error in
+        let task = session.session.dataTask(with: url) { data, response, error in
             if let error = error {
                 assertionFailure(error.localizedDescription)
+                self.untrack(taskForGroupWithKey: articleURL.key, taskKey: url.key)
                 completion(error, nil)
             }
             guard let response = response as? HTTPURLResponse else {
                 assertionFailure("Expected HTTP response")
+                self.untrack(taskForGroupWithKey: articleURL.key, taskKey: url.key)
                 completion(Fetcher.unexpectedResponseError, nil)
                 return
             }
             guard response.statusCode == 200 else {
                 print("Expected 200 status code, got \(response.statusCode)")
+                self.untrack(taskForGroupWithKey: articleURL.key, taskKey: url.key)
                 completion(Fetcher.unexpectedResponseError, nil)
                 return
             }
             guard let data = data else {
                 assertionFailure("Expected data, got nil")
+                self.untrack(taskForGroupWithKey: articleURL.key, taskKey: url.key)
                 completion(Fetcher.noNewDataError, nil)
                 return
             }
@@ -149,14 +157,30 @@ class ArticleFetcher: Fetcher {
                 let media = try decoder.decode(Media.self, from: data)
                 completion(nil, media)
             } catch let error {
+                self.untrack(taskForGroupWithKey: articleURL.key, taskKey: url.key)
                 completion(error, nil)
             }
-        }.resume()
+        }
+        track(task: task, forGroupWithKey: articleURL.key, taskKey: url.key)
+        task.resume()
     }
 
-    func downloadImage(_ url: URL, completion: @escaping DownloadCompletion) {
-        session.downloadTask(with: url) { fileURL, response, error in
+    func downloadImage(_ url: URL, forArticleWithURL articleURL: URL, completion: @escaping DownloadCompletion) {
+        let task = session.downloadTask(with: url) { fileURL, response, error in
             self.handleDownloadTaskCompletion(url: url, fileURL: fileURL, response: response, error: error, completion: completion)
-        }.resume()
+        }
+        track(task: task, forGroupWithKey: articleURL.key, taskKey: url.key)
+        task.resume()
+    }
+}
+
+extension URL {
+    var key: String {
+        var components = URLComponents(url: self, resolvingAgainstBaseURL: false)
+        components?.scheme = "https"
+        guard let key = components?.url?.absoluteString.precomposedStringWithCanonicalMapping else {
+            return absoluteString.precomposedStringWithCanonicalMapping
+        }
+        return key
     }
 }
