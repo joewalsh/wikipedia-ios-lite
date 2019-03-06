@@ -124,32 +124,11 @@ class ArticleCacheController: NSObject {
         return cacheGroup(for: articleURL, in: viewContext) != nil
     }
 
-    private lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "Cache")
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-            if let error = error {
-                fatalError(error.localizedDescription)
-            }
-        })
-        return container
-    }()
-
-
     // MARK: Background context - write only
 
     private lazy var backgroundContext: NSManagedObjectContext = {
         let backgroundContext = persistentContainer.newBackgroundContext()
         return backgroundContext
-    }()
-
-
-    // MARK: View context - read only
-
-    private lazy var viewContext: NSManagedObjectContext = {
-        let viewContext = persistentContainer.viewContext
-        viewContext.automaticallyMergesChangesFromParent = true
-        viewContext.mergePolicy = NSMergeByPropertyStoreTrumpMergePolicy
-        return viewContext
     }()
 
     // MARK: Cache groups
