@@ -2,7 +2,7 @@ import Foundation
 import CoreData
 
 class ArticleCacheController: NSObject {
-    static let articleCacheWasUpdatedNotification = Notification.Name("ArticleCachWasUpdated")
+    static let articleCacheWasUpdatedNotification = Notification.Name("ArticleCacheWasUpdated")
     private let WMFExtendedFileAttributeNameMIMEType = "org.wikimedia.MIMEType"
 
     let fetcher: ArticleFetcher
