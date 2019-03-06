@@ -6,32 +6,40 @@ class ArticleCacheController: NSObject {
     private let WMFExtendedFileAttributeNameMIMEType = "org.wikimedia.MIMEType"
 
     let fetcher: ArticleFetcher
-    let cacheURL: URL
     let fileManager = FileManager.default
 
     init(fetcher: ArticleFetcher) {
-        guard
-            let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last
-        else {
-            fatalError()
-        }
-        let documentsURL = URL(fileURLWithPath: documentsPath)
-        cacheURL = documentsURL.appendingPathComponent("Article Cache", isDirectory: true)
-        do {
-            try fileManager.createDirectory(at: cacheURL, withIntermediateDirectories: true, attributes: nil)
-            print("Created Article Cache directory: \(cacheURL)")
-        } catch let error {
-            fatalError(error.localizedDescription)
-        }
         self.fetcher = fetcher
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(backgroundContextDidSave(_:)), name: NSNotification.Name.NSManagedObjectContextDidSave, object: self.backgroundContext)
     }
 
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    private lazy var cacheURL: URL = {
+        guard
+            let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last
+        else {
+            #warning("Handle failure to get Documents directory path")
+            fatalError()
+        }
+        let documentsURL = URL(fileURLWithPath: documentsPath)
+        let cacheURL = documentsURL.appendingPathComponent("Article Cache", isDirectory: true)
+        do {
+            try fileManager.createDirectory(at: cacheURL, withIntermediateDirectories: true, attributes: nil)
+            print("Created Article Cache directory: \(cacheURL)")
+        } catch let error {
+            #warning("Handle failure to create Article cache directory")
+            fatalError(error.localizedDescription)
+        }
+        return cacheURL
+    }()
+
     private lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator = {
         let modelURL = Bundle.main.url(forResource: "Cache", withExtension: "momd")!
         let model = NSManagedObjectModel(contentsOf: modelURL)!
-        let dbURL = cacheURL.appendingPathComponent("Cache.sqlite", isDirectory: false)
+        let dbURL = cacheURL.deletingLastPathComponent().appendingPathComponent("Cache.sqlite", isDirectory: false)
         let psc = NSPersistentStoreCoordinator(managedObjectModel: model)
         let options = [
             NSMigratePersistentStoresAutomaticallyOption: NSNumber(booleanLiteral: true),
@@ -42,12 +50,15 @@ class ArticleCacheController: NSObject {
         } catch {
             do {
                 try FileManager.default.removeItem(at: dbURL)
-            } catch {
-
+            } catch let error {
+                #warning("Handle failure to remove old db file")
+                assertionFailure(error.localizedDescription)
             }
             do {
                 try psc.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: dbURL, options: options)
-            } catch {
+            } catch let error {
+                #warning("Handle failure to add persistent store to the coordinator")
+                assertionFailure(error.localizedDescription)
                 abort()
             }
         }
@@ -55,8 +66,14 @@ class ArticleCacheController: NSObject {
         return psc
     }()
 
+    private lazy var backgroundContext: NSManagedObjectContext = {
+        let backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        backgroundContext.persistentStoreCoordinator = persistentStoreCoordinator
+        return backgroundContext
+    }()
+
     @objc private func backgroundContextDidSave(_ notification: NSNotification) {
-        self.postArticleCacheUpdatedNotification()
+        postArticleCacheUpdatedNotification()
     }
 
     private func postArticleCacheUpdatedNotification() {
@@ -69,7 +86,7 @@ class ArticleCacheController: NSObject {
         let context = backgroundContext
         context.perform {
             self.fetcher.cancelAllTasks()
-            if let urls = try? self.fileManager.contentsOfDirectory(at: self.cacheURL, includingPropertiesForKeys: [.nameKey, .isDirectoryKey], options: .skipsHiddenFiles) {
+            if let urls = try? self.fileManager.contentsOfDirectory(at: self.cacheURL, includingPropertiesForKeys: [.isRegularFileKey], options: .skipsHiddenFiles) {
                 for url in urls {
                     do {
                         try self.fileManager.removeItem(at: url)
@@ -82,6 +99,7 @@ class ArticleCacheController: NSObject {
             self.deleteAllCacheEntities(in: context)
             self.save(moc: context)
             URLCache.shared.removeAllCachedResponses()
+            self.postArticleCacheUpdatedNotification()
         }
     }
     private func deleteAllCacheEntities(in context: NSManagedObjectContext) {
@@ -153,14 +171,6 @@ class ArticleCacheController: NSObject {
             cacheGroup(for: articleURL, in: context) != nil
         } ?? false
     }
-
-    // MARK: Background context - write only
-
-    private lazy var backgroundContext: NSManagedObjectContext = {
-        let backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        backgroundContext.persistentStoreCoordinator = persistentStoreCoordinator
-        return backgroundContext
-    }()
 
     // MARK: Cache groups
 
