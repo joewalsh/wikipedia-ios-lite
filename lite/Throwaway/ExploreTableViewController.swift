@@ -2,7 +2,7 @@ import UIKit
 import WebKit
 
 private protocol Item {
-    var title: String { get }
+    var title: String? { get }
 }
 
 class ExploreTableViewController: UITableViewController {
@@ -34,7 +34,7 @@ class ExploreTableViewController: UITableViewController {
     }
 
     private struct Article: Item {
-        let title: String
+        let title: String?
         let url: URL
 
         init(title: String) {
@@ -45,10 +45,15 @@ class ExploreTableViewController: UITableViewController {
     }
 
     private struct Preference: Item {
-        let title: String
+        let title: String?
         let titleColor: UIColor
         let accessoryType: UITableViewCell.AccessoryType
         let onSelection: () -> Void
+    }
+
+    private struct CustomPreference: Item {
+        let title: String?
+        let customView: UIView
     }
 
     enum SectionType: Int {
@@ -73,7 +78,7 @@ class ExploreTableViewController: UITableViewController {
     }()
 
     private var preferencesSection: Section {
-        let preferences = [
+        let preferences: [Item] = [
             Preference(
                 title: "Clear cache",
                 titleColor: UIColor.red,
@@ -84,6 +89,9 @@ class ExploreTableViewController: UITableViewController {
                 titleColor: UIColor.black,
                 accessoryType: UserDefaults.standard.collapseTables ? .checkmark : .none,
                 onSelection: { UserDefaults.standard.collapseTables = !UserDefaults.standard.collapseTables }),
+            CustomPreference(
+                title: nil,
+                customView: ThemePreference.instantiate())
             ]
         return Section(title: "Preferences", items: preferences)
     }
@@ -141,11 +149,22 @@ class ExploreTableViewController: UITableViewController {
             cell.textLabel?.text = preference.title
             cell.textLabel?.textColor = preference.titleColor
             cell.accessoryType = preference.accessoryType
+        case let customPreference as CustomPreference:
+            addSubview(customPreference.customView, to: cell)
         default:
             assertionFailure("Unhandled type: \(item)")
             break
         }
         return cell
+    }
+
+    private func addSubview(_ subview: UIView, to cell: UITableViewCell) {
+        subview.translatesAutoresizingMaskIntoConstraints = false
+        let contentView = cell.contentView
+        contentView.addSubview(subview)
+        let leading = subview.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: tableView.separatorInset.left)
+        let centerY = subview.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+        NSLayoutConstraint.activate([leading, centerY])
     }
 
     @objc private func toggleArticleSavedState(_ sender: UIButton) {
@@ -168,6 +187,7 @@ class ExploreTableViewController: UITableViewController {
             let webViewConfiguration = WKWebViewConfiguration()
             let contentController = WKUserContentController()
             contentController.addUserScript(CollapseTablesUserScript(collapseTables: UserDefaults.standard.collapseTables))
+            contentController.addUserScript(ThemeUserScript())
             webViewConfiguration.userContentController = contentController
             webViewConfiguration.setURLSchemeHandler(schemeHandler, forURLScheme: schemeHandler.scheme)
             let articleMobileHTMLURL = configuration.mobileAppsServicesArticleResourceURLForArticle(with: article.url, scheme: schemeHandler.scheme, resource: .mobileHTML)!

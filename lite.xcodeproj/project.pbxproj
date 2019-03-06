@@ -20,6 +20,8 @@
 		7AC98C45222F091500E90A2F /* ExploreTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AC98C43222F091500E90A2F /* ExploreTableViewController.swift */; };
 		7AC98C46222F091500E90A2F /* ExploreTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AC98C44222F091500E90A2F /* ExploreTableViewController.xib */; };
 		7AEA5744223001A4004A4DF8 /* ThemeUserScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AEA5743223001A4004A4DF8 /* ThemeUserScript.swift */; };
+		7AEA574B22300590004A4DF8 /* ThemePreference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AEA574922300590004A4DF8 /* ThemePreference.swift */; };
+		7AEA574C22300590004A4DF8 /* ThemePreference.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AEA574A22300590004A4DF8 /* ThemePreference.xib */; };
 		7AEA574E223006DB004A4DF8 /* Nibbed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AEA574D223006DB004A4DF8 /* Nibbed.swift */; };
 		7AF232332224CFE500774812 /* CacheGroup+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AF232312224CFE500774812 /* CacheGroup+CoreDataProperties.swift */; };
 		7AF232342224CFE500774812 /* CacheItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AF232322224CFE500774812 /* CacheItem+CoreDataProperties.swift */; };
@@ -51,6 +53,8 @@
 		7AC98C43222F091500E90A2F /* ExploreTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExploreTableViewController.swift; path = lite/Throwaway/ExploreTableViewController.swift; sourceTree = SOURCE_ROOT; };
 		7AC98C44222F091500E90A2F /* ExploreTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ExploreTableViewController.xib; path = lite/Throwaway/ExploreTableViewController.xib; sourceTree = SOURCE_ROOT; };
 		7AEA5743223001A4004A4DF8 /* ThemeUserScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeUserScript.swift; sourceTree = "<group>"; };
+		7AEA574922300590004A4DF8 /* ThemePreference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ThemePreference.swift; path = lite/ThemePreference.swift; sourceTree = SOURCE_ROOT; };
+		7AEA574A22300590004A4DF8 /* ThemePreference.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ThemePreference.xib; path = lite/ThemePreference.xib; sourceTree = SOURCE_ROOT; };
 		7AEA574D223006DB004A4DF8 /* Nibbed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Nibbed.swift; sourceTree = "<group>"; };
 		7AF232312224CFE500774812 /* CacheGroup+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CacheGroup+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		7AF232322224CFE500774812 /* CacheItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CacheItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -89,6 +93,8 @@
 				7AEA574D223006DB004A4DF8 /* Nibbed.swift */,
 				7AC98C44222F091500E90A2F /* ExploreTableViewController.xib */,
 				7A34D4C5222F346000D73363 /* UserDefaults.swift */,
+				7AEA574922300590004A4DF8 /* ThemePreference.swift */,
+				7AEA574A22300590004A4DF8 /* ThemePreference.xib */,
 			);
 			name = Throwaway;
 			path = "New Group";
@@ -220,6 +226,7 @@
 			files = (
 				7AC98C46222F091500E90A2F /* ExploreTableViewController.xib in Resources */,
 				D8C271E321B9612600BFD1BD /* LaunchScreen.storyboard in Resources */,
+				7AEA574C22300590004A4DF8 /* ThemePreference.xib in Resources */,
 				D8C271E021B9612600BFD1BD /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -251,6 +258,7 @@
 				D8C271FD21BAB01400BFD1BD /* String+Domains.swift in Sources */,
 				D8C271EB21B9618400BFD1BD /* WebViewController.swift in Sources */,
 				7AF232342224CFE500774812 /* CacheItem+CoreDataProperties.swift in Sources */,
+				7AEA574B22300590004A4DF8 /* ThemePreference.swift in Sources */,
 				7A4BF0632220722D00AE76A1 /* CacheGroup+CoreDataClass.swift in Sources */,
 				D8C271F921BAAFCB00BFD1BD /* Configuration.swift in Sources */,
 				7A218CF022203D39007C33E1 /* Cache.xcdatamodeld in Sources */,
