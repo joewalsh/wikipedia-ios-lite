@@ -33,11 +33,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         explore.cacheController = articleCacheController
         explore.tabBarItem = UITabBarItem(title: "Explore", image: UIImage(named: "explore"), tag: 0)
 
-        let saved = UIViewController()
-        saved.tabBarItem = UITabBarItem(title: "Saved", image: UIImage(named: "saved"), tag: 1)
-
         let tabBarController = UITabBarController()
-        tabBarController.viewControllers = [explore, saved]
+        tabBarController.viewControllers = [explore]
 
         window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()

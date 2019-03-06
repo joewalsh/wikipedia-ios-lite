@@ -69,7 +69,7 @@ class ExploreTableViewController: UITableViewController {
             Article(title: "Panda"),
             Article(title: "Unicorn")
         ]
-        return Section(title: nil, items: articles)
+        return Section(title: "Explore", items: articles)
     }()
 
     private var preferencesSection: Section {
