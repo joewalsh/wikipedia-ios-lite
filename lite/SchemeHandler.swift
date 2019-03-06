@@ -39,6 +39,8 @@ extension SchemeHandler: WKURLSchemeHandler {
             return
         }
 
+        #warning("TODO: Use URLSession's delegate to stream data to webView as it comes it")
+
         let task = session.session.dataTask(with: url) { (data, response, error) in
             if let error = error {
                 urlSchemeTask.didFailWithError(error)
