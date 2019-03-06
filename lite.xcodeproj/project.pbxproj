@@ -20,6 +20,7 @@
 		7AC98C45222F091500E90A2F /* ExploreTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AC98C43222F091500E90A2F /* ExploreTableViewController.swift */; };
 		7AC98C46222F091500E90A2F /* ExploreTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AC98C44222F091500E90A2F /* ExploreTableViewController.xib */; };
 		7AEA5744223001A4004A4DF8 /* ThemeUserScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AEA5743223001A4004A4DF8 /* ThemeUserScript.swift */; };
+		7AEA574E223006DB004A4DF8 /* Nibbed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AEA574D223006DB004A4DF8 /* Nibbed.swift */; };
 		7AF232332224CFE500774812 /* CacheGroup+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AF232312224CFE500774812 /* CacheGroup+CoreDataProperties.swift */; };
 		7AF232342224CFE500774812 /* CacheItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AF232322224CFE500774812 /* CacheItem+CoreDataProperties.swift */; };
 		D8C271D921B9612500BFD1BD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C271D821B9612500BFD1BD /* AppDelegate.swift */; };
@@ -50,6 +51,7 @@
 		7AC98C43222F091500E90A2F /* ExploreTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExploreTableViewController.swift; path = lite/Throwaway/ExploreTableViewController.swift; sourceTree = SOURCE_ROOT; };
 		7AC98C44222F091500E90A2F /* ExploreTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ExploreTableViewController.xib; path = lite/Throwaway/ExploreTableViewController.xib; sourceTree = SOURCE_ROOT; };
 		7AEA5743223001A4004A4DF8 /* ThemeUserScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeUserScript.swift; sourceTree = "<group>"; };
+		7AEA574D223006DB004A4DF8 /* Nibbed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Nibbed.swift; sourceTree = "<group>"; };
 		7AF232312224CFE500774812 /* CacheGroup+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CacheGroup+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		7AF232322224CFE500774812 /* CacheItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CacheItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		D8C271D521B9612500BFD1BD /* lite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = lite.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -84,6 +86,7 @@
 			isa = PBXGroup;
 			children = (
 				7AC98C43222F091500E90A2F /* ExploreTableViewController.swift */,
+				7AEA574D223006DB004A4DF8 /* Nibbed.swift */,
 				7AC98C44222F091500E90A2F /* ExploreTableViewController.xib */,
 				7A34D4C5222F346000D73363 /* UserDefaults.swift */,
 			);
@@ -243,6 +246,7 @@
 				D8C271F521BAA40E00BFD1BD /* PermanentlyPersistableURLCache.swift in Sources */,
 				D8C271FF21BAB05600BFD1BD /* CharacterSet+Extensions.swift in Sources */,
 				7A0C548E221F9137002642A9 /* ArticleCacheController.swift in Sources */,
+				7AEA574E223006DB004A4DF8 /* Nibbed.swift in Sources */,
 				7A34D4C6222F346000D73363 /* UserDefaults.swift in Sources */,
 				D8C271FD21BAB01400BFD1BD /* String+Domains.swift in Sources */,
 				D8C271EB21B9618400BFD1BD /* WebViewController.swift in Sources */,
