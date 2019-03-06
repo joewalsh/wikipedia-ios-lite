@@ -148,7 +148,10 @@ class ArticleCacheController: NSObject {
 
     func isCached(_ articleURL: URL) -> Bool {
         assert(Thread.isMainThread)
-        return cacheGroup(for: articleURL, in: viewContext) != nil
+        let context = backgroundContext
+        return context.performWaitAndReturn {
+            cacheGroup(for: articleURL, in: context) != nil
+        } ?? false
     }
 
     // MARK: Background context - write only
@@ -504,5 +507,15 @@ private extension FileManager {
 
         let readLen = getxattr(path, name, buffer, bufferLength, 0, 0)
         return String(bytesNoCopy: buffer, length: readLen, encoding: .utf8, freeWhenDone: true)
+    }
+}
+
+private extension NSManagedObjectContext {
+    func performWaitAndReturn<T>(_ block: () -> T?) -> T? {
+        var result: T? = nil
+        performAndWait {
+            result = block()
+        }
+        return result
     }
 }
