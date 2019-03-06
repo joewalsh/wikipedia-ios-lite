@@ -5,8 +5,6 @@ class ArticleCacheController: NSObject {
     static let articleCacheWasUpdatedNotification = Notification.Name("ArticleCachWasUpdated")
     private let WMFExtendedFileAttributeNameMIMEType = "org.wikimedia.MIMEType"
 
-    let dispatchQueue = DispatchQueue(label: "ArticleCacheControllerDispatchQueue", qos: .default, attributes: [.concurrent], autoreleaseFrequency: .workItem, target: nil)
-
     let fetcher: ArticleFetcher
     let cacheURL: URL
     let fileManager = FileManager.default
@@ -42,23 +40,21 @@ class ArticleCacheController: NSObject {
 
     func clearAll() {
         let context = backgroundContext
-        dispatchQueue.async(flags: .barrier) {
-            context.perform {
-                self.fetcher.cancelAllTasks()
-                if let urls = try? self.fileManager.contentsOfDirectory(at: self.cacheURL, includingPropertiesForKeys: [.nameKey, .isDirectoryKey], options: .skipsHiddenFiles) {
-                    for url in urls {
-                        do {
-                            try self.fileManager.removeItem(at: url)
-                            print("Removed file at: \(url)")
-                        } catch let error {
-                            print("Failed to remove file at: \(url); \(error.localizedDescription)")
-                        }
+        context.perform {
+            self.fetcher.cancelAllTasks()
+            if let urls = try? self.fileManager.contentsOfDirectory(at: self.cacheURL, includingPropertiesForKeys: [.nameKey, .isDirectoryKey], options: .skipsHiddenFiles) {
+                for url in urls {
+                    do {
+                        try self.fileManager.removeItem(at: url)
+                        print("Removed file at: \(url)")
+                    } catch let error {
+                        print("Failed to remove file at: \(url); \(error.localizedDescription)")
                     }
                 }
-                self.deleteAllCacheEntities(in: context)
-                self.save(moc: context)
-                URLCache.shared.removeAllCachedResponses()
             }
+            self.deleteAllCacheEntities(in: context)
+            self.save(moc: context)
+            URLCache.shared.removeAllCachedResponses()
         }
     }
     private func deleteAllCacheEntities(in context: NSManagedObjectContext) {
@@ -84,38 +80,36 @@ class ArticleCacheController: NSObject {
 
     func removeCachedArticle(with articleURL: URL) {
         let context = backgroundContext
-        dispatchQueue.async(flags: .barrier) {
-            context.perform {
-                self.fetcher.cancelAllTasks(forGroupWithKey: articleURL.key)
-                guard let group = self.cacheGroup(for: articleURL, in: context) else {
-                    assertionFailure("Cache group for \(articleURL) doesn't exist")
-                    return
-                }
-                guard let cacheItems = group.cacheItems as? Set<CacheItem> else {
-                    assertionFailure("Cache group for \(articleURL) has no cache items")
-                    return
-                }
-                for cacheItem in cacheItems where cacheItem.cacheGroups?.count == 1 {
-                    let key = cacheItem.key
-                    guard let pathComponent = key?.sha256() ?? key else {
-                        assertionFailure("cacheItem has no key")
-                        continue
-                    }
-                    let cachedFileURL = self.cacheURL.appendingPathComponent(pathComponent, isDirectory: false)
-                    do {
-                        try self.fileManager.removeItem(at: cachedFileURL)
-                        context.delete(cacheItem)
-                    } catch let error as NSError {
-                        if error.code == NSURLErrorFileDoesNotExist || error.code == NSFileNoSuchFileError {
-                            context.delete(cacheItem)
-                        } else {
-                            fatalError(error.localizedDescription)
-                        }
-                    }
-                }
-                context.delete(group)
-                self.save(moc: context)
+        context.perform {
+            self.fetcher.cancelAllTasks(forGroupWithKey: articleURL.key)
+            guard let group = self.cacheGroup(for: articleURL, in: context) else {
+                assertionFailure("Cache group for \(articleURL) doesn't exist")
+                return
             }
+            guard let cacheItems = group.cacheItems as? Set<CacheItem> else {
+                assertionFailure("Cache group for \(articleURL) has no cache items")
+                return
+            }
+            for cacheItem in cacheItems where cacheItem.cacheGroups?.count == 1 {
+                let key = cacheItem.key
+                guard let pathComponent = key?.sha256() ?? key else {
+                    assertionFailure("cacheItem has no key")
+                    continue
+                }
+                let cachedFileURL = self.cacheURL.appendingPathComponent(pathComponent, isDirectory: false)
+                do {
+                    try self.fileManager.removeItem(at: cachedFileURL)
+                    context.delete(cacheItem)
+                } catch let error as NSError {
+                    if error.code == NSURLErrorFileDoesNotExist || error.code == NSFileNoSuchFileError {
+                        context.delete(cacheItem)
+                    } else {
+                        fatalError(error.localizedDescription)
+                    }
+                }
+            }
+            context.delete(group)
+            self.save(moc: context)
         }
     }
 
