@@ -154,7 +154,8 @@ class ArticleCacheController: NSObject {
     // MARK: Background context - write only
 
     private lazy var backgroundContext: NSManagedObjectContext = {
-        let backgroundContext = persistentContainer.newBackgroundContext()
+        let backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        backgroundContext.persistentStoreCoordinator = persistentStoreCoordinator
         return backgroundContext
     }()
 
