@@ -28,6 +28,33 @@ class ArticleCacheController: NSObject {
         NotificationCenter.default.addObserver(self, selector: #selector(backgroundContextDidSave(_:)), name: NSNotification.Name.NSManagedObjectContextDidSave, object: self.backgroundContext)
     }
 
+    private lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator = {
+        let modelURL = Bundle.main.url(forResource: "Cache", withExtension: "momd")!
+        let model = NSManagedObjectModel(contentsOf: modelURL)!
+        let dbURL = cacheURL.appendingPathComponent("Cache.sqlite", isDirectory: false)
+        let psc = NSPersistentStoreCoordinator(managedObjectModel: model)
+        let options = [
+            NSMigratePersistentStoresAutomaticallyOption: NSNumber(booleanLiteral: true),
+            NSInferMappingModelAutomaticallyOption: NSNumber(booleanLiteral: true)
+        ]
+        do {
+            try psc.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: dbURL, options: options)
+        } catch {
+            do {
+                try FileManager.default.removeItem(at: dbURL)
+            } catch {
+
+            }
+            do {
+                try psc.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: dbURL, options: options)
+            } catch {
+                abort()
+            }
+        }
+
+        return psc
+    }()
+
     @objc private func backgroundContextDidSave(_ notification: NSNotification) {
         self.postArticleCacheUpdatedNotification()
     }
