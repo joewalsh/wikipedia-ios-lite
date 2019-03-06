@@ -166,6 +166,9 @@ class ExploreTableViewController: UITableViewController {
         switch item {
         case let article as Article:
             let webViewConfiguration = WKWebViewConfiguration()
+            let contentController = WKUserContentController()
+            contentController.addUserScript(CollapseTablesUserScript(collapseTables: UserDefaults.standard.collapseTables))
+            webViewConfiguration.userContentController = contentController
             webViewConfiguration.setURLSchemeHandler(schemeHandler, forURLScheme: schemeHandler.scheme)
             let articleMobileHTMLURL = configuration.mobileAppsServicesArticleResourceURLForArticle(with: article.url, scheme: schemeHandler.scheme, resource: .mobileHTML)!
             let webViewController = WebViewController(url: articleMobileHTMLURL, configuration: webViewConfiguration)
