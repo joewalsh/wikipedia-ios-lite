@@ -14,10 +14,13 @@ class ExploreTableViewController: UITableViewController {
 
     var collapseTablesPreferenceObservation: NSKeyValueObservation?
 
+    var theme = Theme.standard
+
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
-        NotificationCenter.default.addObserver(self, selector: #selector(articleCacheWasUpdated(_:)), name: ArticleCacheController.articleCacheWasUpdatedNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(articleCacheWasUpdated(_:)), name: ArticleCacheController.didUpdateCacheNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(themeWasUpdated(_:)), name: UserDefaults.didChangeThemeNotification, object: nil)
 
         collapseTablesPreferenceObservation = UserDefaults.standard.observe(\.collapseTables, options: [.new]) { defaults, change in
             self.tableView.reloadSections([SectionType.preferences.rawValue], with: .automatic)
@@ -31,6 +34,13 @@ class ExploreTableViewController: UITableViewController {
 
     @objc private func articleCacheWasUpdated(_ notification: Notification) {
         tableView.reloadData()
+    }
+
+    @objc private func themeWasUpdated(_ notification: Notification) {
+        guard let theme = notification.object as? Theme else {
+            return
+        }
+        apply(theme: theme)
     }
 
     private struct Article: Item {
@@ -51,7 +61,7 @@ class ExploreTableViewController: UITableViewController {
         let onSelection: () -> Void
     }
 
-    private struct CustomPreference: Item {
+    private struct Custom: Item {
         let title: String?
         let customView: UIView
     }
@@ -89,7 +99,7 @@ class ExploreTableViewController: UITableViewController {
                 titleColor: UIColor.black,
                 accessoryType: UserDefaults.standard.collapseTables ? .checkmark : .none,
                 onSelection: { UserDefaults.standard.collapseTables = !UserDefaults.standard.collapseTables }),
-            CustomPreference(
+            Custom(
                 title: nil,
                 customView: ThemePreference.instantiate())
             ]
@@ -149,8 +159,9 @@ class ExploreTableViewController: UITableViewController {
             cell.textLabel?.text = preference.title
             cell.textLabel?.textColor = preference.titleColor
             cell.accessoryType = preference.accessoryType
-        case let customPreference as CustomPreference:
-            addSubview(customPreference.customView, to: cell)
+        case let custom as Custom:
+            cell.selectionStyle = .none
+            addSubview(custom.customView, to: cell)
         default:
             assertionFailure("Unhandled type: \(item)")
             break
@@ -187,12 +198,16 @@ class ExploreTableViewController: UITableViewController {
             showArticle(article, withTheme: Theme.black)
         case let preference as Preference:
             preference.onSelection()
+        case is Custom:
+            break
         default:
             assertionFailure("Unhandled type: \(item)")
             break
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
+
+    // MARK: Article presentation
 
     private func showArticle(_ article: Article, withTheme theme: Theme) {
         let webViewController = self.webViewController(forArticle: article, theme: theme)
@@ -227,6 +242,16 @@ class ExploreTableViewController: UITableViewController {
         configuration.userContentController = webViewContentController
         configuration.setURLSchemeHandler(schemeHandler, forURLScheme: schemeHandler.scheme)
         return configuration
+    }
+}
+
+extension ExploreTableViewController: Themeable {
+    func apply(theme: Theme) {
+        guard viewIfLoaded != nil else {
+            self.theme = theme
+            return
+        }
+        view.backgroundColor = theme.colors.paperBackground
     }
 }
 
