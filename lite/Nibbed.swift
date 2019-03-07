@@ -1,11 +1,3 @@
-//
-//  Nibbed.swift
-//  Plum
-//
-//  Created by Natalia Harateh on 2/19/19.
-//  Copyright © 2019 Natalia Harateh. All rights reserved.
-//
-
 import UIKit
 
 protocol Nibbed {
