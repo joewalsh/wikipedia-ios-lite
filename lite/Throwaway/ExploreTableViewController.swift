@@ -212,8 +212,17 @@ class ExploreTableViewController: UITableViewController {
     private func showArticle(_ article: Article, withTheme theme: Theme) {
         let webViewController = self.webViewController(forArticle: article, theme: theme)
         let navigationController = UINavigationController(rootViewController: webViewController)
+        addThemePreferencePanel(to: navigationController.navigationBar)
         navigationController.apply(theme: theme)
         present(navigationController, animated: true)
+    }
+
+    private func addThemePreferencePanel(to navigationBar: UINavigationBar) {
+        let themePreference = ThemePreference.instantiate()
+        themePreference.translatesAutoresizingMaskIntoConstraints = false
+        navigationBar.addSubview(themePreference)
+        let centerX = themePreference.centerXAnchor.constraint(equalTo: navigationBar.centerXAnchor)
+        NSLayoutConstraint.activate([centerX])
     }
 
     private func webViewController(forArticle article: Article, theme: Theme) -> WebViewController {
