@@ -23,22 +23,33 @@ extension UIColor {
         self.init(hex, alpha: 1)
     }
 
-    static let base100 = UIColor(0xFFFFFF)
-    static let parchment = UIColor(0xF8F1E3)
-    static let thermosphere = UIColor(0x2E3136)
+    fileprivate static let base100 = UIColor(0xFFFFFF)
+    fileprivate static let parchment = UIColor(0xF8F1E3)
+    fileprivate static let thermosphere = UIColor(0x2E3136)
+    fileprivate static let mesosphere = UIColor(0x43464A)
+    fileprivate static let base10 = UIColor(0x222222)
+    fileprivate static let base90 = UIColor(0xF8F9FA)
+    fileprivate static let blue50 = UIColor(0x3366CC)
+    fileprivate static let stratosphere = UIColor(0x6699FF)
 }
 
 class Colors {
     let paperBackground: UIColor
+    let chromeBackground: UIColor
+    let chromeText: UIColor
+    let link: UIColor
 
-    init(paperBackground: UIColor) {
+    init(paperBackground: UIColor, chromeBackground: UIColor, chromeText: UIColor, link: UIColor) {
         self.paperBackground = paperBackground
+        self.chromeBackground = chromeBackground
+        self.chromeText = chromeText
+        self.link = link
     }
 
-    static let light = Colors(paperBackground: .base100)
-    static let sepia = Colors(paperBackground: .parchment)
-    static let dark = Colors(paperBackground: .thermosphere)
-    static let black = Colors(paperBackground: .black)
+    static let light = Colors(paperBackground: .base100, chromeBackground: .base100, chromeText: .base10, link: .blue50)
+    static let sepia = Colors(paperBackground: .parchment, chromeBackground: .parchment, chromeText: .base10, link: .blue50)
+    static let dark = Colors(paperBackground: .thermosphere, chromeBackground: .mesosphere, chromeText: .base90, link: .stratosphere)
+    static let black = Colors(paperBackground: .black, chromeBackground: .base10, chromeText: .base90, link: .stratosphere)
 }
 
 public class Theme {
