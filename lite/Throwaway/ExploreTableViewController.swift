@@ -199,7 +199,7 @@ class ExploreTableViewController: UITableViewController {
             webViewConfiguration.userContentController = contentController
             webViewConfiguration.setURLSchemeHandler(schemeHandler, forURLScheme: schemeHandler.scheme)
             let articleMobileHTMLURL = configuration.mobileAppsServicesArticleResourceURLForArticle(with: article.url, scheme: schemeHandler.scheme, resource: .mobileHTML)!
-            let webViewController = WebViewController(url: articleMobileHTMLURL, configuration: webViewConfiguration)
+            let webViewController = WebViewController(url: articleMobileHTMLURL, configuration: webViewConfiguration, theme: Theme.black)
 
             let navigationController = UINavigationController(rootViewController: webViewController)
             present(navigationController, animated: true)
