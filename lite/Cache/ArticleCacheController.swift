@@ -17,6 +17,7 @@ class ArticleCacheController: NSObject {
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
+
     private lazy var cacheURL: URL = {
         guard
             let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last
@@ -203,17 +204,6 @@ class ArticleCacheController: NSObject {
         return group
     }
 
-    private func createCacheItem(with key: String, in moc: NSManagedObjectContext) -> CacheItem? {
-        guard let entity = NSEntityDescription.entity(forEntityName: "CacheItem", in: moc) else {
-            return nil
-        }
-        let item = CacheItem(entity: entity, insertInto: moc)
-        item.key = key
-        item.date = NSDate()
-        print("ArticleCacheController: Created cache item with key: \(key)")
-        return item
-    }
-
     // MARK: Cache items
 
     private func cacheItem(with key: String, in moc: NSManagedObjectContext) -> CacheItem? {
@@ -228,6 +218,17 @@ class ArticleCacheController: NSObject {
         } catch let error {
             fatalError(error.localizedDescription)
         }
+    }
+
+    private func createCacheItem(with key: String, in moc: NSManagedObjectContext) -> CacheItem? {
+        guard let entity = NSEntityDescription.entity(forEntityName: "CacheItem", in: moc) else {
+            return nil
+        }
+        let item = CacheItem(entity: entity, insertInto: moc)
+        item.key = key
+        item.date = NSDate()
+        print("ArticleCacheController: Created cache item with key: \(key)")
+        return item
     }
 
     // MARK: Fetch or create
