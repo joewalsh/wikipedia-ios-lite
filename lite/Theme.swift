@@ -56,7 +56,7 @@ public class Theme {
     let colors: Colors
     let kind: Kind
 
-    enum Kind: Int {
+    enum Kind: Int, CaseIterable {
         case light
         case sepia
         case dark
@@ -65,14 +65,18 @@ public class Theme {
         var name: String {
             switch self {
             case .light:
-                return "DEFAULT"
+                return "Default"
             case .sepia:
-                return "SEPIA"
+                return "Sepia"
             case .dark:
-                return "DARK"
+                return "Dark"
             case .black:
-                return "BLACK"
+                return "Black"
             }
+        }
+
+        var jsName: String {
+            return name.uppercased()
         }
 
         var colors: Colors {
