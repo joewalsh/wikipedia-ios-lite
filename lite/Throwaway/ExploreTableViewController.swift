@@ -40,22 +40,11 @@ class ExploreTableViewController: UITableViewController {
         tableView.reloadData()
     }
 
-    private var reloadPreferencesOnViewWillAppear = false
-
     @objc private func themeWasUpdated(_ notification: Notification) {
         guard let theme = notification.object as? Theme else {
             return
         }
         apply(theme: theme)
-        reloadPreferencesOnViewWillAppear = true
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if reloadPreferencesOnViewWillAppear {
-            reloadPreferencesSection()
-            reloadPreferencesOnViewWillAppear = false
-        }
     }
 
     private struct Article: Item {
