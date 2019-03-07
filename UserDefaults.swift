@@ -15,18 +15,18 @@ extension UserDefaults {
         }
     }
 
-    var theme: Theme.Kind? {
+    var theme: Theme.Kind {
         get {
             guard
                 let theme = Theme.Kind(rawValue: integer(forKey: Key.theme.rawValue))
             else {
-                return nil
+                return Theme.standard.kind
             }
             return theme
         }
         set {
-            set(newValue?.rawValue, forKey: Key.theme.rawValue)
-            notify(with: UserDefaults.didChangeThemeNotification, object: theme)
+            set(newValue.rawValue, forKey: Key.theme.rawValue)
+            notify(with: UserDefaults.didChangeThemeNotification, object: Theme(kind: theme))
         }
     }
 
