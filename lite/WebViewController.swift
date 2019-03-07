@@ -5,10 +5,12 @@ class WebViewController: UIViewController {
     let configuration: WKWebViewConfiguration
     let url: URL
     weak var navigationDelegate: WKNavigationDelegate?
+    var theme = Theme.light
     
-    required init(url: URL, configuration: WKWebViewConfiguration = WKWebViewConfiguration()) {
+    required init(url: URL, configuration: WKWebViewConfiguration = WKWebViewConfiguration(), theme: Theme) {
         self.url = url
         self.configuration = configuration
+        self.theme = theme
         super.init(nibName: nil, bundle: nil)
         self.navigationDelegate = self
     }
@@ -26,18 +28,16 @@ class WebViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addConstrainedSubview(webView)
-        webView.backgroundColor = .red
-        webView.scrollView.backgroundColor = .red
         view.backgroundColor = .red
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "close"), style: .plain, target: self, action: #selector(dismissAnimated))
         let request = URLRequest(url: url)
         webView.load(request)
+        apply(theme: theme)
     }
 
     @objc private func dismissAnimated() {
         dismiss(animated: true)
     }
-
 }
 
 extension WebViewController: WKNavigationDelegate {
@@ -70,7 +70,19 @@ extension WebViewController: WKNavigationDelegate {
 
         decisionHandler(.cancel)
 
-        let webViewController = WebViewController(url: adjustedURL, configuration: configuration)
+        let webViewController = WebViewController(url: adjustedURL, configuration: configuration, theme: theme)
         navigationController?.pushViewController(webViewController, animated: true)
+    }
+}
+
+extension WebViewController: Themeable {
+    func apply(theme: Theme) {
+        guard viewIfLoaded != nil else {
+            self.theme = theme
+            return
+        }
+        view.backgroundColor = UIColor.red
+        webView.backgroundColor = UIColor.red
+        webView.scrollView.backgroundColor = UIColor.red
     }
 }
