@@ -251,12 +251,7 @@ class ExploreTableViewController: UITableViewController {
         let collapseTablesUserScript = CollapseTablesUserScript(collapseTables: UserDefaults.standard.collapseTables) {
             print("collapsed")
         }
-        let themeUserScript = ThemeUserScript(theme: theme) {
-            print("theme applied")
-        }
-
         contentController.addAndHandle(collapseTablesUserScript)
-        contentController.addAndHandle(themeUserScript)
 
         return contentController
     }

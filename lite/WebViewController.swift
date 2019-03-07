@@ -96,5 +96,13 @@ extension WebViewController: Themeable {
         view.backgroundColor = theme.colors.paperBackground
         webView.backgroundColor = theme.colors.paperBackground
         webView.scrollView.backgroundColor = theme.colors.paperBackground
+
+        webView.apply(theme: theme)
+    }
+}
+
+private extension WKWebView {
+    func apply(theme: Theme) {
+        evaluateJavaScript(ThemeUserScript.source(with: theme))
     }
 }
