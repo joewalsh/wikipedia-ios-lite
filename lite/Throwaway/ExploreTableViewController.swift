@@ -11,10 +11,9 @@ class ExploreTableViewController: UITableViewController {
     var configuration: Configuration!
     var schemeHandler: SchemeHandler!
     var cacheController: ArticleCacheController!
+    var theme = Theme.standard
 
     var collapseTablesPreferenceObservation: NSKeyValueObservation?
-
-    var theme = Theme.standard
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +24,7 @@ class ExploreTableViewController: UITableViewController {
         collapseTablesPreferenceObservation = UserDefaults.standard.observe(\.collapseTables, options: [.new]) { defaults, change in
             self.tableView.reloadSections([SectionType.preferences.rawValue], with: .automatic)
         }
+        apply(theme: theme)
     }
 
     deinit {
@@ -195,7 +195,7 @@ class ExploreTableViewController: UITableViewController {
         }
         switch item {
         case let article as Article:
-            showArticle(article, withTheme: Theme.black)
+            showArticle(article, withTheme: theme)
         case let preference as Preference:
             preference.onSelection()
         case is Custom:
@@ -251,6 +251,7 @@ extension ExploreTableViewController: Themeable {
             self.theme = theme
             return
         }
+        
         view.backgroundColor = theme.colors.paperBackground
     }
 }
