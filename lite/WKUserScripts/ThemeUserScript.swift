@@ -1,10 +1,10 @@
 import WebKit
 
 final class ThemeUserScript: UserScriptWithCompletion<() -> Void> {
-    init(theme: Theme.Kind, completion: Completion? = nil) {
+    init(theme: Theme, completion: Completion? = nil) {
         let messageHandlerName = "wmfThemeApplied"
         let source = """
-        window.wmf.setTheme('\(theme.jsName)', () => {
+        window.wmf.setTheme('\(theme.kind.jsName)', () => {
             window.webkit.messageHandlers.\(messageHandlerName).postMessage({});
         })
         """
