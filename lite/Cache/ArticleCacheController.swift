@@ -2,7 +2,7 @@ import Foundation
 import CoreData
 
 class ArticleCacheController: NSObject {
-    static let articleCacheWasUpdatedNotification = Notification.Name("ArticleCacheWasUpdated")
+    static let didUpdateCacheNotification = Notification.Name("didUpdateCacheNotification")
     private let WMFExtendedFileAttributeNameMIMEType = "org.wikimedia.MIMEType"
 
     let fetcher: ArticleFetcher
@@ -79,7 +79,7 @@ class ArticleCacheController: NSObject {
 
     private func postArticleCacheUpdatedNotification() {
         DispatchQueue.main.async {
-            NotificationCenter.default.post(name: ArticleCacheController.articleCacheWasUpdatedNotification, object: nil, userInfo: nil)
+            NotificationCenter.default.post(name: ArticleCacheController.didUpdateCacheNotification, object: nil, userInfo: nil)
         }
     }
 
