@@ -5,7 +5,7 @@ class WebViewController: UIViewController {
     let configuration: WKWebViewConfiguration
     let url: URL
     weak var navigationDelegate: WKNavigationDelegate?
-    var theme = Theme.light
+    var theme = Theme.standard
     
     required init(url: URL, configuration: WKWebViewConfiguration = WKWebViewConfiguration(), theme: Theme) {
         self.url = url

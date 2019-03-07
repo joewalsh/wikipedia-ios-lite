@@ -184,26 +184,7 @@ class ExploreTableViewController: UITableViewController {
         }
         switch item {
         case let article as Article:
-            let webViewConfiguration = WKWebViewConfiguration()
-
-            let contentController = WKUserContentController()
-            let collapseTablesUserScript = CollapseTablesUserScript(collapseTables: UserDefaults.standard.collapseTables) {
-                print("collapsed")
-            }
-            contentController.addAndHandle(collapseTablesUserScript)
-            let themeUserScript = ThemeUserScript(theme: .black) {
-                print("Hi there")
-            }
-            contentController.addAndHandle(themeUserScript)
-
-            webViewConfiguration.userContentController = contentController
-            webViewConfiguration.setURLSchemeHandler(schemeHandler, forURLScheme: schemeHandler.scheme)
-            let articleMobileHTMLURL = configuration.mobileAppsServicesArticleResourceURLForArticle(with: article.url, scheme: schemeHandler.scheme, resource: .mobileHTML)!
-            let theme = Theme.black
-            let webViewController = WebViewController(url: articleMobileHTMLURL, configuration: webViewConfiguration, theme: theme)
-            let navigationController = UINavigationController(rootViewController: webViewController)
-            navigationController.apply(theme: theme)
-            present(navigationController, animated: true)
+            showArticle(article, withTheme: Theme.black)
         case let preference as Preference:
             preference.onSelection()
         default:
@@ -211,6 +192,41 @@ class ExploreTableViewController: UITableViewController {
             break
         }
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+
+    private func showArticle(_ article: Article, withTheme theme: Theme) {
+        let webViewController = self.webViewController(forArticle: article, theme: theme)
+        let navigationController = UINavigationController(rootViewController: webViewController)
+        navigationController.apply(theme: theme)
+        present(navigationController, animated: true)
+    }
+
+    private func webViewController(forArticle article: Article, theme: Theme) -> WebViewController {
+        let articleMobileHTMLURL = configuration.mobileAppsServicesArticleResourceURLForArticle(with: article.url, scheme: schemeHandler.scheme, resource: .mobileHTML)!
+        return WebViewController(url: articleMobileHTMLURL, configuration: webViewConfiguration, theme: theme)
+    }
+
+    private var webViewContentController: WKUserContentController {
+        let contentController = WKUserContentController()
+
+        let collapseTablesUserScript = CollapseTablesUserScript(collapseTables: UserDefaults.standard.collapseTables) {
+            print("collapsed")
+        }
+        let themeUserScript = ThemeUserScript(theme: .black) {
+            print("theme applied")
+        }
+
+        contentController.addAndHandle(collapseTablesUserScript)
+        contentController.addAndHandle(themeUserScript)
+
+        return contentController
+    }
+
+    private var webViewConfiguration: WKWebViewConfiguration {
+        let configuration = WKWebViewConfiguration()
+        configuration.userContentController = webViewContentController
+        configuration.setURLSchemeHandler(schemeHandler, forURLScheme: schemeHandler.scheme)
+        return configuration
     }
 }
 

@@ -94,6 +94,7 @@ public class Theme {
         self.colors = kind.colors
     }
 
+    static let standard = Theme.light
     static let light = Theme(kind: .light)
     static let sepia = Theme(kind: .sepia)
     static let dark = Theme(kind: .dark)
