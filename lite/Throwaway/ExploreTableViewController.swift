@@ -22,7 +22,7 @@ class ExploreTableViewController: UITableViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(themeWasUpdated(_:)), name: UserDefaults.didChangeThemeNotification, object: nil)
 
         collapseTablesPreferenceObservation = UserDefaults.standard.observe(\.collapseTables, options: [.new]) { defaults, change in
-            self.reloadPreferencesSection()
+            self.tableView.reloadData()
         }
         apply(theme: theme)
     }
@@ -30,10 +30,6 @@ class ExploreTableViewController: UITableViewController {
     deinit {
         collapseTablesPreferenceObservation?.invalidate()
         collapseTablesPreferenceObservation = nil
-    }
-
-    private func reloadPreferencesSection() {
-        tableView.reloadSections([SectionType.preferences.rawValue], with: .none)
     }
 
     @objc private func articleCacheWasUpdated(_ notification: Notification) {
@@ -171,6 +167,13 @@ class ExploreTableViewController: UITableViewController {
             break
         }
         return cell
+    }
+
+    override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard !cell.contentView.subviews.isEmpty else {
+            return
+        }
+        cell.contentView.subviews.forEach { $0.removeFromSuperview() }
     }
 
     private func addSubview(_ subview: UIView, to cell: UITableViewCell) {
