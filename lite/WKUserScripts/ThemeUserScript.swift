@@ -1,6 +1,6 @@
 import WebKit
 
-final class ThemeUserScript: UserScriptWithCompletion {
+final class ThemeUserScript: UserScriptWithCompletion<() -> Void> {
     init(theme: UserDefaults.Theme, completion: Completion? = nil) {
         let messageHandlerName = "wmf.theme.applied"
         let source = """

@@ -1,7 +1,7 @@
 import WebKit
 
-public class UserScriptWithCompletion: WKUserScript {
-    typealias Completion = (() -> Void)
+public class UserScriptWithCompletion<C>: WKUserScript, WKScriptMessageHandler {
+    typealias Completion = C
     let completion: Completion?
     public let messageHandlerName: String?
 
@@ -10,21 +10,23 @@ public class UserScriptWithCompletion: WKUserScript {
         self.completion = completion
         super.init(source: source, injectionTime: injectionTime, forMainFrameOnly: forMainFrameOnly)
     }
-}
 
-extension UserScriptWithCompletion: WKScriptMessageHandler {
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        guard let completion = completion else {
+        guard completion != nil else {
             return
         }
         DispatchQueue.main.async {
-            completion()
+            self.handleCompletion(receivedMessage: message)
         }
+    }
+
+    open func handleCompletion(receivedMessage message: WKScriptMessage) {
+        assertionFailure("Subclassers should override")
     }
 }
 
 public extension WKUserContentController {
-    func addAndHandle(_ userScriptWithCompletion: UserScriptWithCompletion) {
+    func addAndHandle<Completion>(_ userScriptWithCompletion: UserScriptWithCompletion<Completion>) {
         addUserScript(userScriptWithCompletion)
         guard
             userScriptWithCompletion.completion != nil,

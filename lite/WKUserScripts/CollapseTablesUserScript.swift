@@ -1,6 +1,6 @@
 import WebKit
 
-final class CollapseTablesUserScript: UserScriptWithCompletion {
+final class CollapseTablesUserScript: UserScriptWithCompletion<() -> Void> {
     init(collapseTables: Bool, completion: Completion? = nil) {
         let messageHandlerName = "wmfTablesCollapsed"
         let source = """
@@ -9,5 +9,9 @@ final class CollapseTablesUserScript: UserScriptWithCompletion {
         })
         """
         super.init(source: source, injectionTime: .atDocumentEnd, forMainFrameOnly: true, messageHandlerName: messageHandlerName, completion: completion)
+    }
+
+    override func handleCompletion(receivedMessage message: WKScriptMessage) {
+        completion?()
     }
 }
