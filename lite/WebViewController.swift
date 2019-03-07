@@ -13,6 +13,11 @@ class WebViewController: UIViewController {
         self.theme = theme
         super.init(nibName: nil, bundle: nil)
         self.navigationDelegate = self
+        NotificationCenter.default.addObserver(self, selector: #selector(themeWasUpdated(_:)), name: UserDefaults.didChangeThemeNotification, object: nil)
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -36,6 +41,13 @@ class WebViewController: UIViewController {
 
     @objc private func dismissAnimated() {
         dismiss(animated: true)
+    }
+
+    @objc private func themeWasUpdated(_ notification: Notification) {
+        guard let theme = notification.object as? Theme else {
+            return
+        }
+        apply(theme: theme)
     }
 }
 
@@ -80,6 +92,7 @@ extension WebViewController: Themeable {
             self.theme = theme
             return
         }
+        navigationController?.apply(theme: theme)
         view.backgroundColor = theme.colors.paperBackground
         webView.backgroundColor = theme.colors.paperBackground
         webView.scrollView.backgroundColor = theme.colors.paperBackground

@@ -22,7 +22,7 @@ class ExploreTableViewController: UITableViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(themeWasUpdated(_:)), name: UserDefaults.didChangeThemeNotification, object: nil)
 
         collapseTablesPreferenceObservation = UserDefaults.standard.observe(\.collapseTables, options: [.new]) { defaults, change in
-            self.tableView.reloadSections([SectionType.preferences.rawValue], with: .automatic)
+            self.reloadPreferencesSection()
         }
         apply(theme: theme)
     }
@@ -32,15 +32,30 @@ class ExploreTableViewController: UITableViewController {
         collapseTablesPreferenceObservation = nil
     }
 
+    private func reloadPreferencesSection() {
+        tableView.reloadSections([SectionType.preferences.rawValue], with: .none)
+    }
+
     @objc private func articleCacheWasUpdated(_ notification: Notification) {
         tableView.reloadData()
     }
+
+    private var reloadPreferencesOnViewWillAppear = false
 
     @objc private func themeWasUpdated(_ notification: Notification) {
         guard let theme = notification.object as? Theme else {
             return
         }
         apply(theme: theme)
+        reloadPreferencesOnViewWillAppear = true
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if reloadPreferencesOnViewWillAppear {
+            reloadPreferencesSection()
+            reloadPreferencesOnViewWillAppear = false
+        }
     }
 
     private struct Article: Item {
@@ -260,7 +275,7 @@ extension ExploreTableViewController: Themeable {
             self.theme = theme
             return
         }
-        
+        self.theme = theme
         view.backgroundColor = theme.colors.paperBackground
     }
 }
