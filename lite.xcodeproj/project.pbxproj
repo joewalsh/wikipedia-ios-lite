@@ -42,7 +42,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		7A0C5470221F49DC002642A9 /* Fetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Fetcher.swift; path = "/Users/nharateh/Developer/wikipedia-ios-lite/lite/Fetcher.swift"; sourceTree = "<absolute>"; };
+		7A0C5470221F49DC002642A9 /* Fetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fetcher.swift; sourceTree = "<group>"; };
 		7A0C548D221F9137002642A9 /* ArticleCacheController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleCacheController.swift; sourceTree = "<group>"; };
 		7A218CEF22203D39007C33E1 /* Cache.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Cache.xcdatamodel; sourceTree = "<group>"; };
 		7A34D4C5222F346000D73363 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = SOURCE_ROOT; };
