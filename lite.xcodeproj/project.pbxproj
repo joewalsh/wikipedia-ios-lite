@@ -100,8 +100,7 @@
 				7AEA574922300590004A4DF8 /* ThemePreference.swift */,
 				7AEA574A22300590004A4DF8 /* ThemePreference.xib */,
 			);
-			name = Throwaway;
-			path = "New Group";
+			path = Throwaway;
 			sourceTree = "<group>";
 		};
 		7A34D4C7222F4DD600D73363 /* WKUserScripts */ = {
