@@ -199,9 +199,10 @@ class ExploreTableViewController: UITableViewController {
             webViewConfiguration.userContentController = contentController
             webViewConfiguration.setURLSchemeHandler(schemeHandler, forURLScheme: schemeHandler.scheme)
             let articleMobileHTMLURL = configuration.mobileAppsServicesArticleResourceURLForArticle(with: article.url, scheme: schemeHandler.scheme, resource: .mobileHTML)!
-            let webViewController = WebViewController(url: articleMobileHTMLURL, configuration: webViewConfiguration, theme: Theme.black)
-
+            let theme = Theme.black
+            let webViewController = WebViewController(url: articleMobileHTMLURL, configuration: webViewConfiguration, theme: theme)
             let navigationController = UINavigationController(rootViewController: webViewController)
+            navigationController.apply(theme: theme)
             present(navigationController, animated: true)
         case let preference as Preference:
             preference.onSelection()
@@ -210,5 +211,14 @@ class ExploreTableViewController: UITableViewController {
             break
         }
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+}
+
+extension UINavigationController: Themeable {
+    public func apply(theme: Theme) {
+        navigationBar.barTintColor = theme.colors.chromeBackground
+        navigationBar.isTranslucent = false
+        navigationBar.tintColor = theme.colors.chromeText
+        view.tintColor = theme.colors.link
     }
 }

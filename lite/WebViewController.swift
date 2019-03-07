@@ -28,7 +28,6 @@ class WebViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addConstrainedSubview(webView)
-        view.backgroundColor = .red
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "close"), style: .plain, target: self, action: #selector(dismissAnimated))
         let request = URLRequest(url: url)
         webView.load(request)
@@ -81,8 +80,8 @@ extension WebViewController: Themeable {
             self.theme = theme
             return
         }
-        view.backgroundColor = UIColor.red
-        webView.backgroundColor = UIColor.red
-        webView.scrollView.backgroundColor = UIColor.red
+        view.backgroundColor = theme.colors.paperBackground
+        webView.backgroundColor = theme.colors.paperBackground
+        webView.scrollView.backgroundColor = theme.colors.paperBackground
     }
 }
