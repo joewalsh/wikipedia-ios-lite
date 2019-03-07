@@ -6,26 +6,6 @@ extension UserDefaults {
         case theme
     }
 
-    enum Theme: Int {
-        case `default`
-        case sepia
-        case dark
-        case black
-
-        var name: String {
-            switch self {
-            case .default:
-                return "DEFAULT"
-            case .sepia:
-                return "SEPIA"
-            case .dark:
-                return "DARK"
-            case .black:
-                return "BLACK"
-            }
-        }
-    }
-
     @objc dynamic var collapseTables: Bool {
         get {
             return bool(forKey: Key.collapseTables.rawValue)
@@ -35,10 +15,10 @@ extension UserDefaults {
         }
     }
 
-    var theme: Theme? {
+    var theme: Theme.Kind? {
         get {
             guard
-                let theme = Theme(rawValue: integer(forKey: Key.theme.rawValue))
+                let theme = Theme.Kind(rawValue: integer(forKey: Key.theme.rawValue))
             else {
                 return nil
             }
