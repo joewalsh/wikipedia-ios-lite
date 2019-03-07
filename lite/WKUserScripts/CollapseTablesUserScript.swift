@@ -4,7 +4,7 @@ final class CollapseTablesUserScript: UserScriptWithCompletion<() -> Void> {
     init(collapseTables: Bool, completion: Completion? = nil) {
         let messageHandlerName = "wmfTablesCollapsed"
         let source = """
-        wmf.collapseTables(\(collapseTables.description), () => {
+        window.wmf.collapseTables(\(collapseTables.description), () => {
             window.webkit.messageHandlers.\(messageHandlerName).postMessage({})
         })
         """
