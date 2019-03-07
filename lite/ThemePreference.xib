@@ -22,18 +22,30 @@
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ttf-Ra-Md5" userLabel="Default Theme Button">
                             <rect key="frame" x="0.0" y="0.0" width="50" height="77"/>
                             <state key="normal" title="Default"/>
+                            <connections>
+                                <action selector="updateThemePreference:" destination="iN0-l3-epB" eventType="touchUpInside" id="v8K-C7-eKo"/>
+                            </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EeA-0i-qEw" userLabel="Sepia Theme Button">
+                        <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EeA-0i-qEw" userLabel="Sepia Theme Button">
                             <rect key="frame" x="117.5" y="0.0" width="39" height="77"/>
                             <state key="normal" title="Sepia"/>
+                            <connections>
+                                <action selector="updateThemePreference:" destination="iN0-l3-epB" eventType="touchUpInside" id="jjd-M3-EPk"/>
+                            </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9ua-tZ-mhF" userLabel="Dark Theme Button">
+                        <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9ua-tZ-mhF" userLabel="Dark Theme Button">
                             <rect key="frame" x="224.5" y="0.0" width="33" height="77"/>
                             <state key="normal" title="Dark"/>
+                            <connections>
+                                <action selector="updateThemePreference:" destination="iN0-l3-epB" eventType="touchUpInside" id="71l-MP-h5Y"/>
+                            </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8V7-jI-aXQ" userLabel="Black Theme Button">
+                        <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8V7-jI-aXQ" userLabel="Black Theme Button">
                             <rect key="frame" x="325" y="0.0" width="38" height="77"/>
                             <state key="normal" title="Black"/>
+                            <connections>
+                                <action selector="updateThemePreference:" destination="iN0-l3-epB" eventType="touchUpInside" id="UjZ-c1-YsZ"/>
+                            </connections>
                         </button>
                     </subviews>
                 </stackView>
