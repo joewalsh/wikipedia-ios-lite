@@ -71,7 +71,9 @@ extension SchemeHandler: WKURLSchemeHandler {
             guard let task = self.tasks[urlSchemeTask.request] else {
                 return
             }
-            task.cancel()
+            if task.state == .running {
+                task.cancel()
+            }
             self.tasks.removeValue(forKey: urlSchemeTask.request)
         }
     }
