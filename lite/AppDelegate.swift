@@ -36,6 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         explore.tabBarItem = UITabBarItem(title: "Explore", image: UIImage(named: "explore"), tag: 0)
 
         let tabBarController = UITabBarController()
+        tabBarController.tabBar.tintAdjustmentMode = .normal
         tabBarController.viewControllers = [explore]
 
         window?.rootViewController = tabBarController
