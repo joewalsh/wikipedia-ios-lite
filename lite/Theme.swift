@@ -23,6 +23,7 @@ extension UIColor {
         self.init(hex, alpha: 1)
     }
 
+    fileprivate static let base80 = UIColor(0xEAECF0)
     fileprivate static let base100 = UIColor(0xFFFFFF)
     fileprivate static let parchment = UIColor(0xF8F1E3)
     fileprivate static let thermosphere = UIColor(0x2E3136)
@@ -31,25 +32,30 @@ extension UIColor {
     fileprivate static let base90 = UIColor(0xF8F9FA)
     fileprivate static let blue50 = UIColor(0x3366CC)
     fileprivate static let stratosphere = UIColor(0x6699FF)
+    fileprivate static let amate = UIColor(0xE1DAD1)
+
+    fileprivate static let pitchBlack = UIColor(0x101418)
 }
 
 class Colors {
     let paperBackground: UIColor
     let chromeBackground: UIColor
+    let baseBackground: UIColor
     let chromeText: UIColor
     let link: UIColor
 
-    init(paperBackground: UIColor, chromeBackground: UIColor, chromeText: UIColor, link: UIColor) {
+    init(paperBackground: UIColor, chromeBackground: UIColor, baseBackground: UIColor, chromeText: UIColor, link: UIColor) {
         self.paperBackground = paperBackground
         self.chromeBackground = chromeBackground
+        self.baseBackground = baseBackground
         self.chromeText = chromeText
         self.link = link
     }
 
-    static let light = Colors(paperBackground: .base100, chromeBackground: .base100, chromeText: .base10, link: .blue50)
-    static let sepia = Colors(paperBackground: .parchment, chromeBackground: .parchment, chromeText: .base10, link: .blue50)
-    static let dark = Colors(paperBackground: .thermosphere, chromeBackground: .mesosphere, chromeText: .base90, link: .stratosphere)
-    static let black = Colors(paperBackground: .black, chromeBackground: .base10, chromeText: .base90, link: .stratosphere)
+    static let light = Colors(paperBackground: .base100, chromeBackground: .base100, baseBackground: .base80, chromeText: .base10, link: .blue50)
+    static let sepia = Colors(paperBackground: .parchment, chromeBackground: .parchment, baseBackground: .amate, chromeText: .base10, link: .blue50)
+    static let dark = Colors(paperBackground: .thermosphere, chromeBackground: .mesosphere, baseBackground: .base10, chromeText: .base90, link: .stratosphere)
+    static let black = Colors(paperBackground: .black, chromeBackground: .base10, baseBackground: .pitchBlack, chromeText: .base90, link: .stratosphere)
 }
 
 public class Theme {
