@@ -166,6 +166,8 @@ class ExploreTableViewController: UITableViewController {
             assertionFailure("Unhandled type: \(item)")
             break
         }
+        cell.backgroundColor = theme.colors.paperBackground
+        cell.textLabel?.textColor = theme.colors.chromeText
         return cell
     }
 
@@ -241,9 +243,13 @@ class ExploreTableViewController: UITableViewController {
     private var webViewContentController: WKUserContentController {
         let contentController = WKUserContentController()
 
+        let themeUserScript = ThemeUserScript(theme: theme) {
+            print("theme applied")
+        }
         let collapseTablesUserScript = CollapseTablesUserScript(collapseTables: UserDefaults.standard.collapseTables) {
             print("collapsed")
         }
+        contentController.addAndHandle(themeUserScript)
         contentController.addAndHandle(collapseTablesUserScript)
 
         return contentController
@@ -264,17 +270,45 @@ extension ExploreTableViewController: Themeable {
             return
         }
         self.theme = theme
-        view.backgroundColor = theme.colors.paperBackground
+        view.backgroundColor = theme.colors.baseBackground
+        tabBarController?.apply(theme: theme)
+        tableView.reloadData()
     }
 }
 
 extension UINavigationController: Themeable {
     public func apply(theme: Theme) {
-        navigationBar.barTintColor = theme.colors.chromeBackground
-        navigationBar.isTranslucent = false
-        navigationBar.tintColor = theme.colors.chromeText
-        toolbar.barTintColor = theme.colors.chromeBackground
-        toolbar.isTranslucent = false
+        navigationBar.apply(theme: theme)
+        toolbar.apply(theme: theme)
         view.tintColor = theme.colors.link
+    }
+}
+
+extension UIToolbar: Themeable {
+    public func apply(theme: Theme) {
+        barTintColor = theme.colors.chromeBackground
+        isTranslucent = false
+    }
+}
+
+extension UINavigationBar: Themeable {
+    public func apply(theme: Theme) {
+        barTintColor = theme.colors.chromeBackground
+        isTranslucent = false
+        tintColor = theme.colors.chromeText
+    }
+}
+
+extension UITabBar: Themeable {
+    public func apply(theme: Theme) {
+        isTranslucent = false
+        barTintColor = theme.colors.chromeBackground
+        tintColor = theme.colors.chromeText
+    }
+}
+
+extension UITabBarController: Themeable {
+    public func apply(theme: Theme) {
+        tabBarController?.tabBar.apply(theme: theme)
     }
 }
