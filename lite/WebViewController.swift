@@ -34,6 +34,10 @@ class WebViewController: UIViewController {
         super.viewDidLoad()
         view.addConstrainedSubview(webView)
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "close"), style: .plain, target: self, action: #selector(dismissAnimated))
+        navigationController?.isToolbarHidden = false
+        let themePreference = ThemePreference.instantiate()
+        themePreference.sizeToFit()
+        setToolbarItems([UIBarButtonItem(customView: themePreference)], animated: true)
         let request = URLRequest(url: url)
         webView.load(request)
         apply(theme: theme)

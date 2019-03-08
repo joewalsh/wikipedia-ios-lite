@@ -181,8 +181,9 @@ class ExploreTableViewController: UITableViewController {
         let contentView = cell.contentView
         contentView.addSubview(subview)
         let leading = subview.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: tableView.separatorInset.left)
+        let trailing = contentView.safeAreaLayoutGuide.trailingAnchor.constraint(equalTo: subview.trailingAnchor, constant: tableView.separatorInset.left)
         let centerY = subview.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
-        NSLayoutConstraint.activate([leading, centerY])
+        NSLayoutConstraint.activate([leading, trailing, centerY])
     }
 
     @objc private func toggleArticleSavedState(_ sender: UIButton) {
@@ -219,12 +220,12 @@ class ExploreTableViewController: UITableViewController {
     private func showArticle(_ article: Article, withTheme theme: Theme) {
         let webViewController = self.webViewController(forArticle: article, theme: theme)
         let navigationController = UINavigationController(rootViewController: webViewController)
-        addThemePreferencePanel(to: navigationController.navigationBar)
         navigationController.apply(theme: theme)
         present(navigationController, animated: true)
     }
 
-    private func addThemePreferencePanel(to navigationBar: UINavigationBar) {
+    private func addThemePreferencePanel(to navigationController: UINavigationController) {
+        let navigationBar = navigationController.navigationBar
         let themePreference = ThemePreference.instantiate()
         themePreference.translatesAutoresizingMaskIntoConstraints = false
         navigationBar.addSubview(themePreference)
@@ -272,6 +273,8 @@ extension UINavigationController: Themeable {
         navigationBar.barTintColor = theme.colors.chromeBackground
         navigationBar.isTranslucent = false
         navigationBar.tintColor = theme.colors.chromeText
+        toolbar.barTintColor = theme.colors.chromeBackground
+        toolbar.isTranslucent = false
         view.tintColor = theme.colors.link
     }
 }
