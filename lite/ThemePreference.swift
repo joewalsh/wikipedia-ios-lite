@@ -21,7 +21,7 @@ class ThemePreference: UIView, Nibbed {
         assert(Theme.Kind.allCases.count == themeButtons.count)
         for (kind, button) in zip(Theme.Kind.allCases, themeButtons) {
             button.tag = kind.rawValue
-            let isCurrentTheme = kind.rawValue == defaults.theme.rawValue
+            let isCurrentTheme = kind.rawValue == defaults.theme.kind.rawValue
             if isCurrentTheme {
                 button.isSelected = true
                 selectedButton = button
@@ -40,9 +40,9 @@ class ThemePreference: UIView, Nibbed {
     }
 
     @IBAction private func updateThemePreference(_ sender: UIButton) {
-        guard let theme = Theme.Kind(rawValue: sender.tag) else {
+        guard let themeKind = Theme.Kind(rawValue: sender.tag) else {
             return
         }
-        defaults.theme = theme
+        defaults.theme = (themeKind, false)
     }
 }

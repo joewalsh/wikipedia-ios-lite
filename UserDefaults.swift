@@ -4,6 +4,7 @@ extension UserDefaults {
     enum Key: String {
         case collapseTables
         case theme
+        case dimImages
     }
 
     @objc dynamic var collapseTables: Bool {
@@ -15,18 +16,20 @@ extension UserDefaults {
         }
     }
 
-    var theme: Theme.Kind {
+    var theme: (kind: Theme.Kind, dimImages: Bool) {
         get {
             guard
-                let theme = Theme.Kind(rawValue: integer(forKey: Key.theme.rawValue))
+                let themeKind = Theme.Kind(rawValue: integer(forKey: Key.theme.rawValue))
             else {
-                return Theme.standard.kind
+                return (Theme.standard.kind, false)
             }
-            return theme
+            return (themeKind, bool(forKey: Key.dimImages.rawValue))
         }
         set {
-            set(newValue.rawValue, forKey: Key.theme.rawValue)
-            notify(with: UserDefaults.didChangeThemeNotification, object: Theme(kind: theme))
+            set(newValue.kind.rawValue, forKey: Key.theme.rawValue)
+            set(newValue.dimImages, forKey: Key.dimImages.rawValue)
+            let newTheme = Theme(kind: theme.kind, dimImages: theme.dimImages)
+            notify(with: UserDefaults.didChangeThemeNotification, object: newTheme)
         }
     }
 

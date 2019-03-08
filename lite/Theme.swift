@@ -53,8 +53,11 @@ class Colors {
 }
 
 public class Theme {
-    let colors: Colors
     let kind: Kind
+    let colors: Colors
+    let dimImages: Bool
+    let imageOpacity: CGFloat
+    let isDark: Bool
 
     enum Kind: Int, CaseIterable {
         case light
@@ -82,20 +85,28 @@ public class Theme {
         var colors: Colors {
             switch self {
             case .light:
-                return Colors.light
+                return .light
             case .sepia:
-                return Colors.sepia
+                return .sepia
             case .dark:
-                return Colors.dark
+                return .dark
             case .black:
-                return Colors.black
+                return .black
             }
+        }
+
+        var isDark: Bool {
+            return self == .dark || self == .black
         }
     }
 
-    init(kind: Kind) {
+    init(kind: Kind, dimImages: Bool = false) {
+        assert(kind.isDark == false ? dimImages == false : true, "Only dark themes support image dimming")
         self.kind = kind
         self.colors = kind.colors
+        self.isDark = kind.isDark
+        self.dimImages = dimImages
+        self.imageOpacity = dimImages ? 0.46 : 1
     }
 
     static let standard = Theme.light

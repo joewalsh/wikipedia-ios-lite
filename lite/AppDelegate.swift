@@ -31,7 +31,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let articleCacheController = ArticleCacheController(fetcher: articleFetcher)
         persistentURLCache.delegate = articleCacheController
         explore.cacheController = articleCacheController
-        explore.theme = Theme(kind: UserDefaults.standard.theme)
+        let defaultTheme = UserDefaults.standard.theme
+        explore.theme = Theme(kind: defaultTheme.kind, dimImages: defaultTheme.dimImages)
         explore.tabBarItem = UITabBarItem(title: "Explore", image: UIImage(named: "explore"), tag: 0)
 
         let tabBarController = UITabBarController()
