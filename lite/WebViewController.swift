@@ -1,12 +1,17 @@
 import UIKit
 import WebKit
 
+protocol UserScriptApplicationDelegate: AnyObject {
+    #warning("Pass script + whatever else")
+    func themeUserScriptDidFinish()
+}
+
 class WebViewController: UIViewController {
     let configuration: WKWebViewConfiguration
     let url: URL
     weak var navigationDelegate: WKNavigationDelegate?
     var theme = Theme.standard
-    
+
     required init(url: URL, configuration: WKWebViewConfiguration = WKWebViewConfiguration(), theme: Theme) {
         self.url = url
         self.configuration = configuration
@@ -15,6 +20,12 @@ class WebViewController: UIViewController {
         self.navigationDelegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(themeWasUpdated(_:)), name: UserDefaults.didChangeThemeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dimImagesPreferenceWasUpdated(_:)), name: UserDefaults.didUpdateDimImages, object: nil)
+    }
+
+    var appliedTheme: Bool = false {
+        didSet {
+            webView.isHidden = !appliedTheme
+        }
     }
 
     deinit {
@@ -27,6 +38,7 @@ class WebViewController: UIViewController {
     
     lazy var webView: WKWebView = {
         let webView = WKWebView(frame: .zero, configuration: configuration)
+        webView.isHidden = !appliedTheme
         webView.navigationDelegate = navigationDelegate
         return webView
     }()
@@ -95,6 +107,12 @@ extension WebViewController: WKNavigationDelegate {
 
         let webViewController = WebViewController(url: adjustedURL, configuration: configuration, theme: theme)
         navigationController?.pushViewController(webViewController, animated: true)
+    }
+}
+
+extension WebViewController: UserScriptApplicationDelegate {
+    func themeUserScriptDidFinish() {
+        appliedTheme = true
     }
 }
 

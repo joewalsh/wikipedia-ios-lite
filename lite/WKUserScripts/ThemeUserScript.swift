@@ -5,16 +5,15 @@ final class ThemeUserScript: UserScriptWithCompletion<() -> Void> {
         let callback: String?
         if let messageHandlerName = messageHandlerName {
             callback = """
-            window.webkit.messageHandlers.\(messageHandlerName).postMessage({});
+            window.requestAnimationFrame(() => {
+                window.webkit.messageHandlers.\(messageHandlerName).postMessage({})
+            })
             """
         } else {
             callback = nil
         }
 
         let source: String
-//        let setTheme = """
-//            window.wmf.setTheme('\(theme.kind.jsName)', '\(theme.dimImages.description)')
-//        """
         if let callback = callback {
             source = """
             window.wmf.setTheme('\(theme.kind.jsName)', \(theme.dimImages.description), () => {
