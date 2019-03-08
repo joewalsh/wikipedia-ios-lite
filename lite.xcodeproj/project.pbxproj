@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		7A0C5471221F49DC002642A9 /* Fetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0C5470221F49DC002642A9 /* Fetcher.swift */; };
 		7A0C548E221F9137002642A9 /* ArticleCacheController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0C548D221F9137002642A9 /* ArticleCacheController.swift */; };
+		7A1EEE3A2232C83300733DCF /* pagelib.css in Resources */ = {isa = PBXBuildFile; fileRef = 7A1EEE392232C83300733DCF /* pagelib.css */; };
+		7A1EEE3C2232CDFF00733DCF /* base.css in Resources */ = {isa = PBXBuildFile; fileRef = 7A1EEE3B2232CDFF00733DCF /* base.css */; };
 		7A218CF022203D39007C33E1 /* Cache.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7A218CEE22203D39007C33E1 /* Cache.xcdatamodeld */; };
 		7A34D4C6222F346000D73363 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A34D4C5222F346000D73363 /* UserDefaults.swift */; };
 		7A34D4C9222F4DED00D73363 /* CollapseTablesUserScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A34D4C8222F4DED00D73363 /* CollapseTablesUserScript.swift */; };
@@ -44,6 +46,8 @@
 /* Begin PBXFileReference section */
 		7A0C5470221F49DC002642A9 /* Fetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fetcher.swift; sourceTree = "<group>"; };
 		7A0C548D221F9137002642A9 /* ArticleCacheController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleCacheController.swift; sourceTree = "<group>"; };
+		7A1EEE392232C83300733DCF /* pagelib.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = pagelib.css; sourceTree = "<group>"; };
+		7A1EEE3B2232CDFF00733DCF /* base.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = base.css; sourceTree = "<group>"; };
 		7A218CEF22203D39007C33E1 /* Cache.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Cache.xcdatamodel; sourceTree = "<group>"; };
 		7A34D4C5222F346000D73363 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = SOURCE_ROOT; };
 		7A34D4C8222F4DED00D73363 /* CollapseTablesUserScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapseTablesUserScript.swift; sourceTree = "<group>"; };
@@ -93,6 +97,8 @@
 		7A0C5486221F6E37002642A9 /* Throwaway */ = {
 			isa = PBXGroup;
 			children = (
+				7A1EEE3B2232CDFF00733DCF /* base.css */,
+				7A1EEE392232C83300733DCF /* pagelib.css */,
 				7AC98C43222F091500E90A2F /* ExploreTableViewController.swift */,
 				7A673CD02230A77200A203F4 /* Nibbed.swift */,
 				7AC98C44222F091500E90A2F /* ExploreTableViewController.xib */,
@@ -230,6 +236,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				7AC98C46222F091500E90A2F /* ExploreTableViewController.xib in Resources */,
+				7A1EEE3A2232C83300733DCF /* pagelib.css in Resources */,
+				7A1EEE3C2232CDFF00733DCF /* base.css in Resources */,
 				D8C271E321B9612600BFD1BD /* LaunchScreen.storyboard in Resources */,
 				7AEA574C22300590004A4DF8 /* ThemePreference.xib in Resources */,
 				D8C271E021B9612600BFD1BD /* Assets.xcassets in Resources */,
