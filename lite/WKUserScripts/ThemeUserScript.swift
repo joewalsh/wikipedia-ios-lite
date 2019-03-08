@@ -12,15 +12,18 @@ final class ThemeUserScript: UserScriptWithCompletion<() -> Void> {
         }
 
         let source: String
+//        let setTheme = """
+//            window.wmf.setTheme('\(theme.kind.jsName)', '\(theme.dimImages.description)')
+//        """
         if let callback = callback {
             source = """
-            window.wmf.setTheme('\(theme.kind.jsName)', () => {
+            window.wmf.setTheme('\(theme.kind.jsName)', \(theme.dimImages.description), () => {
                 \(callback)
             })
             """
         } else {
             source = """
-            window.wmf.setTheme('\(theme.kind.jsName)')
+            window.wmf.setTheme('\(theme.kind.jsName)', \(theme.dimImages.description))
             """
         }
         return source

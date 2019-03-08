@@ -16,49 +16,79 @@
             <rect key="frame" x="0.0" y="0.0" width="363" height="77"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="Hvg-9J-ILv">
+                <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="Hvg-9J-ILv">
                     <rect key="frame" x="0.0" y="0.0" width="363" height="77"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ttf-Ra-Md5" userLabel="Default Theme Button">
                             <rect key="frame" x="0.0" y="0.0" width="50" height="77"/>
                             <state key="normal" title="Default"/>
                             <connections>
-                                <action selector="updateThemePreference:" destination="iN0-l3-epB" eventType="touchUpInside" id="v8K-C7-eKo"/>
+                                <action selector="updateTheme:" destination="iN0-l3-epB" eventType="touchUpInside" id="h0d-EQ-i9t"/>
                             </connections>
                         </button>
                         <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EeA-0i-qEw" userLabel="Sepia Theme Button">
-                            <rect key="frame" x="117.5" y="0.0" width="39" height="77"/>
+                            <rect key="frame" x="64" y="0.0" width="39" height="77"/>
                             <state key="normal" title="Sepia"/>
                             <connections>
-                                <action selector="updateThemePreference:" destination="iN0-l3-epB" eventType="touchUpInside" id="jjd-M3-EPk"/>
+                                <action selector="updateTheme:" destination="iN0-l3-epB" eventType="touchUpInside" id="gFg-WS-nGU"/>
                             </connections>
                         </button>
                         <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9ua-tZ-mhF" userLabel="Dark Theme Button">
-                            <rect key="frame" x="224.5" y="0.0" width="33" height="77"/>
+                            <rect key="frame" x="117" y="0.0" width="33" height="77"/>
                             <state key="normal" title="Dark"/>
                             <connections>
-                                <action selector="updateThemePreference:" destination="iN0-l3-epB" eventType="touchUpInside" id="71l-MP-h5Y"/>
+                                <action selector="updateTheme:" destination="iN0-l3-epB" eventType="touchUpInside" id="j05-fa-c8w"/>
                             </connections>
                         </button>
                         <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8V7-jI-aXQ" userLabel="Black Theme Button">
-                            <rect key="frame" x="325" y="0.0" width="38" height="77"/>
+                            <rect key="frame" x="164" y="0.0" width="38" height="77"/>
                             <state key="normal" title="Black"/>
                             <connections>
-                                <action selector="updateThemePreference:" destination="iN0-l3-epB" eventType="touchUpInside" id="UjZ-c1-YsZ"/>
+                                <action selector="updateTheme:" destination="iN0-l3-epB" eventType="touchUpInside" id="B5J-Gy-29t"/>
                             </connections>
                         </button>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bSc-oq-Ms3">
+                            <rect key="frame" x="216" y="0.0" width="147" height="77"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dim Images" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="loO-nz-Dih">
+                                    <rect key="frame" x="0.0" y="0.0" width="90" height="77"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="E10-85-bta">
+                                    <rect key="frame" x="98" y="0.0" width="51" height="77"/>
+                                    <color key="onTintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <connections>
+                                        <action selector="updateThemWithImageDimming:" destination="iN0-l3-epB" eventType="valueChanged" id="hdd-Gp-ao3"/>
+                                    </connections>
+                                </switch>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="E10-85-bta" firstAttribute="top" secondItem="bSc-oq-Ms3" secondAttribute="top" id="2xK-A1-Rns"/>
+                                <constraint firstAttribute="bottom" secondItem="loO-nz-Dih" secondAttribute="bottom" id="F0b-qB-bYz"/>
+                                <constraint firstAttribute="bottom" secondItem="E10-85-bta" secondAttribute="bottom" id="KcT-Lr-wFY"/>
+                                <constraint firstAttribute="trailing" secondItem="E10-85-bta" secondAttribute="trailing" id="dSA-4s-UEB"/>
+                                <constraint firstItem="E10-85-bta" firstAttribute="centerY" secondItem="bSc-oq-Ms3" secondAttribute="centerY" id="fR6-aa-hBH"/>
+                                <constraint firstItem="E10-85-bta" firstAttribute="leading" secondItem="loO-nz-Dih" secondAttribute="trailing" constant="8" id="iU6-j6-F9u"/>
+                                <constraint firstItem="loO-nz-Dih" firstAttribute="top" secondItem="bSc-oq-Ms3" secondAttribute="top" id="jrF-HE-JZF"/>
+                                <constraint firstItem="loO-nz-Dih" firstAttribute="leading" secondItem="bSc-oq-Ms3" secondAttribute="leading" id="y5X-rI-84G"/>
+                            </constraints>
+                        </view>
                     </subviews>
                 </stackView>
             </subviews>
             <constraints>
                 <constraint firstItem="Hvg-9J-ILv" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="3pn-zW-9DN"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Hvg-9J-ILv" secondAttribute="trailing" id="ExN-jf-mAn"/>
+                <constraint firstAttribute="trailing" secondItem="Hvg-9J-ILv" secondAttribute="trailing" id="7u4-UT-EJA"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="Hvg-9J-ILv" secondAttribute="bottom" id="OhY-WF-wWS"/>
                 <constraint firstItem="Hvg-9J-ILv" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="phq-xt-dAR"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
+                <outlet property="dimImagesLabel" destination="loO-nz-Dih" id="RFp-Dx-4yw"/>
+                <outlet property="dimImagesSwitch" destination="E10-85-bta" id="V0b-lj-lAK"/>
                 <outletCollection property="themeButtons" destination="Ttf-Ra-Md5" collectionClass="NSMutableArray" id="ER1-8E-8Tu"/>
                 <outletCollection property="themeButtons" destination="EeA-0i-qEw" collectionClass="NSMutableArray" id="iSC-Gj-5Sb"/>
                 <outletCollection property="themeButtons" destination="9ua-tZ-mhF" collectionClass="NSMutableArray" id="6M3-NW-KNV"/>
