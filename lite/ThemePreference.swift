@@ -26,14 +26,14 @@ class ThemePreference: UIView, Nibbed {
     override func awakeFromNib() {
         super.awakeFromNib()
         assert(Theme.Kind.allCases.count == themeButtons.count)
-        let defaultTheme = defaults.theme
+        let theme = defaults.theme
         for (kind, button) in zip(Theme.Kind.allCases, themeButtons) {
             button.tag = kind.rawValue
-            let isCurrentTheme = button.tag == defaultTheme.kind.rawValue
+            let isCurrentTheme = button.tag == theme.kind.rawValue
             if isCurrentTheme {
                 activeButton = button
-                dimImagesSwitch.isEnabled = defaultTheme.kind.isDark
-                dimImagesSwitch.isOn = defaultTheme.dimImages
+                dimImagesSwitch.isEnabled = theme.kind.isDark
+                dimImagesSwitch.isOn = theme.dimImages
             }
             button.setTitle(kind.name, for: .normal)
         }
