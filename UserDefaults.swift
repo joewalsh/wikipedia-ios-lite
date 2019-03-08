@@ -16,20 +16,38 @@ extension UserDefaults {
         }
     }
 
-    var theme: (kind: Theme.Kind, dimImages: Bool) {
+    var themeKind: Theme.Kind {
         get {
             guard
-                let themeKind = Theme.Kind(rawValue: integer(forKey: Key.theme.rawValue))
+                let kind = Theme.Kind(rawValue: integer(forKey: Key.theme.rawValue))
             else {
-                return (Theme.standard.kind, false)
+                return Theme.standard.kind
             }
-            return (themeKind, bool(forKey: Key.dimImages.rawValue))
+            return kind
         }
         set {
-            set(newValue.kind.rawValue, forKey: Key.theme.rawValue)
-            set(newValue.dimImages, forKey: Key.dimImages.rawValue)
-            let newTheme = Theme(kind: theme.kind, dimImages: theme.dimImages)
-            notify(with: UserDefaults.didChangeThemeNotification, object: newTheme)
+            set(newValue.rawValue, forKey: Key.theme.rawValue)
+            notify(with: UserDefaults.didChangeThemeNotification, object: theme)
+        }
+    }
+
+    var theme: Theme {
+        get {
+            return Theme(kind: themeKind, dimImages: dimImages)
+        }
+        set {
+            themeKind = newValue.kind
+            dimImages = newValue.dimImages
+        }
+    }
+
+    var dimImages: Bool {
+        get {
+            return bool(forKey: Key.dimImages.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.dimImages.rawValue)
+            notify(with: UserDefaults.didUpdateDimImages, object: newValue)
         }
     }
 
@@ -42,4 +60,5 @@ extension UserDefaults {
 
 extension UserDefaults {
     static let didChangeThemeNotification = Notification.Name(rawValue: "didChangeThemeNotification")
+    static let didUpdateDimImages = Notification.Name(rawValue: "didUpdateDimImages")
 }

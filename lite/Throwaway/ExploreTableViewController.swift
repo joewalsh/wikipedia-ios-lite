@@ -309,6 +309,6 @@ extension UITabBar: Themeable {
 
 extension UITabBarController: Themeable {
     public func apply(theme: Theme) {
-        tabBarController?.tabBar.apply(theme: theme)
+        tabBar.apply(theme: theme)
     }
 }

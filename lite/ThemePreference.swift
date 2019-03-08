@@ -26,14 +26,14 @@ class ThemePreference: UIView, Nibbed {
     override func awakeFromNib() {
         super.awakeFromNib()
         assert(Theme.Kind.allCases.count == themeButtons.count)
-        let theme = defaults.theme
+        let themeKind = defaults.themeKind
         for (kind, button) in zip(Theme.Kind.allCases, themeButtons) {
             button.tag = kind.rawValue
-            let isCurrentTheme = button.tag == theme.kind.rawValue
+            let isCurrentTheme = button.tag == themeKind.rawValue
             if isCurrentTheme {
                 activeButton = button
-                dimImagesSwitch.isEnabled = theme.kind.isDark
-                dimImagesSwitch.isOn = theme.dimImages
+                dimImagesSwitch.isEnabled = themeKind.isDark
+                dimImagesSwitch.isOn = defaults.dimImages
             }
             button.setTitle(kind.name, for: .normal)
         }
@@ -52,16 +52,11 @@ class ThemePreference: UIView, Nibbed {
         guard let themeKind = Theme.Kind(rawValue: sender.tag) else {
             return
         }
-        defaults.theme = (themeKind, themeKind.isDark ? dimImagesSwitch.isOn : false)
+        defaults.dimImages = themeKind.isDark ? dimImagesSwitch.isOn : false
+        defaults.themeKind = themeKind
     }
 
     @IBAction private func updateThemWithImageDimming(_ sender: UISwitch) {
-        guard
-            let activeButton = activeButton,
-            let themeKind = Theme.Kind(rawValue: activeButton.tag)
-        else {
-            return
-        }
-        defaults.theme = (themeKind, sender.isOn)
+        defaults.dimImages = sender.isOn
     }
 }
