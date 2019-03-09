@@ -1,15 +1,15 @@
 import Foundation
 
-struct Callback {
-    let response: ((URLResponse) -> Void)?
-    let data: ((Data) -> Void)?
-    let success: (() -> Void)
-    let failure: ((Error) -> Void)
-}
-
 public class Session: NSObject {
     let sessionConfiguration: URLSessionConfiguration
     let session: URLSession
+
+    struct Callback {
+        let response: ((URLSessionTask, URLResponse) -> Void)?
+        let data: ((Data) -> Void)?
+        let success: (() -> Void)
+        let failure: ((URLSessionTask, Error) -> Void)
+    }
     
     enum Result<T> {
         case success(result: T)
