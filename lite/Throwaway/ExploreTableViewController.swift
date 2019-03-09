@@ -82,7 +82,8 @@ class ExploreTableViewController: UITableViewController {
             Article(title: "Wolf"),
             Article(title: "Cat"),
             Article(title: "Panda"),
-            Article(title: "Unicorn")
+            Article(title: "Unicorn"),
+            Article(title: "Barack_Obama")
         ]
         return Section(title: "Explore", items: articles)
     }()
