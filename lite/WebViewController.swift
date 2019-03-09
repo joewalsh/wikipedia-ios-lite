@@ -24,9 +24,9 @@ class WebViewController: UIViewController {
         let themeUserScript = ThemeUserScript(theme: theme) {
             self.webView.isHidden = false
         }
-        let collapseTablesUserScript = CollapseTablesUserScript(collapseTables: UserDefaults.standard.collapseTables)
+        let tablesUserScript = TablesUserScript(collapse: UserDefaults.standard.collapseTables)
         contentController.addAndHandle(themeUserScript)
-        contentController.addAndHandle(collapseTablesUserScript)
+        contentController.addAndHandle(tablesUserScript)
 
         return contentController
     }()
