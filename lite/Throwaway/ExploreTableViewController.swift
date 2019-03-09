@@ -235,31 +235,14 @@ class ExploreTableViewController: UITableViewController {
         NSLayoutConstraint.activate([centerX])
     }
 
-    private weak var userScriptApplicationDelegate: UserScriptApplicationDelegate?
-
     private func webViewController(forArticle article: Article, theme: Theme) -> WebViewController {
         let articleMobileHTMLURL = configuration.mobileAppsServicesArticleResourceURLForArticle(with: article.url, scheme: schemeHandler.scheme, resource: .mobileHTML)!
         let webViewController = WebViewController(url: articleMobileHTMLURL, configuration: webViewConfiguration, theme: theme)
-        userScriptApplicationDelegate = webViewController
         return webViewController
-    }
-
-    private var webViewContentController: WKUserContentController {
-        let contentController = WKUserContentController()
-
-        let themeUserScript = ThemeUserScript(theme: theme) {
-            self.userScriptApplicationDelegate?.themeUserScriptDidFinish()
-        }
-        let collapseTablesUserScript = CollapseTablesUserScript(collapseTables: UserDefaults.standard.collapseTables)
-        contentController.addAndHandle(themeUserScript)
-        contentController.addAndHandle(collapseTablesUserScript)
-
-        return contentController
     }
 
     private var webViewConfiguration: WKWebViewConfiguration {
         let configuration = WKWebViewConfiguration()
-        configuration.userContentController = webViewContentController
         configuration.setURLSchemeHandler(schemeHandler, forURLScheme: schemeHandler.scheme)
         return configuration
     }
