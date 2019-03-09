@@ -26,11 +26,13 @@ public class Session: NSObject {
     }
 }
 
-public enum RequestError: LocalizedError {
+public enum RequestError: Int, LocalizedError {
     case unknown
     case invalidParameters
     case unexpectedResponse
     case noNewData
+    case timeout = 504
+    
     public var errorDescription: String? {
         switch self {
         case .unexpectedResponse:
@@ -39,4 +41,9 @@ public enum RequestError: LocalizedError {
             return "Something went wrong. Please try again later."
         }
     }
+
+    static func from(code: Int) -> RequestError? {
+        return self.init(rawValue: code)
+    }
+}
 }

@@ -95,6 +95,9 @@ open class Fetcher: NSObject {
     @objc public class var noNewDataError: NSError {
         return RequestError.noNewData as NSError
     }
+    @objc public class var timeoutError: NSError {
+        return RequestError.timeout as NSError
+    }
     @objc public class var cancelledError: NSError {
         return NSError(domain: NSCocoaErrorDomain, code: NSUserCancelledError, userInfo: [NSLocalizedDescriptionKey: RequestError.unexpectedResponse.localizedDescription])
     }
