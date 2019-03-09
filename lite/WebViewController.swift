@@ -1,11 +1,6 @@
 import UIKit
 import WebKit
 
-protocol UserScriptApplicationDelegate: AnyObject {
-    #warning("Pass script + whatever else")
-    func themeUserScriptDidFinish()
-}
-
 class WebViewController: UIViewController {
     let configuration: WKWebViewConfiguration
     let url: URL
@@ -18,15 +13,23 @@ class WebViewController: UIViewController {
         self.theme = theme
         super.init(nibName: nil, bundle: nil)
         self.navigationDelegate = self
+        configuration.userContentController = contentController
         NotificationCenter.default.addObserver(self, selector: #selector(themeWasUpdated(_:)), name: UserDefaults.didChangeThemeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dimImagesPreferenceWasUpdated(_:)), name: UserDefaults.didUpdateDimImages, object: nil)
     }
 
-    var appliedTheme: Bool = false {
-        didSet {
-            webView.isHidden = !appliedTheme
+    private lazy var contentController: WKUserContentController = {
+        let contentController = WKUserContentController()
+
+        let themeUserScript = ThemeUserScript(theme: theme) {
+            self.webView.isHidden = false
         }
-    }
+        let collapseTablesUserScript = CollapseTablesUserScript(collapseTables: UserDefaults.standard.collapseTables)
+        contentController.addAndHandle(themeUserScript)
+        contentController.addAndHandle(collapseTablesUserScript)
+
+        return contentController
+    }()
 
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -38,7 +41,7 @@ class WebViewController: UIViewController {
     
     lazy var webView: WKWebView = {
         let webView = WKWebView(frame: .zero, configuration: configuration)
-        webView.isHidden = !appliedTheme
+        webView.isHidden = true
         webView.navigationDelegate = navigationDelegate
         return webView
     }()
@@ -108,11 +111,7 @@ extension WebViewController: WKNavigationDelegate {
         let webViewController = WebViewController(url: adjustedURL, configuration: configuration, theme: theme)
         navigationController?.pushViewController(webViewController, animated: true)
     }
-}
 
-extension WebViewController: UserScriptApplicationDelegate {
-    func themeUserScriptDidFinish() {
-        appliedTheme = true
     }
 }
 
