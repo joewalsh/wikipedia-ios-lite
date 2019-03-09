@@ -39,31 +39,28 @@ extension SchemeHandler: WKURLSchemeHandler {
             return
         }
 
-        #warning("TODO: Use URLSession's delegate to stream data to webView as it comes it")
-
-        let task = session.session.dataTask(with: url) { (data, response, error) in
-            if let error = error {
+        let revisedRequest = URLRequest(url: url, cachePolicy: request.cachePolicy, timeoutInterval: request.timeoutInterval)
+        let callback = Session.Callback(response: { task, response in
+            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
+                let error = RequestError.from(code: httpResponse.statusCode) ?? .unknown
+                task.cancel()
                 urlSchemeTask.didFailWithError(error)
-            } else if let response = response {
-                if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
-                    urlSchemeTask.didFailWithError(Fetcher.unexpectedResponseError)
-                } else {
-                    urlSchemeTask.didReceive(response)
-                    if let data = data {
-                        urlSchemeTask.didReceive(data)
-                    }
-                    urlSchemeTask.didFinish()
-                }
             } else {
-                urlSchemeTask.didFailWithError(Fetcher.unexpectedResponseError)
+                urlSchemeTask.didReceive(response)
             }
+        }, data: { data in
+            urlSchemeTask.didReceive(data)
+        }, success: {
+            urlSchemeTask.didFinish()
+        }) { task, error in
+            task.cancel()
+            urlSchemeTask.didFailWithError(error)
         }
-
-        task.resume()
-
+        let task = session.dataTaskWith(revisedRequest, callback: callback)
         queue.async(flags: .barrier) {
             self.tasks[urlSchemeTask.request] = task
         }
+        task.resume()
     }
     
     func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
