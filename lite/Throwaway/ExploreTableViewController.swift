@@ -156,6 +156,7 @@ class ExploreTableViewController: UITableViewController {
             saveButton.addTarget(self, action: #selector(toggleArticleSavedState), for: .touchUpInside)
             saveButton.sizeToFit()
             cell.accessoryView = saveButton
+            cell.accessibilityLabel = "readArticle"
         case let preference as Preference:
             cell.textLabel?.text = preference.title
             cell.textLabel?.textColor = preference.titleColor
@@ -259,42 +260,5 @@ extension ExploreTableViewController: Themeable {
         view.backgroundColor = theme.colors.baseBackground
         tabBarController?.apply(theme: theme)
         tableView.reloadData()
-    }
-}
-
-extension UINavigationController: Themeable {
-    public func apply(theme: Theme) {
-        navigationBar.apply(theme: theme)
-        toolbar.apply(theme: theme)
-        view.tintColor = theme.colors.link
-    }
-}
-
-extension UIToolbar: Themeable {
-    public func apply(theme: Theme) {
-        barTintColor = theme.colors.chromeBackground
-        isTranslucent = false
-    }
-}
-
-extension UINavigationBar: Themeable {
-    public func apply(theme: Theme) {
-        barTintColor = theme.colors.chromeBackground
-        isTranslucent = false
-        tintColor = theme.colors.chromeText
-    }
-}
-
-extension UITabBar: Themeable {
-    public func apply(theme: Theme) {
-        isTranslucent = false
-        barTintColor = theme.colors.chromeBackground
-        tintColor = theme.colors.chromeText
-    }
-}
-
-extension UITabBarController: Themeable {
-    public func apply(theme: Theme) {
-        tabBar.apply(theme: theme)
     }
 }

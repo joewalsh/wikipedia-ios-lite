@@ -125,3 +125,40 @@ public class Theme {
 public protocol Themeable: AnyObject {
     func apply(theme: Theme)
 }
+
+extension UINavigationController: Themeable {
+    public func apply(theme: Theme) {
+        navigationBar.apply(theme: theme)
+        toolbar.apply(theme: theme)
+        view.tintColor = theme.colors.link
+    }
+}
+
+extension UIToolbar: Themeable {
+    public func apply(theme: Theme) {
+        barTintColor = theme.colors.chromeBackground
+        isTranslucent = false
+    }
+}
+
+extension UINavigationBar: Themeable {
+    public func apply(theme: Theme) {
+        barTintColor = theme.colors.chromeBackground
+        isTranslucent = false
+        tintColor = theme.colors.chromeText
+    }
+}
+
+extension UITabBar: Themeable {
+    public func apply(theme: Theme) {
+        isTranslucent = false
+        barTintColor = theme.colors.chromeBackground
+        tintColor = theme.colors.chromeText
+    }
+}
+
+extension UITabBarController: Themeable {
+    public func apply(theme: Theme) {
+        tabBar.apply(theme: theme)
+    }
+}
