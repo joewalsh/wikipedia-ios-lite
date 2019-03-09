@@ -6,27 +6,21 @@ class ArticleCacheController: NSObject {
     private let WMFExtendedFileAttributeNameMIMEType = "org.wikimedia.MIMEType"
 
     let fetcher: ArticleFetcher
+    let cacheURL: URL
     let fileManager = FileManager.default
+    let backgroundContext: NSManagedObjectContext
 
     init(fetcher: ArticleFetcher) {
         self.fetcher = fetcher
-        super.init()
-        NotificationCenter.default.addObserver(self, selector: #selector(backgroundContextDidSave(_:)), name: NSNotification.Name.NSManagedObjectContextDidSave, object: self.backgroundContext)
-    }
 
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-
-    private lazy var cacheURL: URL = {
         guard
             let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last
-        else {
-            #warning("Handle failure to get Documents directory path")
-            fatalError()
+            else {
+                #warning("Handle failure to get Documents directory path")
+                fatalError()
         }
         let documentsURL = URL(fileURLWithPath: documentsPath)
-        let cacheURL = documentsURL.appendingPathComponent("Article Cache", isDirectory: true)
+        cacheURL = documentsURL.appendingPathComponent("Article Cache", isDirectory: true)
         do {
             try fileManager.createDirectory(at: cacheURL, withIntermediateDirectories: true, attributes: nil)
             print("Created Article Cache directory: \(cacheURL)")
@@ -34,20 +28,17 @@ class ArticleCacheController: NSObject {
             #warning("Handle failure to create Article cache directory")
             fatalError(error.localizedDescription)
         }
-        return cacheURL
-    }()
 
-    private lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator = {
         let modelURL = Bundle.main.url(forResource: "Cache", withExtension: "momd")!
         let model = NSManagedObjectModel(contentsOf: modelURL)!
         let dbURL = cacheURL.deletingLastPathComponent().appendingPathComponent("Cache.sqlite", isDirectory: false)
-        let psc = NSPersistentStoreCoordinator(managedObjectModel: model)
+        let persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
         let options = [
             NSMigratePersistentStoresAutomaticallyOption: NSNumber(booleanLiteral: true),
             NSInferMappingModelAutomaticallyOption: NSNumber(booleanLiteral: true)
         ]
         do {
-            try psc.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: dbURL, options: options)
+            try persistentStoreCoordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: dbURL, options: options)
         } catch {
             do {
                 try FileManager.default.removeItem(at: dbURL)
@@ -56,7 +47,7 @@ class ArticleCacheController: NSObject {
                 assertionFailure(error.localizedDescription)
             }
             do {
-                try psc.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: dbURL, options: options)
+                try persistentStoreCoordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: dbURL, options: options)
             } catch let error {
                 #warning("Handle failure to add persistent store to the coordinator")
                 assertionFailure(error.localizedDescription)
@@ -64,14 +55,16 @@ class ArticleCacheController: NSObject {
             }
         }
 
-        return psc
-    }()
-
-    private lazy var backgroundContext: NSManagedObjectContext = {
-        let backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         backgroundContext.persistentStoreCoordinator = persistentStoreCoordinator
-        return backgroundContext
-    }()
+
+        super.init()
+        NotificationCenter.default.addObserver(self, selector: #selector(backgroundContextDidSave(_:)), name: NSNotification.Name.NSManagedObjectContextDidSave, object: self.backgroundContext)
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
 
     @objc private func backgroundContextDidSave(_ notification: NSNotification) {
         postArticleCacheUpdatedNotification()
