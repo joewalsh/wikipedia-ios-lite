@@ -119,8 +119,12 @@ extension WebViewController: WKNavigationDelegate {
 
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         guard let requestError = RequestError.from(code: (error as NSError).code) else {
-            // show error
-            print(error.localizedDescription)
+            let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+            let gotIt = UIAlertAction(title: "Got it", style: .default) { _ in
+                self.dismissAnimated()
+            }
+            alert.addAction(gotIt)
+            present(alert, animated: true)
             return
         }
         switch requestError {
