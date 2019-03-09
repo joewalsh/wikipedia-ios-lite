@@ -7,6 +7,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -16,32 +17,32 @@
             <rect key="frame" x="0.0" y="0.0" width="363" height="77"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="Hvg-9J-ILv">
+                <stackView opaque="NO" contentMode="scaleToFill" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="Hvg-9J-ILv">
                     <rect key="frame" x="0.0" y="0.0" width="363" height="77"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ttf-Ra-Md5" userLabel="Default Theme Button">
-                            <rect key="frame" x="0.0" y="0.0" width="50" height="77"/>
+                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ttf-Ra-Md5" userLabel="Default Theme Button">
+                            <rect key="frame" x="0.0" y="0.0" width="74" height="77"/>
                             <state key="normal" title="Default"/>
                             <connections>
                                 <action selector="updateTheme:" destination="iN0-l3-epB" eventType="touchUpInside" id="h0d-EQ-i9t"/>
                             </connections>
                         </button>
                         <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EeA-0i-qEw" userLabel="Sepia Theme Button">
-                            <rect key="frame" x="64" y="0.0" width="39" height="77"/>
+                            <rect key="frame" x="82" y="0.0" width="39" height="77"/>
                             <state key="normal" title="Sepia"/>
                             <connections>
                                 <action selector="updateTheme:" destination="iN0-l3-epB" eventType="touchUpInside" id="gFg-WS-nGU"/>
                             </connections>
                         </button>
                         <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9ua-tZ-mhF" userLabel="Dark Theme Button">
-                            <rect key="frame" x="117" y="0.0" width="33" height="77"/>
+                            <rect key="frame" x="129" y="0.0" width="33" height="77"/>
                             <state key="normal" title="Dark"/>
                             <connections>
                                 <action selector="updateTheme:" destination="iN0-l3-epB" eventType="touchUpInside" id="j05-fa-c8w"/>
                             </connections>
                         </button>
                         <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8V7-jI-aXQ" userLabel="Black Theme Button">
-                            <rect key="frame" x="164" y="0.0" width="38" height="77"/>
+                            <rect key="frame" x="170" y="0.0" width="38" height="77"/>
                             <state key="normal" title="Black"/>
                             <connections>
                                 <action selector="updateTheme:" destination="iN0-l3-epB" eventType="touchUpInside" id="B5J-Gy-29t"/>
@@ -72,6 +73,7 @@
                                 <constraint firstItem="E10-85-bta" firstAttribute="centerY" secondItem="bSc-oq-Ms3" secondAttribute="centerY" id="fR6-aa-hBH"/>
                                 <constraint firstItem="E10-85-bta" firstAttribute="leading" secondItem="loO-nz-Dih" secondAttribute="trailing" constant="8" id="iU6-j6-F9u"/>
                                 <constraint firstItem="loO-nz-Dih" firstAttribute="top" secondItem="bSc-oq-Ms3" secondAttribute="top" id="jrF-HE-JZF"/>
+                                <constraint firstAttribute="width" constant="147" id="w2L-S5-Nzy"/>
                                 <constraint firstItem="loO-nz-Dih" firstAttribute="leading" secondItem="bSc-oq-Ms3" secondAttribute="leading" id="y5X-rI-84G"/>
                             </constraints>
                         </view>

@@ -3,6 +3,11 @@ import WebKit
 final class CollapseTablesUserScript: UserScriptWithCompletion<() -> Void> {
     init(collapseTables: Bool, completion: Completion? = nil) {
         let messageHandlerName = "wmfTablesCollapsed"
+        let isMain = true
+        let pageTitle = "Article Title"
+        let infoboxTitle = "Quick Facts"
+        let footerTitle = "Close"
+        let otherTitle = "More information"
         let source = """
         window.wmf.collapseTables(\(collapseTables.description), () => {
             window.webkit.messageHandlers.\(messageHandlerName).postMessage({})

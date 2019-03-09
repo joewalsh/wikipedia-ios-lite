@@ -84,6 +84,7 @@ class WebViewController: UIViewController {
 
 extension WebViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        #warning("Handle edit, reference links")
         guard let url = navigationAction.request.url else {
             decisionHandler(.allow)
             return
