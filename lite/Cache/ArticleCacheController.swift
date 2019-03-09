@@ -402,15 +402,17 @@ class ArticleCacheController: NSObject {
                     }
                 }
 
-                guard createItem else {
-                    return
-                }
-                guard let item = self.fetchOrCreateCacheItem(with: key, in: context) else {
-                    return
-                }
+                context.perform {
+                    guard createItem else {
+                        return
+                    }
+                    guard let item = self.fetchOrCreateCacheItem(with: key, in: context) else {
+                        return
+                    }
 
-                group.addToCacheItems(item)
-                self.save(moc: context)
+                    group.addToCacheItems(item)
+                    self.save(moc: context)
+                }
             }
         }
     }
