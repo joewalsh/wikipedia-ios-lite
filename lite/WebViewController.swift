@@ -49,13 +49,17 @@ class WebViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addConstrainedSubview(webView)
+
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "close"), style: .plain, target: self, action: #selector(dismissAnimated))
         navigationController?.isToolbarHidden = false
+
         let themePreference = ThemePreference.instantiate()
         themePreference.sizeToFit()
         setToolbarItems([UIBarButtonItem(customView: themePreference)], animated: true)
-        let request = URLRequest(url: url)
+
+        let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
         webView.load(request)
+
         apply(theme: theme)
     }
 
@@ -101,17 +105,30 @@ extension WebViewController: WKNavigationDelegate {
             return
         }
 
-        guard let adjustedURL = Configuration.current.mobileAppsServicesArticleResourceURLForArticle(with: url, scheme: scheme, resource: .mobileHTML) else {
+        guard let revisedURL = Configuration.current.mobileAppsServicesArticleResourceURLForArticle(with: url, scheme: scheme, resource: .mobileHTML) else {
             decisionHandler(.allow)
             return
         }
 
         decisionHandler(.cancel)
 
-        let webViewController = WebViewController(url: adjustedURL, configuration: configuration, theme: theme)
+        let webViewController = WebViewController(url: revisedURL, configuration: configuration, theme: theme)
         navigationController?.pushViewController(webViewController, animated: true)
     }
 
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        guard let requestError = RequestError.from(code: (error as NSError).code) else {
+            // show error
+            print(error.localizedDescription)
+            return
+        }
+        switch requestError {
+        case .timeout:
+            let request = URLRequest(url: url, cachePolicy: .returnCacheDataDontLoad)
+            webView.load(request)
+        default:
+            break
+        }
     }
 }
 
