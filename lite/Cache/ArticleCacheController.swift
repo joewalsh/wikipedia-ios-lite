@@ -472,16 +472,29 @@ class ArticleCacheController: NSObject {
 }
 
 extension ArticleCacheController: PermanentlyPersistableURLCacheDelegate {
+    #warning("Get files directly when content bg color is fixed upstream")
+    // https://phabricator.wikimedia.org/T217837
+    func temporaryCachedResponseWithLocalFile(for request: URLRequest) -> CachedURLResponse? {
+        guard let url = request.url else {
+            return nil
+        }
+        guard let file = ArticleCacheController.filesThatShouldBeReplacedWithLocalFiles.first(where: { name, type in
+            url.path.contains(type) && url.pathComponents.last == name
+        }) else {
+            return nil
+        }
+        let localFilePath = Bundle.main.path(forResource: file.name, ofType: file.type)!
+        let data = FileManager.default.contents(atPath: localFilePath)!
+        return cachedURLResponse(for: url, with: data, at: localFilePath)
+    }
+
+    static let filesThatShouldBeReplacedWithLocalFiles: [(name: String, type: String)] = [
+        ("pagelib", "css"),
+        ("base", "css")
+    ]
+
     func permanentlyPersistedResponse(for url: URL) -> CachedURLResponse? {
         assert(!Thread.isMainThread)
-        #warning("Get css directly when content bg color is fixed upstream")
-        // https://phabricator.wikimedia.org/T217837
-        let localFilenamesMatchingType = ArticleCacheController.temporarilyServedLocallyFilenamesWithTypes.filter { url.path.contains($0.value) }
-        if !localFilenamesMatchingType.isEmpty, let localFilenameMatchingTypeAndName = localFilenamesMatchingType.first(where: { url.pathComponents.last == $0.key }) {
-            let localFilePath = Bundle.main.path(forResource: localFilenameMatchingTypeAndName.key, ofType: localFilenameMatchingTypeAndName.value)!
-            let data = FileManager.default.contents(atPath: localFilePath)!
-            return cachedURLResponse(for: url, with: data, at: localFilePath)
-        }
         if let cachedFilePath = fileURL(for: url)?.path, let data = fileManager.contents(atPath: cachedFilePath) {
             return cachedURLResponse(for: url, with: data, at: cachedFilePath)
         } else if url.isImageURL, let cachedFilePath = fileURL(for: url, includingVariantIfAvailable: false)?.path, let data = fileManager.contents(atPath: cachedFilePath) {
@@ -490,13 +503,6 @@ extension ArticleCacheController: PermanentlyPersistableURLCacheDelegate {
         } else {
             return nil
         }
-    }
-
-    static var temporarilyServedLocallyFilenamesWithTypes: [String: String] {
-        return [
-            "pagelib": "css",
-            "base": "css"
-        ]
     }
 
     private func cachedURLResponse(for url: URL, with data: Data, at filePath: String) -> CachedURLResponse {
