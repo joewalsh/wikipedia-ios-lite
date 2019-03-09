@@ -26,6 +26,12 @@ public class Session: NSObject {
     func downloadTask(with url: URL, completionHandler: @escaping (URL?, URLResponse?, Error?) -> Void) -> URLSessionDownloadTask {
         return session.downloadTask(with: url, completionHandler: completionHandler)
     }
+
+    func dataTaskWith(_ request: URLRequest, callback: Callback) -> URLSessionTask {
+        let task = session.dataTask(with: request)
+        sessionDelegate.addCallback(callback: callback, for: task)
+        return task
+    }
 }
 
 public enum RequestError: Int, LocalizedError {
