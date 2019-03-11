@@ -14,6 +14,9 @@ class PermanentlyPersistableURLCache: URLCache {
         }
         print("PermanentlyPersistableURLCache: asking for cachedResponse for request with url: \(request.url!)")
         guard let response = super.cachedResponse(for: request) else {
+            guard request.permanentlyPersistedCachePolicy == .usePermanentlyPersistedCacheData else {
+                return nil
+            }
             guard let url = request.url else {
                 return nil
             }
