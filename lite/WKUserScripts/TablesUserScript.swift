@@ -12,7 +12,7 @@ final class TablesUserScript: UserScriptWithCompletion<() -> Void> {
         let footerTitle = "Close"
 
         let source = """
-        window.wmf.collapseTables(
+        window.wmf.adjustTables(
         \(collapse.description),
         \(isMain.description),
         '\(pageTitle)',
