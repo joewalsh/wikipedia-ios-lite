@@ -45,12 +45,19 @@ class WebViewController: UIViewController {
         webView.navigationDelegate = navigationDelegate
         return webView
     }()
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        print("WebViewController didAppear")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addConstrainedSubview(webView)
 
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "close"), style: .plain, target: self, action: #selector(dismissAnimated))
+        let closeButton = UIBarButtonItem(image: UIImage(named: "close"), style: .plain, target: self, action: #selector(dismissAnimated))
+        closeButton.accessibilityIdentifier = "close"
+        navigationItem.rightBarButtonItem = closeButton
         navigationController?.isToolbarHidden = false
 
         let themePreference = ThemePreference.instantiate()

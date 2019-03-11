@@ -156,7 +156,7 @@ class ExploreTableViewController: UITableViewController {
             saveButton.addTarget(self, action: #selector(toggleArticleSavedState), for: .touchUpInside)
             saveButton.sizeToFit()
             cell.accessoryView = saveButton
-            cell.accessibilityLabel = "readArticle"
+            cell.accessibilityIdentifier = "article"
         case let preference as Preference:
             cell.textLabel?.text = preference.title
             cell.textLabel?.textColor = preference.titleColor
