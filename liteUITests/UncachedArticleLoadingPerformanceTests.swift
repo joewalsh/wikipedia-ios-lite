@@ -1,5 +1,4 @@
 import XCTest
-import WebKit
 
 class UncachedArticleLoadingPerformanceTests: XCTestCase {
     let app = XCUIApplication()
@@ -59,5 +58,4 @@ class UncachedArticleLoadingPerformanceTests: XCTestCase {
             }
         }
     }
-
 }

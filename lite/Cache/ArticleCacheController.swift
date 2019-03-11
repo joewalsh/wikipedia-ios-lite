@@ -76,7 +76,8 @@ class ArticleCacheController: NSObject {
         }
     }
 
-    func clearAll() {
+    private func clearAll() {
+        assert(Thread.isMainThread)
         let context = backgroundContext
         context.perform {
             self.fetcher.cancelAllTasks()
@@ -92,7 +93,6 @@ class ArticleCacheController: NSObject {
             }
             self.deleteAllCacheEntities(in: context)
             self.save(moc: context)
-            URLCache.shared.removeAllCachedResponses()
             self.postArticleCacheUpdatedNotification()
         }
     }
@@ -472,6 +472,10 @@ class ArticleCacheController: NSObject {
 }
 
 extension ArticleCacheController: PermanentlyPersistableURLCacheDelegate {
+    func removeAllPermanentlyPersistedCachedResponsed() {
+        clearAll()
+    }
+
     #warning("Get files directly when content bg color is fixed upstream")
     // https://phabricator.wikimedia.org/T217837
     func temporaryCachedResponseWithLocalFile(for request: URLRequest) -> CachedURLResponse? {

@@ -2,6 +2,7 @@ import UIKit
 
 protocol PermanentlyPersistableURLCacheDelegate: AnyObject {
     func permanentlyPersistedResponse(for url: URL) -> CachedURLResponse?
+    func removeAllPermanentlyPersistedCachedResponsed()
     func temporaryCachedResponseWithLocalFile(for url: URLRequest) -> CachedURLResponse?
 }
 
@@ -27,5 +28,10 @@ class PermanentlyPersistableURLCache: URLCache {
         }
         print("PermanentlyPersistableURLCache: has cached data for for url \(request.url!)")
         return response
+    }
+
+    override func removeAllCachedResponses() {
+        super.removeAllCachedResponses()
+        delegate?.removeAllPermanentlyPersistedCachedResponsed()
     }
 }
