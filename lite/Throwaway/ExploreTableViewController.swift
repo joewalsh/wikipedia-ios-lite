@@ -94,7 +94,7 @@ class ExploreTableViewController: UITableViewController {
                 title: "Clear cache",
                 titleColor: UIColor.red,
                 accessoryType: .none,
-                onSelection: { self.cacheController.clearAll() }),
+                onSelection: { URLCache.shared.removeAllCachedResponses() }),
             Preference(
                 title: "Collapse tables",
                 titleColor: UIColor.black,
@@ -156,6 +156,7 @@ class ExploreTableViewController: UITableViewController {
             saveButton.addTarget(self, action: #selector(toggleArticleSavedState), for: .touchUpInside)
             saveButton.sizeToFit()
             cell.accessoryView = saveButton
+            saveButton.accessibilityIdentifier = "save"
             cell.accessibilityIdentifier = "article"
         case let preference as Preference:
             cell.textLabel?.text = preference.title
