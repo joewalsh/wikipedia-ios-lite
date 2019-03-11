@@ -39,7 +39,8 @@ extension SchemeHandler: WKURLSchemeHandler {
             return
         }
 
-        let revisedRequest = URLRequest(url: url, cachePolicy: request.cachePolicy, timeoutInterval: request.timeoutInterval)
+        request.url = url
+
         let callback = Session.Callback(response: { task, response in
             if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
                 let error = RequestError.from(code: httpResponse.statusCode) ?? .unknown
@@ -56,7 +57,7 @@ extension SchemeHandler: WKURLSchemeHandler {
             task.cancel()
             urlSchemeTask.didFailWithError(error)
         }
-        let task = session.dataTaskWith(revisedRequest, callback: callback)
+        let task = session.dataTaskWith(request, callback: callback)
         queue.async(flags: .barrier) {
             self.tasks[urlSchemeTask.request] = task
         }
