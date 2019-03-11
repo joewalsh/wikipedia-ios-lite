@@ -24,6 +24,7 @@ class UncachedArticleLoadingPerformanceTests: XCTestCase {
             }
         }
         measureMetrics([.wallClockTime], automaticallyStartMeasuring: false) {
+            URLCache.shared.removeAllCachedResponses()
             if app.tables.count == 1 {
                 openArticle()
             } else if app.webViews.count == 1 {
