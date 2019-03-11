@@ -64,7 +64,7 @@ class WebViewController: UIViewController {
         themePreference.sizeToFit()
         setToolbarItems([UIBarButtonItem(customView: themePreference)], animated: true)
 
-        let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
+        let request = URLRequest(url: url, permanentlyPersistedCachePolicy: .ignorePermanentlyPersistedCacheData)
         webView.load(request)
 
         apply(theme: theme)
@@ -87,6 +87,9 @@ class WebViewController: UIViewController {
         }
         webView.dimImages(dim)
     }
+
+    private var loadRetryCount = 0
+    private let maxLoadRetryCount = 3
 }
 
 extension WebViewController: WKNavigationDelegate {
@@ -126,21 +129,29 @@ extension WebViewController: WKNavigationDelegate {
 
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         guard let requestError = RequestError.from(code: (error as NSError).code) else {
-            let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
-            let gotIt = UIAlertAction(title: "Got it", style: .default) { _ in
-                self.dismissAnimated()
-            }
-            alert.addAction(gotIt)
-            present(alert, animated: true)
+            showAlert(forError: error)
             return
         }
         switch requestError {
+        case .timeout where loadRetryCount == maxLoadRetryCount:
+            showAlert(forError: error)
+            loadRetryCount = 0
         case .timeout:
-            let request = URLRequest(url: url, cachePolicy: .returnCacheDataDontLoad)
+            loadRetryCount += 1
+            let request = URLRequest(url: url, permanentlyPersistedCachePolicy: .usePermanentlyPersistedCacheData)
             webView.load(request)
         default:
             break
         }
+    }
+
+    private func showAlert(forError error: Error) {
+        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+        let gotIt = UIAlertAction(title: "Got it", style: .default) { _ in
+            self.dismissAnimated()
+        }
+        alert.addAction(gotIt)
+        present(alert, animated: true)
     }
 }
 
