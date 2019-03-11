@@ -6,18 +6,21 @@ class UncachedArticleLoadingPerformanceTests: XCTestCase {
 
     override func setUp() {
         continueAfterFailure = false
-        URLCache.shared.removeAllCachedResponses()
         app.launch()
     }
 
     func testArticleLoadPerformanceWihBaseline() {
+        var testCount = 0
         let openArticle = {
             let articleCell = self.app.tables.cells["article"].firstMatch
             articleCell.tap()
             self.startMeasuring()
+            print("Started measuring for test: \(testCount)")
             let element = self.app.webViews.firstMatch
             self.waitForElementToAppear(element: element) {
                 self.stopMeasuring()
+                print("Stopped measuring for test: \(testCount)")
+                testCount += 1
             }
         }
         measureMetrics([.wallClockTime], automaticallyStartMeasuring: false) {
@@ -30,7 +33,6 @@ class UncachedArticleLoadingPerformanceTests: XCTestCase {
             }
         }
     }
-
 
     func testArticleLoadWithoutBaseline() {
         let articleCell = app.tables.cells["article"].firstMatch
