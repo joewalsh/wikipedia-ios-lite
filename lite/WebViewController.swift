@@ -21,12 +21,14 @@ class WebViewController: UIViewController {
     private lazy var contentController: WKUserContentController = {
         let contentController = WKUserContentController()
 
+        /* TODO: Re-add when MCS has JS ready
         let themeUserScript = ThemeUserScript(theme: theme) {
             self.webView.isHidden = false
         }
         let tablesUserScript = TablesUserScript(collapse: UserDefaults.standard.collapseTables)
         contentController.addAndHandle(themeUserScript)
         contentController.addAndHandle(tablesUserScript)
+        */
 
         return contentController
     }()
