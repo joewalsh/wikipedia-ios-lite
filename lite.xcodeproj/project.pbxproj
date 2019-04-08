@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		672D370D2258011000DD70CF /* UserTalkChoiceView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 672D370C2258011000DD70CF /* UserTalkChoiceView.xib */; };
+		672D370F2258012E00DD70CF /* UserTalkChoiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 672D370E2258012E00DD70CF /* UserTalkChoiceView.swift */; };
+		672D3711225B8DF300DD70CF /* UserTalkDiscussionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 672D3710225B8DF300DD70CF /* UserTalkDiscussionViewController.swift */; };
+		672D3715225B8ED100DD70CF /* UserTalk.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 672D3714225B8ED100DD70CF /* UserTalk.storyboard */; };
+		672D3717225B983D00DD70CF /* UserTalkFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 672D3716225B983D00DD70CF /* UserTalkFetcher.swift */; };
+		672D371B225BB01700DD70CF /* UserTalkWebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 672D371A225BB01700DD70CF /* UserTalkWebViewViewController.swift */; };
+		672D371C225BF02200DD70CF /* UserTalkFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 672D3716225B983D00DD70CF /* UserTalkFetcher.swift */; };
 		7A0C5471221F49DC002642A9 /* Fetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0C5470221F49DC002642A9 /* Fetcher.swift */; };
 		7A0C548E221F9137002642A9 /* ArticleCacheController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0C548D221F9137002642A9 /* ArticleCacheController.swift */; };
 		7A168565223417F400A0900F /* UncachedArticleLoadingPerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A168564223417F400A0900F /* UncachedArticleLoadingPerformanceTests.swift */; };
@@ -62,6 +69,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		672D370C2258011000DD70CF /* UserTalkChoiceView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserTalkChoiceView.xib; sourceTree = "<group>"; };
+		672D370E2258012E00DD70CF /* UserTalkChoiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTalkChoiceView.swift; sourceTree = "<group>"; };
+		672D3710225B8DF300DD70CF /* UserTalkDiscussionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTalkDiscussionViewController.swift; sourceTree = "<group>"; };
+		672D3714225B8ED100DD70CF /* UserTalk.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = UserTalk.storyboard; sourceTree = "<group>"; };
+		672D3716225B983D00DD70CF /* UserTalkFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTalkFetcher.swift; sourceTree = "<group>"; };
+		672D371A225BB01700DD70CF /* UserTalkWebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTalkWebViewViewController.swift; sourceTree = "<group>"; };
 		7A0C5470221F49DC002642A9 /* Fetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fetcher.swift; sourceTree = "<group>"; };
 		7A0C548D221F9137002642A9 /* ArticleCacheController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleCacheController.swift; sourceTree = "<group>"; };
 		7A168559223417D700A0900F /* liteUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = liteUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -123,6 +136,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		672D371D225BF8B600DD70CF /* UserTalk */ = {
+			isa = PBXGroup;
+			children = (
+				672D370C2258011000DD70CF /* UserTalkChoiceView.xib */,
+				672D370E2258012E00DD70CF /* UserTalkChoiceView.swift */,
+				672D3710225B8DF300DD70CF /* UserTalkDiscussionViewController.swift */,
+				672D3716225B983D00DD70CF /* UserTalkFetcher.swift */,
+				672D3714225B8ED100DD70CF /* UserTalk.storyboard */,
+				672D371A225BB01700DD70CF /* UserTalkWebViewViewController.swift */,
+			);
+			path = UserTalk;
+			sourceTree = "<group>";
+		};
 		7A0C5486221F6E37002642A9 /* Throwaway */ = {
 			isa = PBXGroup;
 			children = (
@@ -134,6 +160,7 @@
 				7A34D4C5222F346000D73363 /* UserDefaults.swift */,
 				7AEA574922300590004A4DF8 /* ThemePreference.swift */,
 				7AEA574A22300590004A4DF8 /* ThemePreference.xib */,
+				672D371D225BF8B600DD70CF /* UserTalk */,
 			);
 			path = Throwaway;
 			sourceTree = "<group>";
@@ -164,10 +191,10 @@
 				7A0C548D221F9137002642A9 /* ArticleCacheController.swift */,
 				7A4BF05D2220722D00AE76A1 /* CacheItem+CoreDataClass.swift */,
 				7A4BF05F2220722D00AE76A1 /* CacheGroup+CoreDataClass.swift */,
-				7AF232312224CFE500774812 /* CacheGroup+CoreDataProperties.swift */,
 				7AF232322224CFE500774812 /* CacheItem+CoreDataProperties.swift */,
 				7A47956D2220B9CC00E989AD /* String+SHA256.swift */,
 				7A218CEE22203D39007C33E1 /* Cache.xcdatamodeld */,
+				7AF232312224CFE500774812 /* CacheGroup+CoreDataProperties.swift */,
 				7AC09D232224565700099FDB /* URL+KeyComponents.swift */,
 			);
 			path = Cache;
@@ -311,7 +338,9 @@
 				7A1EEE3C2232CDFF00733DCF /* base.css in Resources */,
 				D8C271E321B9612600BFD1BD /* LaunchScreen.storyboard in Resources */,
 				7AEA574C22300590004A4DF8 /* ThemePreference.xib in Resources */,
+				672D3715225B8ED100DD70CF /* UserTalk.storyboard in Resources */,
 				D8C271E021B9612600BFD1BD /* Assets.xcassets in Resources */,
+				672D370D2258011000DD70CF /* UserTalkChoiceView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -326,6 +355,7 @@
 				7A168565223417F400A0900F /* UncachedArticleLoadingPerformanceTests.swift in Sources */,
 				7A1685672234185900A0900F /* Configuration.swift in Sources */,
 				7A16856B223418B800A0900F /* CharacterSet+Extensions.swift in Sources */,
+				672D371C225BF02200DD70CF /* UserTalkFetcher.swift in Sources */,
 				7A1685662234183B00A0900F /* Session.swift in Sources */,
 				7A1685682234187E00A0900F /* SchemeHandler.swift in Sources */,
 				7A168569223418A900A0900F /* URLComponents+Extensions.swift in Sources */,
@@ -346,12 +376,14 @@
 				7A484278221F36C8003AEC93 /* ArticleFetcher.swift in Sources */,
 				7A47956E2220B9CC00E989AD /* String+SHA256.swift in Sources */,
 				D8C271EF21B961D100BFD1BD /* SchemeHandler.swift in Sources */,
+				672D3711225B8DF300DD70CF /* UserTalkDiscussionViewController.swift in Sources */,
 				7AC09D242224565700099FDB /* URL+KeyComponents.swift in Sources */,
 				7AF232332224CFE500774812 /* CacheGroup+CoreDataProperties.swift in Sources */,
 				7A0C5471221F49DC002642A9 /* Fetcher.swift in Sources */,
 				D8C271F521BAA40E00BFD1BD /* PermanentlyPersistableURLCache.swift in Sources */,
 				7A673CCF2230A6C300A203F4 /* Theme.swift in Sources */,
 				D8C271FF21BAB05600BFD1BD /* CharacterSet+Extensions.swift in Sources */,
+				672D371B225BB01700DD70CF /* UserTalkWebViewViewController.swift in Sources */,
 				7A0C548E221F9137002642A9 /* ArticleCacheController.swift in Sources */,
 				7A673CCD223094E000A203F4 /* UserScriptWithCompletion.swift in Sources */,
 				7ACD12232237071900069BBB /* URLRequest+PermanentlyPersistedCachePolicy.swift in Sources */,
@@ -359,9 +391,11 @@
 				D8C271FD21BAB01400BFD1BD /* String+Domains.swift in Sources */,
 				D8C271EB21B9618400BFD1BD /* WebViewController.swift in Sources */,
 				7AF232342224CFE500774812 /* CacheItem+CoreDataProperties.swift in Sources */,
+				672D370F2258012E00DD70CF /* UserTalkChoiceView.swift in Sources */,
 				7AEA574B22300590004A4DF8 /* ThemePreference.swift in Sources */,
 				7A4BF0632220722D00AE76A1 /* CacheGroup+CoreDataClass.swift in Sources */,
 				D8C271F921BAAFCB00BFD1BD /* Configuration.swift in Sources */,
+				672D3717225B983D00DD70CF /* UserTalkFetcher.swift in Sources */,
 				7A218CF022203D39007C33E1 /* Cache.xcdatamodeld in Sources */,
 				D8C271ED21B961C300BFD1BD /* Session.swift in Sources */,
 				7AEA5744223001A4004A4DF8 /* ThemeUserScript.swift in Sources */,

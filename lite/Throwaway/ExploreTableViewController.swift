@@ -69,6 +69,7 @@ class ExploreTableViewController: UITableViewController {
     enum SectionType: Int {
         case article
         case preferences
+        case userTalk
     }
 
     private struct Section {
@@ -106,11 +107,23 @@ class ExploreTableViewController: UITableViewController {
             ]
         return Section(title: "Preferences", items: preferences)
     }
+    
+    private lazy var userTalkSection: Section = {
+        let userTalkView = UserTalkChoiceView.instantiate()
+        userTalkView.delegate = self
+        let userTalk = [
+            Custom(
+                title: nil,
+                customView: userTalkView)
+        ]
+        return Section(title: "User talk", items: userTalk)
+    }()
 
     private var sections: [Section] {
         var sections = [Section]()
         sections.insert(articleSection, at: SectionType.article.rawValue)
         sections.insert(preferencesSection, at: SectionType.preferences.rawValue)
+        sections.insert(userTalkSection, at: SectionType.userTalk.rawValue)
         return sections
     }
 
@@ -200,6 +213,14 @@ class ExploreTableViewController: UITableViewController {
         }
         cacheController.toggleCache(for: article.url)
     }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == SectionType.userTalk.rawValue {
+            return 170
+        }
+        
+        return 44
+    }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let item = item(at: indexPath) else {
@@ -261,5 +282,18 @@ extension ExploreTableViewController: Themeable {
         view.backgroundColor = theme.colors.baseBackground
         tabBarController?.apply(theme: theme)
         tableView.reloadData()
+    }
+}
+
+extension ExploreTableViewController: UserTalkChoiceDelegate {
+    func userTalkChoiceDidTapWebViewList(_ userTalkChoice: UserTalkChoiceView, name: String, type: UserTalkType) {
+        if let discussionVC = UIStoryboard(name: "UserTalk", bundle: nil).instantiateViewController(withIdentifier: "UserTalkDiscussionViewController") as? UserTalkDiscussionViewController {
+            let name = "User_talk:\(name.replacingOccurrences(of: " ", with: "_"))"
+            let navVC = UINavigationController(rootViewController: discussionVC)
+            discussionVC.name = name
+            discussionVC.type = type
+            present(navVC, animated: true, completion: nil)
+        }
+        //no-op
     }
 }
