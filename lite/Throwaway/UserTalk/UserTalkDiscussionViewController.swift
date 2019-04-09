@@ -61,14 +61,14 @@ extension UserTalkDiscussionViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard discussions.count > indexPath.row else {
+        guard discussions.count > indexPath.row,
+         let cell = tableView.dequeueReusableCell(withIdentifier: "DiscussionListCell", for: indexPath) as? DiscussionListTableViewCell else {
                 return UITableViewCell()
         }
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "DiscussionListCell", for: indexPath)
         let discussion = discussions[indexPath.row]
         
-        cell.textLabel?.text = discussion.title
+        cell.setTitle(htmlString: discussion.title)
         return cell
     }
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		67204F11225CEFC2009634C9 /* DiscussionListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67204F10225CEFC2009634C9 /* DiscussionListTableViewCell.swift */; };
 		672D370D2258011000DD70CF /* UserTalkChoiceView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 672D370C2258011000DD70CF /* UserTalkChoiceView.xib */; };
 		672D370F2258012E00DD70CF /* UserTalkChoiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 672D370E2258012E00DD70CF /* UserTalkChoiceView.swift */; };
 		672D3711225B8DF300DD70CF /* UserTalkDiscussionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 672D3710225B8DF300DD70CF /* UserTalkDiscussionViewController.swift */; };
@@ -69,6 +70,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		67204F10225CEFC2009634C9 /* DiscussionListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscussionListTableViewCell.swift; sourceTree = "<group>"; };
 		672D370C2258011000DD70CF /* UserTalkChoiceView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserTalkChoiceView.xib; sourceTree = "<group>"; };
 		672D370E2258012E00DD70CF /* UserTalkChoiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTalkChoiceView.swift; sourceTree = "<group>"; };
 		672D3710225B8DF300DD70CF /* UserTalkDiscussionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTalkDiscussionViewController.swift; sourceTree = "<group>"; };
@@ -144,6 +146,7 @@
 				672D3710225B8DF300DD70CF /* UserTalkDiscussionViewController.swift */,
 				672D3716225B983D00DD70CF /* UserTalkFetcher.swift */,
 				672D3714225B8ED100DD70CF /* UserTalk.storyboard */,
+				67204F10225CEFC2009634C9 /* DiscussionListTableViewCell.swift */,
 				672D371A225BB01700DD70CF /* UserTalkWebViewViewController.swift */,
 			);
 			path = UserTalk;
@@ -393,6 +396,7 @@
 				7AF232342224CFE500774812 /* CacheItem+CoreDataProperties.swift in Sources */,
 				672D370F2258012E00DD70CF /* UserTalkChoiceView.swift in Sources */,
 				7AEA574B22300590004A4DF8 /* ThemePreference.swift in Sources */,
+				67204F11225CEFC2009634C9 /* DiscussionListTableViewCell.swift in Sources */,
 				7A4BF0632220722D00AE76A1 /* CacheGroup+CoreDataClass.swift in Sources */,
 				D8C271F921BAAFCB00BFD1BD /* Configuration.swift in Sources */,
 				672D3717225B983D00DD70CF /* UserTalkFetcher.swift in Sources */,
