@@ -520,10 +520,11 @@ private extension FileManager {
     func setValue(_ value: String, forExtendedFileAttributeNamed attributeName: String, forFileAtPath path: String) {
         let attributeNamePointer = (attributeName as NSString).utf8String
         let pathPointer = (path as NSString).fileSystemRepresentation
-        let valuePointer = (value as NSString).utf8String
-
-        let result = setxattr(pathPointer, attributeNamePointer, valuePointer, strlen(valuePointer), 0, 0)
-        assert(result != -1)
+        
+        if let valuePointer = (value as NSString).utf8String {
+            let result = setxattr(pathPointer, attributeNamePointer, valuePointer, strlen(valuePointer), 0, 0)
+            assert(result != -1)
+        }
     }
 
     func getValueForExtendedFileAttributeNamed(_ attributeName: String, forFileAtPath path: String) -> String? {

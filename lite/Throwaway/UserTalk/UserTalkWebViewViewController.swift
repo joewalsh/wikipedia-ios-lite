@@ -26,20 +26,12 @@ class UserTalkWebViewViewController: UIViewController {
         for string in cssStrings {
             html += "<style>\(string)</style>"
          }
+        html += "<meta name=\"viewport\" content=\"initial-scale=1.0, user-scalable=yes, minimum-scale=0.25, maximum-scale=5.0, width=device-width\"/>"
         html += "</head>"
         html += "<body>\(discussion.text)</body>"
         html += "</html>"
         
-        //let url = URL(string: "http://localhost:6927") //this worked for images but not links
-        
-        //let url = URL(string: "https:") //this worked for images but not links
-        //upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Original_Barnstar_Hires.png/100px-Original_Barnstar_Hires.png)
-        //https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Original_Barnstar_Hires.png/100px-Original_Barnstar_Hires.png"
-        
-        //link embed example: source says /wiki/File:Original_Barnstar_Hires.png...needs to point to https://en.m.wikipedia.org/wiki/File:Original_Barnstar_Hires.png
-        
-        let baseUrl = URL(string: "https://en.m.wikipedia.org") //this works for both images and links
+        let baseUrl = URL(string: "\(Configuration.Scheme.https)://\(Configuration.Domain.englishWikipedia)")
         webView.loadHTMLString(html, baseURL: baseUrl)
     }
-
 }
