@@ -1,5 +1,5 @@
 //
-//  UserTalkWebViewViewController.swift
+//  UserTalkThreadWebViewController.swift
 //  lite
 //
 //  Created by Toni Sevener on 4/8/19.
@@ -9,9 +9,14 @@
 import UIKit
 import WebKit
 
-class UserTalkWebViewViewController: UIViewController {
+class UserTalkThreadWebViewController: UIViewController {
     
-    var discussion: Discussion!
+    var discussion: Discussion! {
+        didSet {
+            let textItems = discussion.textItems
+            print(textItems)
+        }
+    }
     var cssStrings: [String] = []
     
     lazy var webView: WKWebView = {

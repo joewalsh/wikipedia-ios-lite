@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -36,16 +36,22 @@
                                     <rect key="frame" x="0.0" y="0.0" width="68" height="30"/>
                                     <state key="normal" title="Web View"/>
                                     <connections>
-                                        <action selector="tappedWebView:" destination="iN0-l3-epB" eventType="touchUpInside" id="vyN-23-ewV"/>
+                                        <action selector="tappedButton:" destination="iN0-l3-epB" eventType="touchUpInside" id="OTj-Ae-SeW"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vk5-5Y-Cs0">
+                                <button opaque="NO" tag="1" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vk5-5Y-Cs0">
                                     <rect key="frame" x="0.0" y="30" width="97" height="30"/>
                                     <state key="normal" title="Web View List"/>
+                                    <connections>
+                                        <action selector="tappedButton:" destination="iN0-l3-epB" eventType="touchUpInside" id="QeO-Of-96n"/>
+                                    </connections>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nYP-Wm-c9E">
+                                <button opaque="NO" tag="2" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nYP-Wm-c9E">
                                     <rect key="frame" x="0.0" y="60" width="30" height="30"/>
                                     <state key="normal" title="List"/>
+                                    <connections>
+                                        <action selector="tappedButton:" destination="iN0-l3-epB" eventType="touchUpInside" id="57f-sv-2TU"/>
+                                    </connections>
                                 </button>
                             </subviews>
                         </stackView>

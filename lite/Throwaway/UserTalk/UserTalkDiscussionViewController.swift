@@ -62,7 +62,7 @@ extension UserTalkDiscussionViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard discussions.count > indexPath.row,
-         let cell = tableView.dequeueReusableCell(withIdentifier: "DiscussionListCell", for: indexPath) as? DiscussionListTableViewCell else {
+         let cell = tableView.dequeueReusableCell(withIdentifier: "DiscussionTableViewCell", for: indexPath) as? DiscussionTableViewCell else {
                 return UITableViewCell()
         }
         
@@ -83,9 +83,20 @@ extension UserTalkDiscussionViewController: UITableViewDelegate {
         
         switch type! {
         case .webView:
-            if let vc = UIStoryboard(name: "UserTalk", bundle: nil).instantiateViewController(withIdentifier: "UserTalkWebViewViewController") as? UserTalkWebViewViewController {
+            if let vc = UIStoryboard(name: "UserTalk", bundle: nil).instantiateViewController(withIdentifier: "UserTalkWebViewViewController") as? UserTalkThreadWebViewController {
                 vc.discussion = discussion
                 vc.cssStrings = cssStrings
+                navigationController?.pushViewController(vc, animated: true)
+            }
+        case .webViewList:
+            if let vc = UIStoryboard(name: "UserTalk", bundle: nil).instantiateViewController(withIdentifier: "UserTalkWebViewListViewController") as? UserTalkThreadWebListViewController {
+                vc.discussion = discussion
+                vc.cssStrings = cssStrings
+                navigationController?.pushViewController(vc, animated: true)
+            }
+        case .list:
+            if let vc = UIStoryboard(name: "UserTalk", bundle: nil).instantiateViewController(withIdentifier: "UserTalkListViewController") as? UserTalkThreadListViewController {
+                vc.discussion = discussion
                 navigationController?.pushViewController(vc, animated: true)
             }
             

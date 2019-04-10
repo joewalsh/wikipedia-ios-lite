@@ -1,14 +1,14 @@
 
 import UIKit
 
-enum UserTalkType {
+enum UserTalkType: Int {
     case webView
     case webViewList
     case list
 }
 
 protocol UserTalkChoiceDelegate: class {
-    func userTalkChoiceDidTapWebViewList(_ userTalkChoice: UserTalkChoiceView, name: String, type: UserTalkType)
+    func userTalkChoiceDidTapButton(_ userTalkChoice: UserTalkChoiceView, name: String, type: UserTalkType)
 }
 
 class UserTalkChoiceView: UIView, Nibbed {
@@ -23,9 +23,10 @@ class UserTalkChoiceView: UIView, Nibbed {
         }
     }
     
-    @IBAction func tappedWebView(_ sender: Any) {
-        if let name = textField.text {
-            delegate?.userTalkChoiceDidTapWebViewList(self, name: name, type: .webView)
+    @IBAction func tappedButton(_ sender: UIButton) {
+        if let name = textField.text,
+            let type = UserTalkType(rawValue: sender.tag) {
+            delegate?.userTalkChoiceDidTapButton(self, name: name, type: type)
         }
     }
 }

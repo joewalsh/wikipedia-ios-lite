@@ -1,5 +1,5 @@
 //
-//  DiscussionListTableViewCell.swift
+//  DiscussionTableViewCell.swift
 //  lite
 //
 //  Created by Toni Sevener on 4/9/19.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DiscussionListTableViewCell: UITableViewCell {
+class DiscussionTableViewCell: UITableViewCell {
 
     @IBOutlet private var titleTextView: UITextView!
     

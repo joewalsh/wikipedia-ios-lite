@@ -142,6 +142,62 @@ struct Discussion: Decodable {
     let text: String
     let title: String
     
+    //just a brute force attempt to split out <dl><dd></dl></dd> replies into their own items
+    //would be good to actually keep the tree structure so we could indent if needed
+    lazy var textItems: [String] = {
+        var html = self.text
+        
+        //remove last \n if necessary
+        var itemsToReturn: [String] = []
+        while html.range(of: "<dl><dd>") != nil {
+            
+            //if there are items after the last reply, cut and move to return items
+            if let lastRangeOfClosingTags = html.range(of: "</dd></dl>", options: .backwards, range: nil, locale: nil),
+                !lastRangeOfClosingTags.isEmpty {
+                
+                //if there are items after the last reply, cut and move to return items
+                let suffix = String(html.suffix(from: lastRangeOfClosingTags.upperBound))
+                if !suffix.isEmpty {
+                    html.removeLast(suffix.count)
+                    itemsToReturn.insert(suffix, at: 0)
+                    continue
+                }
+            }
+            
+            if let firstRangeOfClosingTags = html.range(of: "</dd></dl>"),
+                !firstRangeOfClosingTags.isEmpty {
+                
+                let firstRangeClosingStartIndex = firstRangeOfClosingTags.lowerBound
+                
+                //get matching opening tag equivalent, remove from string
+                if let lastRangeOfOpeningTags = html.prefix(upTo: firstRangeClosingStartIndex).range(of: "<dl><dd>", options: .backwards, range: nil, locale: nil),
+                    !lastRangeOfOpeningTags.isEmpty,
+                    lastRangeOfOpeningTags.upperBound < firstRangeOfClosingTags.lowerBound {
+                    
+                    let range = Range.init(uncheckedBounds: (lower: lastRangeOfOpeningTags.lowerBound, upper: firstRangeOfClosingTags.upperBound))
+                    
+                    let startIndex = range.lowerBound
+                    let endIndex = range.upperBound
+                    
+                    let string = String(html[startIndex..<endIndex])
+                    itemsToReturn.insert(string, at: 0)
+                    html.removeSubrange(range)
+                } else {
+                    print("invalid - closing tag exists without opening tag. exit early")
+                    return [self.text]
+                }
+            } else {
+                print("invalid - opening tag exists without closing tag. exit early")
+                return [self.text]
+            }
+        }
+        
+        if !html.isEmpty {
+            itemsToReturn.insert(html, at: 0)
+        }
+        return itemsToReturn.filter{$0 != "\n"}
+    }()
+    
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case text = "text"

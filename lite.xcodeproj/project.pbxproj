@@ -7,13 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		67204F11225CEFC2009634C9 /* DiscussionListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67204F10225CEFC2009634C9 /* DiscussionListTableViewCell.swift */; };
+		67204F11225CEFC2009634C9 /* DiscussionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67204F10225CEFC2009634C9 /* DiscussionTableViewCell.swift */; };
+		67204F13225D4AA6009634C9 /* UserTalkThreadWebListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67204F12225D4AA6009634C9 /* UserTalkThreadWebListViewController.swift */; };
+		67204F15225D4B2C009634C9 /* ThreadWebListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67204F14225D4B2C009634C9 /* ThreadWebListTableViewCell.swift */; };
+		67204F17225D503A009634C9 /* UserTalkThreadListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67204F16225D503A009634C9 /* UserTalkThreadListViewController.swift */; };
+		67204F19225D5051009634C9 /* ThreadListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67204F18225D5051009634C9 /* ThreadListTableViewCell.swift */; };
 		672D370D2258011000DD70CF /* UserTalkChoiceView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 672D370C2258011000DD70CF /* UserTalkChoiceView.xib */; };
 		672D370F2258012E00DD70CF /* UserTalkChoiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 672D370E2258012E00DD70CF /* UserTalkChoiceView.swift */; };
 		672D3711225B8DF300DD70CF /* UserTalkDiscussionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 672D3710225B8DF300DD70CF /* UserTalkDiscussionViewController.swift */; };
 		672D3715225B8ED100DD70CF /* UserTalk.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 672D3714225B8ED100DD70CF /* UserTalk.storyboard */; };
 		672D3717225B983D00DD70CF /* UserTalkFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 672D3716225B983D00DD70CF /* UserTalkFetcher.swift */; };
-		672D371B225BB01700DD70CF /* UserTalkWebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 672D371A225BB01700DD70CF /* UserTalkWebViewViewController.swift */; };
+		672D371B225BB01700DD70CF /* UserTalkThreadWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 672D371A225BB01700DD70CF /* UserTalkThreadWebViewController.swift */; };
 		672D371C225BF02200DD70CF /* UserTalkFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 672D3716225B983D00DD70CF /* UserTalkFetcher.swift */; };
 		7A0C5471221F49DC002642A9 /* Fetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0C5470221F49DC002642A9 /* Fetcher.swift */; };
 		7A0C548E221F9137002642A9 /* ArticleCacheController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0C548D221F9137002642A9 /* ArticleCacheController.swift */; };
@@ -70,13 +74,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		67204F10225CEFC2009634C9 /* DiscussionListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscussionListTableViewCell.swift; sourceTree = "<group>"; };
+		67204F10225CEFC2009634C9 /* DiscussionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscussionTableViewCell.swift; sourceTree = "<group>"; };
+		67204F12225D4AA6009634C9 /* UserTalkThreadWebListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTalkThreadWebListViewController.swift; sourceTree = "<group>"; };
+		67204F14225D4B2C009634C9 /* ThreadWebListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadWebListTableViewCell.swift; sourceTree = "<group>"; };
+		67204F16225D503A009634C9 /* UserTalkThreadListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTalkThreadListViewController.swift; sourceTree = "<group>"; };
+		67204F18225D5051009634C9 /* ThreadListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadListTableViewCell.swift; sourceTree = "<group>"; };
 		672D370C2258011000DD70CF /* UserTalkChoiceView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserTalkChoiceView.xib; sourceTree = "<group>"; };
 		672D370E2258012E00DD70CF /* UserTalkChoiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTalkChoiceView.swift; sourceTree = "<group>"; };
 		672D3710225B8DF300DD70CF /* UserTalkDiscussionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTalkDiscussionViewController.swift; sourceTree = "<group>"; };
 		672D3714225B8ED100DD70CF /* UserTalk.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = UserTalk.storyboard; sourceTree = "<group>"; };
 		672D3716225B983D00DD70CF /* UserTalkFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTalkFetcher.swift; sourceTree = "<group>"; };
-		672D371A225BB01700DD70CF /* UserTalkWebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTalkWebViewViewController.swift; sourceTree = "<group>"; };
+		672D371A225BB01700DD70CF /* UserTalkThreadWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTalkThreadWebViewController.swift; sourceTree = "<group>"; };
 		7A0C5470221F49DC002642A9 /* Fetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fetcher.swift; sourceTree = "<group>"; };
 		7A0C548D221F9137002642A9 /* ArticleCacheController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleCacheController.swift; sourceTree = "<group>"; };
 		7A168559223417D700A0900F /* liteUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = liteUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -143,11 +151,15 @@
 			children = (
 				672D370C2258011000DD70CF /* UserTalkChoiceView.xib */,
 				672D370E2258012E00DD70CF /* UserTalkChoiceView.swift */,
-				672D3710225B8DF300DD70CF /* UserTalkDiscussionViewController.swift */,
 				672D3716225B983D00DD70CF /* UserTalkFetcher.swift */,
 				672D3714225B8ED100DD70CF /* UserTalk.storyboard */,
-				67204F10225CEFC2009634C9 /* DiscussionListTableViewCell.swift */,
-				672D371A225BB01700DD70CF /* UserTalkWebViewViewController.swift */,
+				672D3710225B8DF300DD70CF /* UserTalkDiscussionViewController.swift */,
+				67204F10225CEFC2009634C9 /* DiscussionTableViewCell.swift */,
+				672D371A225BB01700DD70CF /* UserTalkThreadWebViewController.swift */,
+				67204F12225D4AA6009634C9 /* UserTalkThreadWebListViewController.swift */,
+				67204F14225D4B2C009634C9 /* ThreadWebListTableViewCell.swift */,
+				67204F16225D503A009634C9 /* UserTalkThreadListViewController.swift */,
+				67204F18225D5051009634C9 /* ThreadListTableViewCell.swift */,
 			);
 			path = UserTalk;
 			sourceTree = "<group>";
@@ -386,7 +398,8 @@
 				D8C271F521BAA40E00BFD1BD /* PermanentlyPersistableURLCache.swift in Sources */,
 				7A673CCF2230A6C300A203F4 /* Theme.swift in Sources */,
 				D8C271FF21BAB05600BFD1BD /* CharacterSet+Extensions.swift in Sources */,
-				672D371B225BB01700DD70CF /* UserTalkWebViewViewController.swift in Sources */,
+				67204F15225D4B2C009634C9 /* ThreadWebListTableViewCell.swift in Sources */,
+				672D371B225BB01700DD70CF /* UserTalkThreadWebViewController.swift in Sources */,
 				7A0C548E221F9137002642A9 /* ArticleCacheController.swift in Sources */,
 				7A673CCD223094E000A203F4 /* UserScriptWithCompletion.swift in Sources */,
 				7ACD12232237071900069BBB /* URLRequest+PermanentlyPersistedCachePolicy.swift in Sources */,
@@ -394,10 +407,13 @@
 				D8C271FD21BAB01400BFD1BD /* String+Domains.swift in Sources */,
 				D8C271EB21B9618400BFD1BD /* WebViewController.swift in Sources */,
 				7AF232342224CFE500774812 /* CacheItem+CoreDataProperties.swift in Sources */,
+				67204F13225D4AA6009634C9 /* UserTalkThreadWebListViewController.swift in Sources */,
+				67204F19225D5051009634C9 /* ThreadListTableViewCell.swift in Sources */,
 				672D370F2258012E00DD70CF /* UserTalkChoiceView.swift in Sources */,
 				7AEA574B22300590004A4DF8 /* ThemePreference.swift in Sources */,
-				67204F11225CEFC2009634C9 /* DiscussionListTableViewCell.swift in Sources */,
+				67204F11225CEFC2009634C9 /* DiscussionTableViewCell.swift in Sources */,
 				7A4BF0632220722D00AE76A1 /* CacheGroup+CoreDataClass.swift in Sources */,
+				67204F17225D503A009634C9 /* UserTalkThreadListViewController.swift in Sources */,
 				D8C271F921BAAFCB00BFD1BD /* Configuration.swift in Sources */,
 				672D3717225B983D00DD70CF /* UserTalkFetcher.swift in Sources */,
 				7A218CF022203D39007C33E1 /* Cache.xcdatamodeld in Sources */,

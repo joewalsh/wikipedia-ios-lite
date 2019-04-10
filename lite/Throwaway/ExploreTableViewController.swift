@@ -286,7 +286,7 @@ extension ExploreTableViewController: Themeable {
 }
 
 extension ExploreTableViewController: UserTalkChoiceDelegate {
-    func userTalkChoiceDidTapWebViewList(_ userTalkChoice: UserTalkChoiceView, name: String, type: UserTalkType) {
+    func userTalkChoiceDidTapButton(_ userTalkChoice: UserTalkChoiceView, name: String, type: UserTalkType) {
         if let discussionVC = UIStoryboard(name: "UserTalk", bundle: nil).instantiateViewController(withIdentifier: "UserTalkDiscussionViewController") as? UserTalkDiscussionViewController {
             let name = "User_talk:\(name.replacingOccurrences(of: " ", with: "_"))"
             let navVC = UINavigationController(rootViewController: discussionVC)
