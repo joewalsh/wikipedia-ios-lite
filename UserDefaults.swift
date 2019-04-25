@@ -47,7 +47,7 @@ extension UserDefaults {
         }
         set {
             set(newValue, forKey: Key.dimImages.rawValue)
-            notify(with: UserDefaults.didUpdateDimImages, object: newValue)
+            notify(with: UserDefaults.didChangeThemeNotification, object: theme)
         }
     }
 
@@ -60,5 +60,4 @@ extension UserDefaults {
 
 extension UserDefaults {
     static let didChangeThemeNotification = Notification.Name(rawValue: "didChangeThemeNotification")
-    static let didUpdateDimImages = Notification.Name(rawValue: "didUpdateDimImages")
 }

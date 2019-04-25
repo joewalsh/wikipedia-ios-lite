@@ -15,7 +15,7 @@ final class ThemeUserScript: UserScriptWithCompletion<() -> Void> {
 
         var source: String = """
         pagelib.ThemeTransform.setTheme(document, pagelib.ThemeTransform.THEME.\(theme.kind.jsName));
-        pagelib.DimImagesTransform.dim(window, \(theme.dimImages.description));
+        pagelib.DimImagesTransform.dim(window, \(theme.dimImages ? "true" : "false"));
         """
         if let callback = callback {
             source += "\n\(callback)"
