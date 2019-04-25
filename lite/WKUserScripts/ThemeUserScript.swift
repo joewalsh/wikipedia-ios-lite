@@ -6,24 +6,19 @@ final class ThemeUserScript: UserScriptWithCompletion<() -> Void> {
         if let messageHandlerName = messageHandlerName {
             callback = """
             window.requestAnimationFrame(() => {
-                window.webkit.messageHandlers.\(messageHandlerName).postMessage({})
-            })
+                window.webkit.messageHandlers.\(messageHandlerName).postMessage({});
+            });
             """
         } else {
             callback = nil
         }
 
-        let source: String
+        var source: String = """
+        pagelib.ThemeTransform.setTheme(document, pagelib.ThemeTransform.THEME.\(theme.kind.jsName));
+        pagelib.DimImagesTransform.dim(window, \(theme.dimImages.description));
+        """
         if let callback = callback {
-            source = """
-            window.wmf.setTheme('\(theme.kind.jsName)', \(theme.dimImages.description), () => {
-                \(callback)
-            })
-            """
-        } else {
-            source = """
-            window.wmf.setTheme('\(theme.kind.jsName)', \(theme.dimImages.description))
-            """
+            source += "\n\(callback)"
         }
         return source
     }
