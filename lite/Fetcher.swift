@@ -86,19 +86,19 @@ open class Fetcher: NSObject {
 
 // These are for bridging to Obj-C only
 @objc public extension Fetcher {
-    @objc public class var unexpectedResponseError: NSError {
+    @objc class var unexpectedResponseError: NSError {
         return RequestError.unexpectedResponse as NSError
     }
-    @objc public class var invalidParametersError: NSError {
+    @objc class var invalidParametersError: NSError {
         return RequestError.invalidParameters as NSError
     }
-    @objc public class var noNewDataError: NSError {
+    @objc class var noNewDataError: NSError {
         return RequestError.noNewData as NSError
     }
-    @objc public class var timeoutError: NSError {
+    @objc class var timeoutError: NSError {
         return RequestError.timeout as NSError
     }
-    @objc public class var cancelledError: NSError {
+    @objc class var cancelledError: NSError {
         return NSError(domain: NSCocoaErrorDomain, code: NSUserCancelledError, userInfo: [NSLocalizedDescriptionKey: RequestError.unexpectedResponse.localizedDescription])
     }
 }
