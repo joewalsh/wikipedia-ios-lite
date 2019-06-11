@@ -31,8 +31,8 @@ public extension WKUserContentController {
         guard
             userScriptWithCompletion.completion != nil,
             let messageHandlerName = userScriptWithCompletion.messageHandlerName
-            else {
-                return
+        else {
+            return
         }
         add(userScriptWithCompletion, name: messageHandlerName)
     }
