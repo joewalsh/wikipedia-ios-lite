@@ -19,13 +19,10 @@ class WebViewController: UIViewController {
 
     private lazy var contentController: WKUserContentController = {
         let contentController = WKUserContentController()
-
-        let themeUserScript = ThemeUserScript(theme: theme) {
+        let pageSetupUserScript = PageSetupUserScript(theme: UserDefaults.standard.theme, dimImages: UserDefaults.standard.dimImages, collapseTables: UserDefaults.standard.collapseTables) {
             self.webView.isHidden = false
         }
-        let tablesUserScript = TablesUserScript(collapse: UserDefaults.standard.collapseTables)
-        contentController.addAndHandle(themeUserScript)
-        contentController.addAndHandle(tablesUserScript)
+        contentController.addAndHandle(pageSetupUserScript)
 
         return contentController
     }()
