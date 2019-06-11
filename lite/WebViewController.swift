@@ -161,6 +161,6 @@ extension WebViewController: Themeable {
 
 private extension WKWebView {
     func apply(theme: Theme) {
-        evaluateJavaScript(ThemeUserScript.source(with: theme))
+        evaluateJavaScript(ThemeJavascript.set(theme: theme))
     }
 }
