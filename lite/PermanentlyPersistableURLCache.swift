@@ -10,9 +10,6 @@ class PermanentlyPersistableURLCache: URLCache {
     weak var delegate: PermanentlyPersistableURLCacheDelegate?
 
     override func cachedResponse(for request: URLRequest) -> CachedURLResponse? {
-        if let response = delegate?.temporaryCachedResponseWithLocalFile(for: request) {
-            return response
-        }
         print("PermanentlyPersistableURLCache: asking for cachedResponse for request with url: \(request.url!)")
         guard let response = super.cachedResponse(for: request) else {
             guard request.permanentlyPersistedCachePolicy == .usePermanentlyPersistedCacheData else {
