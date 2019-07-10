@@ -9,6 +9,12 @@ final class PageSetupUserScript: UserScriptWithCompletion<() -> Void> {
         pagelib.c1.PageMods.setMulti(document, {
         platform: pagelib.c1.Platforms.IOS,
         clientVersion: '\(version)',
+        l10n: {
+            addTitleDescription: 'Titelbeschreibung bearbeiten',
+            tableInfobox: 'Schnelle Fakten',
+            tableOther: 'Weitere Informationen',
+            tableClose: 'Schließen'
+        },
         theme: pagelib.c1.Themes.\(theme.kind.jsName),
         dimImages: \(dimImages),
         margins: { top: '32px', right: '32px', bottom: '32px', left: '32px' },
