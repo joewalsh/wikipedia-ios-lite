@@ -15,6 +15,7 @@ class WebViewController: UIViewController {
         self.navigationDelegate = self
         configuration.userContentController = contentController
         NotificationCenter.default.addObserver(self, selector: #selector(themeWasUpdated(_:)), name: UserDefaults.didChangeThemeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(dimImagesWasUpdated(_:)), name: UserDefaults.didUpdateDimImages, object: nil)
     }
 
     private lazy var contentController: WKUserContentController = {
@@ -75,6 +76,13 @@ class WebViewController: UIViewController {
             return
         }
         apply(theme: theme)
+    }
+
+    @objc private func dimImagesWasUpdated(_ notification: Notification) {
+        guard let dimImages = notification.object as? Bool else {
+            return
+        }
+        webView.evaluateJavaScript(ThemeJavascript.dimImages(dimImages))
     }
 
     private var loadRetryCount = 0
