@@ -21,7 +21,7 @@ final class PageSetupUserScript: UserScriptWithCompletion<() -> Void> {
         areTablesCollapsed: \(collapseTables),
         scrollTop: 64
         }, () => {
-        window.webkit.messageHandlers.\(messageHandlerName).postMessage({})
+            window.webkit.messageHandlers.\(messageHandlerName).postMessage({})
         })
         """
         super.init(source: source, injectionTime: .atDocumentEnd, forMainFrameOnly: true, messageHandlerName: messageHandlerName, completion: completion)
