@@ -23,7 +23,7 @@ class ArticleFetcher: Fetcher {
     // MARK: Resources
 
     func downloadResource(_ resource: Resource, for articleURL: URL, completion: @escaping DownloadCompletion) {
-        guard let url = configuration.mobileAppsServicesArticleResourceURLForArticle(with: articleURL, scheme: scheme, resource: resource) else {
+        guard let url = configuration.mobileAppsServicesPageResourceURLForArticle(with: articleURL, scheme: scheme, resource: resource) else {
             completion(Fetcher.invalidParametersError, nil, nil, nil)
             return
         }
@@ -38,7 +38,7 @@ class ArticleFetcher: Fetcher {
     // MARK: Data
 
     func downloadData(_ data: Data, for articleURL: URL, completion: @escaping DownloadCompletion) {
-        guard let url = configuration.mobileAppsServicesArticleDataURLForArticle(with: articleURL, data: data, scheme: scheme) else {
+        guard let url = configuration.mobileAppsServicesPageDataURLForArticle(with: articleURL, data: data, scheme: scheme) else {
             completion(Fetcher.invalidParametersError, nil, nil, nil)
             return
         }
@@ -130,7 +130,7 @@ class ArticleFetcher: Fetcher {
     }
 
     func getMedia(for articleURL: URL, completion: @escaping (Error?, Media?) -> Void) {
-        let url = configuration.mobileAppsServicesArticleResourceURLForArticle(with: articleURL, scheme: scheme, resource: .media)!
+        let url = configuration.mobileAppsServicesPageResourceURLForArticle(with: articleURL, scheme: scheme, resource: .media)!
         let task = session.session.dataTask(with: url) { data, response, error in
             if let error = error {
                 assertionFailure(error.localizedDescription)

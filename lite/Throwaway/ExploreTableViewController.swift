@@ -239,8 +239,8 @@ class ExploreTableViewController: UITableViewController {
     }
 
     private func webViewController(forArticle article: Article, theme: Theme) -> WebViewController {
-        let articleMobileHTMLURL = configuration.mobileAppsServicesArticleResourceURLForArticle(with: article.url, scheme: schemeHandler.scheme, resource: .mobileHTML)!
-        let webViewController = WebViewController(url: articleMobileHTMLURL, configuration: webViewConfiguration, theme: theme)
+        let articleMobileHTMLURL = configuration.mobileAppsServicesPageResourceURLForArticle(with: article.url, scheme: schemeHandler.scheme, resource: .mobileHTML)!
+        let webViewController = WebViewController(articleTitle: article.title!, url: articleMobileHTMLURL, configuration: webViewConfiguration, theme: theme)
         return webViewController
     }
 

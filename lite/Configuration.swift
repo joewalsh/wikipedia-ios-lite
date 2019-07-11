@@ -159,17 +159,21 @@ public class Configuration: NSObject {
         }
     }
 
-    func mobileAppsServicesArticleDataURLForArticle(with url: URL, data: MobileAppsServices.Data, scheme: String) -> URL? {
+    func mobileAppsServicesPageDataURLForArticle(with url: URL, data: MobileAppsServices.Data, scheme: String) -> URL? {
         var components = mobileAppsServicesAPIURLComponentsForHost(url.host, appending: ["data", data.rawValue, "mobile", data.associatedRawValue])
         components.scheme = scheme
         return components.url
     }
     
-    func mobileAppsServicesArticleResourceURLForArticle(with url: URL, scheme: String, resource: MobileAppsServices.Page.Resource) -> URL? {
+    func mobileAppsServicesPageResourceURLForArticle(with url: URL, scheme: String, resource: MobileAppsServices.Page.Resource) -> URL? {
         guard let title = mobileAppsServicesArticleTitle(from: url) else {
             return nil
         }
-        var components = mobileAppsServicesAPIURLComponentsForHost(url.host, appending: ["page", resource.rawValue, title])
+        return mobileAppsServicesPageResourceURLForArticle(with: title, scheme: scheme, host: url.host, resource: resource)
+    }
+
+    func mobileAppsServicesPageResourceURLForArticle(with title: String, scheme: String, host: String?, resource: MobileAppsServices.Page.Resource) -> URL? {
+        var components = mobileAppsServicesAPIURLComponentsForHost(host, appending: ["page", resource.rawValue, title])
         components.scheme = scheme
         return components.url
     }
