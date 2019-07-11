@@ -77,7 +77,7 @@ class WebViewController: UIViewController {
         guard let dimImages = notification.object as? Bool else {
             return
         }
-        webView.evaluateJavaScript(ThemeJavascript.dimImages(dimImages))
+        webView.evaluateJavaScript(ThemeJavaScript.dimImages(dimImages))
     }
 
     private var loadRetryCount = 0
@@ -164,6 +164,6 @@ extension WebViewController: Themeable {
 
 private extension WKWebView {
     func apply(theme: Theme) {
-        evaluateJavaScript(ThemeJavascript.set(theme: theme))
+        evaluateJavaScript(ThemeJavaScript.set(theme: theme))
     }
 }
