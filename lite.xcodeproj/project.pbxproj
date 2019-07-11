@@ -25,6 +25,7 @@
 		7A673CCD223094E000A203F4 /* UserScriptWithCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A673CCC223094E000A203F4 /* UserScriptWithCompletion.swift */; };
 		7A673CCF2230A6C300A203F4 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A673CCE2230A6C300A203F4 /* Theme.swift */; };
 		7A673CD12230A77300A203F4 /* Nibbed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A673CD02230A77200A203F4 /* Nibbed.swift */; };
+		7A9F9BFD22D675260051EE8D /* FooterSetupUserScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A9F9BFC22D675260051EE8D /* FooterSetupUserScript.swift */; };
 		7AB780C922AFF97D0079A87C /* PageSetupUserScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AB780C822AFF97D0079A87C /* PageSetupUserScript.swift */; };
 		7AC09D242224565700099FDB /* URL+KeyComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AC09D232224565700099FDB /* URL+KeyComponents.swift */; };
 		7AC98C45222F091500E90A2F /* ExploreTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AC98C43222F091500E90A2F /* ExploreTableViewController.swift */; };
@@ -74,6 +75,7 @@
 		7A673CCC223094E000A203F4 /* UserScriptWithCompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserScriptWithCompletion.swift; sourceTree = "<group>"; };
 		7A673CCE2230A6C300A203F4 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		7A673CD02230A77200A203F4 /* Nibbed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Nibbed.swift; path = lite/Nibbed.swift; sourceTree = SOURCE_ROOT; };
+		7A9F9BFC22D675260051EE8D /* FooterSetupUserScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterSetupUserScript.swift; sourceTree = "<group>"; };
 		7AB780C822AFF97D0079A87C /* PageSetupUserScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSetupUserScript.swift; sourceTree = "<group>"; };
 		7AC09D232224565700099FDB /* URL+KeyComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+KeyComponents.swift"; sourceTree = "<group>"; };
 		7AC98C43222F091500E90A2F /* ExploreTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExploreTableViewController.swift; path = lite/Throwaway/ExploreTableViewController.swift; sourceTree = SOURCE_ROOT; };
@@ -145,6 +147,7 @@
 			isa = PBXGroup;
 			children = (
 				7AB780C822AFF97D0079A87C /* PageSetupUserScript.swift */,
+				7A9F9BFC22D675260051EE8D /* FooterSetupUserScript.swift */,
 				7A673CCC223094E000A203F4 /* UserScriptWithCompletion.swift */,
 			);
 			path = WKUserScripts;
@@ -332,6 +335,7 @@
 			files = (
 				7A4BF0612220722D00AE76A1 /* CacheItem+CoreDataClass.swift in Sources */,
 				D8C271F121B9623600BFD1BD /* UIView+ConstrainedSubview.swift in Sources */,
+				7A9F9BFD22D675260051EE8D /* FooterSetupUserScript.swift in Sources */,
 				D8C271D921B9612500BFD1BD /* AppDelegate.swift in Sources */,
 				7AC98C45222F091500E90A2F /* ExploreTableViewController.swift in Sources */,
 				D8C271FB21BAAFFA00BFD1BD /* URLComponents+Extensions.swift in Sources */,
