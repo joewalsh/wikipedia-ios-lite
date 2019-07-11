@@ -2,12 +2,14 @@ import UIKit
 import WebKit
 
 class WebViewController: UIViewController {
+    let articleTitle: String
     let configuration: WKWebViewConfiguration
     let url: URL
     weak var navigationDelegate: WKNavigationDelegate?
     var theme = Theme.standard
 
-    required init(url: URL, configuration: WKWebViewConfiguration = WKWebViewConfiguration(), theme: Theme) {
+    required init(articleTitle: String, url: URL, configuration: WKWebViewConfiguration = WKWebViewConfiguration(), theme: Theme) {
+        self.articleTitle = articleTitle
         self.url = url
         self.configuration = configuration
         self.theme = theme
