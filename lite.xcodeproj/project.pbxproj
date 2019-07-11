@@ -32,7 +32,7 @@
 		7AC98C45222F091500E90A2F /* ExploreTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AC98C43222F091500E90A2F /* ExploreTableViewController.swift */; };
 		7AC98C46222F091500E90A2F /* ExploreTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AC98C44222F091500E90A2F /* ExploreTableViewController.xib */; };
 		7ACD12232237071900069BBB /* URLRequest+PermanentlyPersistedCachePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACD12222237071900069BBB /* URLRequest+PermanentlyPersistedCachePolicy.swift */; };
-		7AEA5744223001A4004A4DF8 /* ThemeJavascript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AEA5743223001A4004A4DF8 /* ThemeJavascript.swift */; };
+		7AEA5744223001A4004A4DF8 /* JavaScriptConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AEA5743223001A4004A4DF8 /* JavaScriptConstants.swift */; };
 		7AEA574B22300590004A4DF8 /* ThemePreference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AEA574922300590004A4DF8 /* ThemePreference.swift */; };
 		7AEA574C22300590004A4DF8 /* ThemePreference.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AEA574A22300590004A4DF8 /* ThemePreference.xib */; };
 		7AF232332224CFE500774812 /* CacheGroup+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AF232312224CFE500774812 /* CacheGroup+CoreDataProperties.swift */; };
@@ -83,7 +83,7 @@
 		7AC98C43222F091500E90A2F /* ExploreTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExploreTableViewController.swift; path = lite/Throwaway/ExploreTableViewController.swift; sourceTree = SOURCE_ROOT; };
 		7AC98C44222F091500E90A2F /* ExploreTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ExploreTableViewController.xib; path = lite/Throwaway/ExploreTableViewController.xib; sourceTree = SOURCE_ROOT; };
 		7ACD12222237071900069BBB /* URLRequest+PermanentlyPersistedCachePolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLRequest+PermanentlyPersistedCachePolicy.swift"; sourceTree = "<group>"; };
-		7AEA5743223001A4004A4DF8 /* ThemeJavascript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeJavascript.swift; sourceTree = "<group>"; };
+		7AEA5743223001A4004A4DF8 /* JavaScriptConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JavaScriptConstants.swift; sourceTree = "<group>"; };
 		7AEA574922300590004A4DF8 /* ThemePreference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ThemePreference.swift; path = lite/ThemePreference.swift; sourceTree = SOURCE_ROOT; };
 		7AEA574A22300590004A4DF8 /* ThemePreference.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ThemePreference.xib; path = lite/ThemePreference.xib; sourceTree = SOURCE_ROOT; };
 		7AF232312224CFE500774812 /* CacheGroup+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CacheGroup+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -202,7 +202,7 @@
 				D8C271EA21B9618400BFD1BD /* WebViewController.swift */,
 				7A34D4C7222F4DD600D73363 /* WKUserScripts */,
 				7A484277221F36C8003AEC93 /* ArticleFetcher.swift */,
-				7AEA5743223001A4004A4DF8 /* ThemeJavascript.swift */,
+				7AEA5743223001A4004A4DF8 /* JavaScriptConstants.swift */,
 				7A0C5470221F49DC002642A9 /* Fetcher.swift */,
 				7A4BF0652220723600AE76A1 /* Cache */,
 				7A0C5486221F6E37002642A9 /* Throwaway */,
@@ -366,7 +366,7 @@
 				D8C271F921BAAFCB00BFD1BD /* Configuration.swift in Sources */,
 				7A218CF022203D39007C33E1 /* Cache.xcdatamodeld in Sources */,
 				D8C271ED21B961C300BFD1BD /* Session.swift in Sources */,
-				7AEA5744223001A4004A4DF8 /* ThemeJavascript.swift in Sources */,
+				7AEA5744223001A4004A4DF8 /* JavaScriptConstants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
