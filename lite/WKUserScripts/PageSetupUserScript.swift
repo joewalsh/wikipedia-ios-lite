@@ -1,7 +1,7 @@
 import WebKit
 
 final class PageSetupUserScript: UserScriptWithCompletion<() -> Void> {
-    init(theme: Theme, dimImages: Bool, collapseTables: Bool, completion: Completion? = nil) {
+    init(theme: Theme, dimImages: Bool, expandTables: Bool, completion: Completion? = nil) {
         let messageHandlerName = "pageSetup"
 
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
@@ -18,7 +18,7 @@ final class PageSetupUserScript: UserScriptWithCompletion<() -> Void> {
         theme: pagelib.c1.Themes.\(theme.kind.jsName),
         dimImages: \(dimImages),
         margins: { top: '32px', right: '32px', bottom: '32px', left: '32px' },
-        areTablesCollapsed: \(collapseTables),
+        areTablesCollapsed: \(expandTables),
         scrollTop: 64
         }, () => {
             window.webkit.messageHandlers.\(messageHandlerName).postMessage({})

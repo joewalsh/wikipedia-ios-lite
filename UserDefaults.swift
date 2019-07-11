@@ -2,17 +2,17 @@ import Foundation
 
 extension UserDefaults {
     enum Key: String {
-        case collapseTables
+        case expandTables
         case theme
         case dimImages
     }
 
-    @objc dynamic var collapseTables: Bool {
+    @objc dynamic var expandTables: Bool {
         get {
-            return bool(forKey: Key.collapseTables.rawValue)
+            return bool(forKey: Key.expandTables.rawValue)
         }
         set {
-            set(newValue, forKey: Key.collapseTables.rawValue)
+            set(newValue, forKey: Key.expandTables.rawValue)
         }
     }
 

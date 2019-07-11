@@ -13,7 +13,7 @@ class ExploreTableViewController: UITableViewController {
     var cacheController: ArticleCacheController!
     var theme = Theme.standard
 
-    var collapseTablesPreferenceObservation: NSKeyValueObservation?
+    var expandTablesPreferenceObservation: NSKeyValueObservation?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,15 +21,15 @@ class ExploreTableViewController: UITableViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(articleCacheWasUpdated(_:)), name: ArticleCacheController.didUpdateCacheNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(themeWasUpdated(_:)), name: UserDefaults.didChangeThemeNotification, object: nil)
 
-        collapseTablesPreferenceObservation = UserDefaults.standard.observe(\.collapseTables, options: [.new]) { defaults, change in
+        expandTablesPreferenceObservation = UserDefaults.standard.observe(\.expandTables, options: [.new]) { defaults, change in
             self.tableView.reloadData()
         }
         apply(theme: theme)
     }
 
     deinit {
-        collapseTablesPreferenceObservation?.invalidate()
-        collapseTablesPreferenceObservation = nil
+        expandTablesPreferenceObservation?.invalidate()
+        expandTablesPreferenceObservation = nil
     }
 
     @objc private func articleCacheWasUpdated(_ notification: Notification) {
@@ -96,10 +96,10 @@ class ExploreTableViewController: UITableViewController {
                 accessoryType: .none,
                 onSelection: { URLCache.shared.removeAllCachedResponses() }),
             Preference(
-                title: "Collapse tables",
+                title: "Expand tables",
                 titleColor: UIColor.black,
-                accessoryType: UserDefaults.standard.collapseTables ? .checkmark : .none,
-                onSelection: { UserDefaults.standard.collapseTables = !UserDefaults.standard.collapseTables }),
+                accessoryType: UserDefaults.standard.expandTables ? .checkmark : .none,
+                onSelection: { UserDefaults.standard.expandTables = !UserDefaults.standard.expandTables }),
             Custom(
                 title: nil,
                 customView: ThemePreference.instantiate())

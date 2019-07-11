@@ -24,7 +24,7 @@ class WebViewController: UIViewController {
     // It would have to delegate back to this VC so that it can 1) evaluateJavaScript 2) push other VCs.
     private lazy var contentController: WKUserContentController = {
         let contentController = WKUserContentController()
-        let pageSetupUserScript = PageSetupUserScript(theme: UserDefaults.standard.theme, dimImages: UserDefaults.standard.dimImages, collapseTables: UserDefaults.standard.collapseTables) {
+        let pageSetupUserScript = PageSetupUserScript(theme: UserDefaults.standard.theme, dimImages: UserDefaults.standard.dimImages, expandTables: UserDefaults.standard.expandTables) {
             self.webView.isHidden = false
         }
         let footerSetupUserScript = FooterSetupUserScript(articleTitle: articleTitle)
