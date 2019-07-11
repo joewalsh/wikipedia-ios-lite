@@ -110,7 +110,7 @@ extension WebViewController: WKNavigationDelegate {
             return
         }
 
-        guard let revisedURL = Configuration.current.mobileAppsServicesArticleResourceURLForArticle(with: url, scheme: scheme, resource: .mobileHTML) else {
+        guard let revisedURL = Configuration.current.mobileAppsServicesPageResourceURLForArticle(with: url, scheme: scheme, resource: .mobileHTML) else {
             decisionHandler(.allow)
             return
         }
