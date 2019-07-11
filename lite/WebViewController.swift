@@ -42,11 +42,6 @@ class WebViewController: UIViewController {
         webView.navigationDelegate = navigationDelegate
         return webView
     }()
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        print("WebViewController didAppear")
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
