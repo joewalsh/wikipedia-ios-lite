@@ -25,8 +25,10 @@ class WebViewController: UIViewController {
         let pageSetupUserScript = PageSetupUserScript(theme: UserDefaults.standard.theme, dimImages: UserDefaults.standard.dimImages, collapseTables: UserDefaults.standard.collapseTables) {
             self.webView.isHidden = false
         }
+        let footerSetupUserScript = FooterSetupUserScript(articleTitle: articleTitle)
         contentController.addAndHandle(pageSetupUserScript)
 
+        contentController.addAndHandle(footerSetupUserScript)
         return contentController
     }()
 
