@@ -19,6 +19,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }()
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        UserDefaults.standard.register(defaults: [
+            #keyPath(UserDefaults.collapseTables): true
+        ])
+
         let persistentURLCache = PermanentlyPersistableURLCache(memoryCapacity: 4 * 1024 * 1024, diskCapacity: 20 * 1024 * 1024, diskPath: nil)
         URLCache.shared = persistentURLCache
 
