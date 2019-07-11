@@ -2,7 +2,7 @@ import WebKit
 
 final class PageSetupUserScript: UserScriptWithCompletion<() -> Void> {
     init(theme: Theme, dimImages: Bool, collapseTables: Bool, completion: Completion? = nil) {
-        let messageHandlerName = "wmfPageSetup"
+        let messageHandlerName = "pageSetup"
 
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
         let source = """
