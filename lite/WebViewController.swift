@@ -117,7 +117,14 @@ extension WebViewController: WKNavigationDelegate {
 
         decisionHandler(.cancel)
 
-        let webViewController = WebViewController(url: revisedURL, configuration: configuration, theme: theme)
+        guard let indexOfLastSlash = url.path.lastIndex(of: "/") else {
+            decisionHandler(.allow)
+            return
+        }
+
+        let articleTitle = String(url.path[indexOfLastSlash...])
+
+        let webViewController = WebViewController(articleTitle: articleTitle, url: revisedURL, configuration: configuration, theme: theme)
         navigationController?.pushViewController(webViewController, animated: true)
     }
 
