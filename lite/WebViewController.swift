@@ -20,15 +20,54 @@ class WebViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(dimImagesWasUpdated(_:)), name: UserDefaults.didUpdateDimImages, object: nil)
     }
 
+    // TODO: This could be extracted into a WKUserContentController subclass.
+    // It would have to delegate back to this VC so that it can 1) evaluateJavaScript 2) push other VCs.
     private lazy var contentController: WKUserContentController = {
         let contentController = WKUserContentController()
         let pageSetupUserScript = PageSetupUserScript(theme: UserDefaults.standard.theme, dimImages: UserDefaults.standard.dimImages, collapseTables: UserDefaults.standard.collapseTables) {
             self.webView.isHidden = false
         }
         let footerSetupUserScript = FooterSetupUserScript(articleTitle: articleTitle)
+        let interactionSetupUserScript = InteractionSetupUserScript { interaction in
+            switch interaction.action {
+            case .readMoreTitlesRetrieved:
+                guard let titles = interaction.data["titles"] as? [String] else {
+                    return
+                }
+                for title in titles {
+                    self.webView.evaluateJavaScript(FooterJavaScript.updateReadMoreSaveButton(for: title, saved: true))
+                }
+            case .linkClicked:
+                guard let href = interaction.data["href"] as? String else {
+                    assertionFailure("Unhandled link data")
+                    return
+                }
+                guard let firstIndexOfForwardSlash = href.firstIndex(of: "/") else {
+                    assertionFailure("Unhandled link type")
+                    return
+                }
+                let distance = href.distance(from: href.startIndex, to: firstIndexOfForwardSlash)
+                if distance == 0 { // external?
+                    print()
+                } else if String(href[href.startIndex..<firstIndexOfForwardSlash]) == "." { // internal?
+                    guard let scheme = self.url.scheme else {
+                        assertionFailure("Missing scheme")
+                        return
+                    }
+                    let title = String(href[href.index(firstIndexOfForwardSlash, offsetBy: 1)...])
+                    guard let url = Configuration.current.mobileAppsServicesPageResourceURLForArticle(with: title, scheme: scheme, host: self.url.host, resource: .mobileHTML) else {
+                        return
+                    }
+                    let webViewController = WebViewController(articleTitle: title, url: url, configuration: self.configuration, theme: self.theme)
+                    self.navigationController?.pushViewController(webViewController, animated: true)
+                }
+            default:
+                break
+            }
+        }
         contentController.addAndHandle(pageSetupUserScript)
-
         contentController.addAndHandle(footerSetupUserScript)
+        contentController.addAndHandle(interactionSetupUserScript)
         return contentController
     }()
 
