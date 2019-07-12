@@ -178,6 +178,13 @@ public class Configuration: NSObject {
         return components.url
     }
 
+    func mobileAppsServicesPageResourceURLForArticle(with title: String, baseURL: URL, resource: MobileAppsServices.Page.Resource) -> URL? {
+        let host = Configuration.Stage.current == .local ? baseURL.pathComponents[1] : baseURL.host
+        var components = mobileAppsServicesAPIURLComponentsForHost(host, appending: ["page", resource.rawValue, title])
+        components.scheme = baseURL.scheme
+        return components.url
+    }
+
     func mobileAppsServicesArticleTitle(from url: URL) -> String? {
         guard url.host?.hasSuffix("wikipedia.org") ?? false else {
             return nil

@@ -55,7 +55,7 @@ class WebViewController: UIViewController {
                         return
                     }
                     let title = String(href[href.index(firstIndexOfForwardSlash, offsetBy: 1)...])
-                    guard let url = Configuration.current.mobileAppsServicesPageResourceURLForArticle(with: title, scheme: scheme, host: self.url.host, resource: .mobileHTML) else {
+                    guard let url = Configuration.current.mobileAppsServicesPageResourceURLForArticle(with: title, baseURL: self.url, resource: .mobileHTML) else {
                         return
                     }
                     let webViewController = WebViewController(articleTitle: title, url: url, configuration: self.configuration, theme: self.theme)
