@@ -73,7 +73,12 @@ class WebViewController: UIViewController {
                     self.navigationController?.pushViewController(webViewController, animated: true)
                 }
             default:
-                break
+                let alert = UIAlertController(title: "Interaction", message: interaction.action.rawValue, preferredStyle: .alert)
+                let gotIt = UIAlertAction(title: "Got it", style: .default) { _ in
+                    self.dismissAnimated()
+                }
+                alert.addAction(gotIt)
+                self.present(alert, animated: true)
             }
         }
         contentController.addAndHandle(pageSetupUserScript)
