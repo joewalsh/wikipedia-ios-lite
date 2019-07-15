@@ -54,7 +54,7 @@ extension SearchViewController: SearchResultsTableViewControllerDelegate {
         else {
             return
         }
-        let webViewController = WebViewController(articleTitle: title, url: mobileHTMLURL, configuration: webViewConfiguration, theme: theme)
+        let webViewController = WebViewController(articleTitle: title, url: mobileHTMLURL, configuration: webViewConfiguration, showsCloseButton: false, theme: theme)
         webViewController.title = page.title
         navigationController?.pushViewController(webViewController, animated: true)
     }

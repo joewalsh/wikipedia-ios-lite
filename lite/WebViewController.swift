@@ -6,14 +6,18 @@ class WebViewController: UIViewController {
     let fragment: String?
     let configuration: WKWebViewConfiguration
     let url: URL
+
+    private let showsCloseButton: Bool
+
     weak var navigationDelegate: WKNavigationDelegate?
     var theme = Theme.standard
 
-    required init(articleTitle: String, fragment: String? = nil, url: URL, configuration: WKWebViewConfiguration = WKWebViewConfiguration(), theme: Theme) {
+    required init(articleTitle: String, fragment: String? = nil, url: URL, configuration: WKWebViewConfiguration = WKWebViewConfiguration(), showsCloseButton: Bool = true, theme: Theme) {
         self.articleTitle = articleTitle
         self.fragment = fragment
         self.url = url
         self.configuration = configuration
+        self.showsCloseButton = showsCloseButton
         self.theme = theme
         super.init(nibName: nil, bundle: nil)
         self.navigationDelegate = self
@@ -131,9 +135,11 @@ class WebViewController: UIViewController {
         super.viewDidLoad()
         view.addConstrainedSubview(webView)
 
-        let closeButton = UIBarButtonItem(image: UIImage(named: "close"), style: .plain, target: self, action: #selector(dismissAnimated))
-        closeButton.accessibilityIdentifier = "close"
-        navigationItem.rightBarButtonItem = closeButton
+        if showsCloseButton {
+            let closeButton = UIBarButtonItem(image: UIImage(named: "close"), style: .plain, target: self, action: #selector(dismissAnimated))
+            closeButton.accessibilityIdentifier = "close"
+            navigationItem.rightBarButtonItem = closeButton
+        }
         navigationController?.isToolbarHidden = false
 
         let themePreference = ThemePreference.instantiate()
