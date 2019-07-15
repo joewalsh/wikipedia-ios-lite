@@ -1,6 +1,6 @@
 import WebKit
 
-public class UserScriptWithCompletion<C>: WKUserScript, WKScriptMessageHandler {
+public class UserScriptWithCompletion<C>: WKUserScript, NamedScriptMessageHandler {
     typealias Completion = C
     let completion: Completion?
     public let messageHandlerName: String?

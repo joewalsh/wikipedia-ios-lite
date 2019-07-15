@@ -20,6 +20,17 @@ class WebViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(dimImagesWasUpdated(_:)), name: UserDefaults.didUpdateDimImages, object: nil)
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        for userScript in contentController.userScripts {
+            guard let messageHandlerName = (userScript as? NamedScriptMessageHandler)?.messageHandlerName else {
+                continue
+            }
+            contentController.removeScriptMessageHandler(forName: messageHandlerName)
+        }
+        contentController.removeAllUserScripts()
+    }
+
     // TODO: This could be extracted into a WKUserContentController subclass.
     // It would have to delegate back to this VC so that it can 1) evaluateJavaScript 2) push other VCs.
     private lazy var contentController: WKUserContentController = {
