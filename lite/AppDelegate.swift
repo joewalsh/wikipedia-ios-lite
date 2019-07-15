@@ -17,6 +17,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         assert(Thread.isMainThread)
         return SchemeHandler(scheme: "app", session: session)
     }()
+
+    lazy var webViewConfiguration: WKWebViewConfiguration = {
+        let configuration = WKWebViewConfiguration()
+        configuration.setURLSchemeHandler(schemeHandler, forURLScheme: schemeHandler.scheme)
+        return configuration
+    }()
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         UserDefaults.standard.register(defaults: [
@@ -36,12 +42,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         persistentURLCache.delegate = articleCacheController
         explore.cacheController = articleCacheController
         let defaultTheme = UserDefaults.standard.theme
-        explore.theme = Theme(kind: defaultTheme.kind, dimImages: defaultTheme.dimImages)
+        explore.theme = defaultTheme
         explore.tabBarItem = UITabBarItem(title: "Explore", image: UIImage(named: "explore"), tag: 0)
+
+        let search = SearchViewController(session: session, configuration: configuration, webViewConfiguration: webViewConfiguration)
+        search.theme = defaultTheme
+        search.tabBarItem = UITabBarItem(title: "Search", image: UIImage(named: "search"), tag: 0)
 
         let tabBarController = UITabBarController()
         tabBarController.tabBar.tintAdjustmentMode = .normal
-        tabBarController.viewControllers = [explore]
+        tabBarController.viewControllers = [explore, UINavigationController(rootViewController: search)]
 
         window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
