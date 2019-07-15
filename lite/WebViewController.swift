@@ -22,8 +22,12 @@ class WebViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(dimImagesWasUpdated(_:)), name: UserDefaults.didUpdateDimImages, object: nil)
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
         for userScript in contentController.userScripts {
             guard let messageHandlerName = (userScript as? NamedScriptMessageHandler)?.messageHandlerName else {
                 continue
@@ -97,14 +101,6 @@ class WebViewController: UIViewController {
         contentController.addAndHandle(interactionSetupUserScript)
         return contentController
     }()
-
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     lazy var webView: WKWebView = {
         let webView = WKWebView(frame: .zero, configuration: configuration)
