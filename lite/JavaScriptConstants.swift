@@ -15,3 +15,18 @@ struct FooterJavaScript {
         return "pagelib.c1.Footer.updateReadMoreSaveButtonForTitle(document, '\(articleTitle)', 'Saved for later', \(saved)"
     }
 }
+
+struct ScrollJavaScript {
+    static func rectY(for fragment: String) -> String {
+        let js =
+        """
+        const rectY = (fragment) => {
+            const el = document.getElementById('\(fragment)')
+            const rect = el.getBoundingClientRect()
+            return { rectY: rect.top }
+        }
+        rectY('\(fragment)')
+        """
+        return js
+    }
+}

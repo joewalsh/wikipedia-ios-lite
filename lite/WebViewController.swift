@@ -42,7 +42,25 @@ class WebViewController: UIViewController {
     private lazy var contentController: WKUserContentController = {
         let contentController = WKUserContentController()
         let pageSetupUserScript = PageSetupUserScript(theme: UserDefaults.standard.theme, dimImages: UserDefaults.standard.dimImages, expandTables: UserDefaults.standard.expandTables) {
-            self.webView.isHidden = false
+            if let fragment = self.fragment {
+                self.webView.evaluateJavaScript(ScrollJavaScript.rectY(for: fragment)) { result, error in
+                    guard
+                        error == nil,
+                        let result = result as? [String: Any],
+                        let rectY = result["rectY"] as? CGFloat
+                    else {
+                        return
+                    }
+                    let point = CGPoint(x: self.webView.scrollView.contentOffset.x, y: rectY + floor(self.webView.scrollView.contentOffset.y))
+                    UIView.animate(withDuration: 0, animations: {
+                        self.webView.scrollView.setContentOffset(point, animated: false)
+                    }, completion: { _ in
+                        self.webView.isHidden = false
+                    })
+                }
+            } else {
+                self.webView.isHidden = false
+            }
         }
         let footerSetupUserScript = FooterSetupUserScript(articleTitle: articleTitle)
         let interactionSetupUserScript = InteractionSetupUserScript { interaction in
