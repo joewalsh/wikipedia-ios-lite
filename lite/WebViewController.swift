@@ -3,13 +3,15 @@ import WebKit
 
 class WebViewController: UIViewController {
     let articleTitle: String
+    let fragment: String?
     let configuration: WKWebViewConfiguration
     let url: URL
     weak var navigationDelegate: WKNavigationDelegate?
     var theme = Theme.standard
 
-    required init(articleTitle: String, url: URL, configuration: WKWebViewConfiguration = WKWebViewConfiguration(), theme: Theme) {
+    required init(articleTitle: String, fragment: String? = nil, url: URL, configuration: WKWebViewConfiguration = WKWebViewConfiguration(), theme: Theme) {
         self.articleTitle = articleTitle
+        self.fragment = fragment
         self.url = url
         self.configuration = configuration
         self.theme = theme
@@ -65,11 +67,20 @@ class WebViewController: UIViewController {
                         assertionFailure("Missing scheme")
                         return
                     }
-                    let title = String(href[href.index(firstIndexOfForwardSlash, offsetBy: 1)...])
+                    let titleWithOptionalFragment = String(href[href.index(firstIndexOfForwardSlash, offsetBy: 1)...])
+                    let title: String
+                    let fragment: String?
+                    if let indexOfLastHash = titleWithOptionalFragment.lastIndex(of: "#") {
+                        title = String(titleWithOptionalFragment[titleWithOptionalFragment.startIndex..<indexOfLastHash])
+                        fragment = String(titleWithOptionalFragment[titleWithOptionalFragment.index(indexOfLastHash, offsetBy: 1)...])
+                    } else {
+                        title = titleWithOptionalFragment
+                        fragment = nil
+                    }
                     guard let url = Configuration.current.mobileAppsServicesPageResourceURLForArticle(with: title, baseURL: self.url, resource: .mobileHTML) else {
                         return
                     }
-                    let webViewController = WebViewController(articleTitle: title, url: url, configuration: self.configuration, theme: self.theme)
+                    let webViewController = WebViewController(articleTitle: title, fragment: fragment, url: url, configuration: self.configuration, theme: self.theme)
                     self.navigationController?.pushViewController(webViewController, animated: true)
                 }
             default:
