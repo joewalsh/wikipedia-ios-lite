@@ -70,14 +70,14 @@ class WebViewController: UIViewController {
         let interactionSetupUserScript = InteractionSetupUserScript { interaction in
             switch interaction.action {
             case .readMoreTitlesRetrieved:
-                guard let titles = interaction.data["titles"] as? [String] else {
+                guard let titles = interaction.data?["titles"] as? [String] else {
                     return
                 }
                 for title in titles {
                     self.webView.evaluateJavaScript(FooterJavaScript.updateReadMoreSaveButton(for: title, saved: true))
                 }
             case .linkClicked:
-                guard let href = interaction.data["href"] as? String else {
+                guard let href = interaction.data?["href"] as? String else {
                     assertionFailure("Unhandled link data")
                     return
                 }

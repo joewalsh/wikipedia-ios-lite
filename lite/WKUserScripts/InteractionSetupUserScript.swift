@@ -13,12 +13,12 @@ final class InteractionSetupUserScript: UserScriptWithCompletion<(Interaction) -
         guard
             let body = message.body as? [String: Any],
             let actionRawValue = body[Interaction.Keys.action] as? String,
-            let action = Interaction.Action(rawValue: actionRawValue),
-            let data = body[Interaction.Keys.data] as? [String: Any]
+            let action = Interaction.Action(rawValue: actionRawValue)
         else {
-            assertionFailure("Acion or data is missing; data might be optional")
+            assertionFailure("Missing action")
             return
         }
+        let data = body[Interaction.Keys.data] as? [String: Any]
         let interaction = Interaction(action: action, data: data)
         completion?(interaction)
     }
@@ -26,7 +26,7 @@ final class InteractionSetupUserScript: UserScriptWithCompletion<(Interaction) -
 
 struct Interaction {
     let action: Action
-    let data: [String: Any]
+    let data: [String: Any]?
 
     enum Action: String {
         case linkClicked = "link_clicked"
