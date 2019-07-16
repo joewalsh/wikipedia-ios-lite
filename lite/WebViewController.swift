@@ -116,9 +116,11 @@ class WebViewController: UIViewController {
                         title = titleWithOptionalFragment
                         fragment = nil
                     }
-                    print("")
-//                    let webViewController = WebViewController(articleTitle: title, articleURL: url, articleFragment: fragment, articleCacheController: self.articleCacheController, webViewConfiguration: self.webViewConfiguration)
-//                    self.navigationController?.pushViewController(webViewController, animated: true)
+                    guard let linkedArticleURL = URL(string: self.articleURL.absoluteString.replacingOccurrences(of: self.articleTitle, with: title)) else {
+                        return
+                    }
+                    let webViewController = WebViewController.init(articleTitle: title, articleURL: linkedArticleURL, articleCacheController: self.articleCacheController, configuration: self.configuration, webViewConfiguration: self.webViewConfiguration)
+                    self.navigationController?.pushViewController(webViewController, animated: true)
                 }
             default:
                 let alert = UIAlertController(title: "Interaction", message: interaction.action.rawValue, preferredStyle: .alert)
