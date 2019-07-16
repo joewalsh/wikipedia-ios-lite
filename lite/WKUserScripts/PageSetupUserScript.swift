@@ -21,7 +21,9 @@ final class PageSetupUserScript: UserScriptWithCompletion<() -> Void> {
         areTablesCollapsed: \(expandTables),
         scrollTop: 64
         }, () => {
-            window.webkit.messageHandlers.\(messageHandlerName).postMessage({})
+            window.requestAnimationFrame(() => {
+                window.webkit.messageHandlers.\(messageHandlerName).postMessage({})
+            })
         })
         """
         super.init(source: source, injectionTime: .atDocumentEnd, forMainFrameOnly: true, messageHandlerName: messageHandlerName, completion: completion)
