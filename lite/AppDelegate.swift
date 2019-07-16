@@ -34,18 +34,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         window = UIWindow(frame: UIScreen.main.bounds)
 
-        let explore = ExploreTableViewController()
-        explore.configuration = configuration
-        explore.schemeHandler = schemeHandler
         let articleFetcher = ArticleFetcher(session: session, configuration: configuration)
         let articleCacheController = ArticleCacheController(fetcher: articleFetcher)
         persistentURLCache.delegate = articleCacheController
-        explore.cacheController = articleCacheController
+        let explore = ExploreTableViewController(configuration: configuration, articleCacheController: articleCacheController, webViewConfiguration: webViewConfiguration)
         let defaultTheme = UserDefaults.standard.theme
-        explore.theme = defaultTheme
+        explore.apply(theme: defaultTheme)
         explore.tabBarItem = UITabBarItem(title: "Explore", image: UIImage(named: "explore"), tag: 0)
 
-        let search = SearchViewController(session: session, configuration: configuration, webViewConfiguration: webViewConfiguration)
+        let search = SearchViewController(session: session, configuration: configuration, webViewConfiguration: webViewConfiguration, articleCacheController: articleCacheController)
         search.theme = defaultTheme
         search.tabBarItem = UITabBarItem(title: "Search", image: UIImage(named: "search"), tag: 0)
 
