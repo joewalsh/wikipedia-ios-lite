@@ -8,12 +8,24 @@ private protocol Item {
 class ExploreTableViewController: UITableViewController {
     private let reuseIdentifier = "👻"
 
-    var configuration: Configuration!
-    var schemeHandler: SchemeHandler!
-    var cacheController: ArticleCacheController!
-    var theme = Theme.standard
+    private let configuration: Configuration
+    private let articleCacheController: ArticleCacheController
+    private let webViewConfiguration: WKWebViewConfiguration
 
-    var expandTablesPreferenceObservation: NSKeyValueObservation?
+    private var theme = Theme.standard
+
+    private var expandTablesPreferenceObservation: NSKeyValueObservation?
+
+    init(configuration: Configuration, articleCacheController: ArticleCacheController, webViewConfiguration: WKWebViewConfiguration) {
+        self.configuration = configuration
+        self.articleCacheController = articleCacheController
+        self.webViewConfiguration = webViewConfiguration
+        super.init(style: .grouped)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -148,7 +160,7 @@ class ExploreTableViewController: UITableViewController {
         case let article as Article:
             cell.textLabel?.text = article.title
             let saveButton = UIButton()
-            let isCached = cacheController.isCached(article.url)
+            let isCached = articleCacheController.isCached(article.url)
             let imageName = isCached ? "save-filled" : "save"
             saveButton.setImage(UIImage(named: imageName), for: .normal)
             saveButton.imageView?.contentMode = .scaleAspectFit
@@ -198,7 +210,7 @@ class ExploreTableViewController: UITableViewController {
         else {
             return
         }
-        cacheController.toggleCache(for: article.url)
+        articleCacheController.toggleCache(for: article.url)
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -223,7 +235,10 @@ class ExploreTableViewController: UITableViewController {
     // MARK: Article presentation
 
     private func showArticle(_ article: Article, withTheme theme: Theme) {
-        let webViewController = self.webViewController(forArticle: article, theme: theme)
+        guard let webViewController = self.webViewController(forArticle: article, theme: theme) else {
+            return
+        }
+        webViewController.apply(theme: theme)
         let navigationController = UINavigationController(rootViewController: webViewController)
         navigationController.apply(theme: theme)
         present(navigationController, animated: true)
@@ -238,16 +253,11 @@ class ExploreTableViewController: UITableViewController {
         NSLayoutConstraint.activate([centerX])
     }
 
-    private func webViewController(forArticle article: Article, theme: Theme) -> WebViewController {
-        let articleMobileHTMLURL = configuration.mobileAppsServicesPageResourceURLForArticle(with: article.url, scheme: schemeHandler.scheme, resource: .mobileHTML)!
-        let webViewController = WebViewController(articleTitle: article.title!, url: articleMobileHTMLURL, configuration: webViewConfiguration, theme: theme)
-        return webViewController
-    }
-
-    private var webViewConfiguration: WKWebViewConfiguration {
-        let configuration = WKWebViewConfiguration()
-        configuration.setURLSchemeHandler(schemeHandler, forURLScheme: schemeHandler.scheme)
-        return configuration
+    private func webViewController(forArticle article: Article, theme: Theme) -> WebViewController? {
+        guard let title = article.title else {
+            return nil
+        }
+        return WebViewController(articleTitle: title, articleURL: article.url, articleCacheController: articleCacheController, configuration: configuration, webViewConfiguration: webViewConfiguration)
     }
 }
 

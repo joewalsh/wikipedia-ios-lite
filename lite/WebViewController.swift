@@ -2,26 +2,39 @@ import UIKit
 import WebKit
 
 class WebViewController: UIViewController {
-    let articleTitle: String
-    let fragment: String?
-    let configuration: WKWebViewConfiguration
-    let url: URL
+    private let articleTitle: String
+    private let articleURL: URL
+    private let articleFragment: String?
+    private let articleCacheController: ArticleCacheController
 
-    private let showsCloseButton: Bool
+    private let configuration: Configuration
+
+    private let webViewConfiguration: WKWebViewConfiguration
 
     weak var navigationDelegate: WKNavigationDelegate?
-    var theme = Theme.standard
 
-    required init(articleTitle: String, fragment: String? = nil, url: URL, configuration: WKWebViewConfiguration = WKWebViewConfiguration(), showsCloseButton: Bool = true, theme: Theme) {
+    private var theme = Theme.standard
+
+    private lazy var mobileHTMLURL: URL? = {
+        return configuration.mobileAppsServicesPageResourceURLForArticle(with: articleURL, scheme: articleURL.scheme ?? "app", resource: .mobileHTML)
+    }()
+
+    required init(articleTitle: String, articleURL: URL, articleFragment: String? = nil, articleCacheController: ArticleCacheController, configuration: Configuration, webViewConfiguration: WKWebViewConfiguration) {
         self.articleTitle = articleTitle
-        self.fragment = fragment
-        self.url = url
+        self.articleURL = articleURL
+        self.articleFragment = articleFragment
+        self.articleCacheController = articleCacheController
+
         self.configuration = configuration
-        self.showsCloseButton = showsCloseButton
-        self.theme = theme
+
+        self.webViewConfiguration = webViewConfiguration
+
         super.init(nibName: nil, bundle: nil)
+
         self.navigationDelegate = self
-        configuration.userContentController = contentController
+
+        webViewConfiguration.userContentController = contentController
+
         NotificationCenter.default.addObserver(self, selector: #selector(themeWasUpdated(_:)), name: UserDefaults.didChangeThemeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dimImagesWasUpdated(_:)), name: UserDefaults.didUpdateDimImages, object: nil)
     }
@@ -69,8 +82,8 @@ class WebViewController: UIViewController {
 //            self.isWebViewHidden = false
 //        }
         let pageSetupUserScript = PageSetupUserScript(theme: UserDefaults.standard.theme, dimImages: UserDefaults.standard.dimImages, expandTables: UserDefaults.standard.expandTables) {
-            if let fragment = self.fragment {
-                self.webView.evaluateJavaScript(ScrollJavaScript.rectY(for: fragment)) { result, error in
+            if let articleFragment = self.articleFragment {
+                self.webView.evaluateJavaScript(ScrollJavaScript.rectY(for: articleFragment)) { result, error in
                     guard
                         error == nil,
                         let result = result as? [String: Any],
@@ -112,7 +125,7 @@ class WebViewController: UIViewController {
                 if distance == 0 { // external?
                     print()
                 } else if String(href[href.startIndex..<firstIndexOfForwardSlash]) == "." { // internal?
-                    guard let scheme = self.url.scheme else {
+                    guard let scheme = self.articleURL.scheme else {
                         assertionFailure("Missing scheme")
                         return
                     }
@@ -126,10 +139,10 @@ class WebViewController: UIViewController {
                         title = titleWithOptionalFragment
                         fragment = nil
                     }
-                    guard let url = Configuration.current.mobileAppsServicesPageResourceURLForArticle(with: title, baseURL: self.url, resource: .mobileHTML) else {
+                    guard let linkedArticleURL = URL(string: self.articleURL.absoluteString.replacingOccurrences(of: self.articleTitle, with: title)) else {
                         return
                     }
-                    let webViewController = WebViewController(articleTitle: title, fragment: fragment, url: url, configuration: self.configuration, theme: self.theme)
+                    let webViewController = WebViewController.init(articleTitle: title, articleURL: linkedArticleURL, articleCacheController: self.articleCacheController, configuration: self.configuration, webViewConfiguration: self.webViewConfiguration)
                     self.navigationController?.pushViewController(webViewController, animated: true)
                 }
             default:
@@ -149,31 +162,60 @@ class WebViewController: UIViewController {
     }()
     
     lazy var webView: WKWebView = {
-        let webView = WKWebView(frame: .zero, configuration: configuration)
+        let webView = WKWebView(frame: .zero, configuration: webViewConfiguration)
         webView.navigationDelegate = navigationDelegate
         return webView
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        defer {
+            apply(theme: theme)
+        }
+
         view.addConstrainedSubview(webView)
 
-        if showsCloseButton {
+        guard let mobileHTMLURL = mobileHTMLURL else {
+            return
+        }
+
+        let request = URLRequest(url: mobileHTMLURL, permanentlyPersistedCachePolicy: .ignorePermanentlyPersistedCacheData)
+        isWebViewHidden = true
+        webView.load(request)
+
+        configureCloseButton()
+        configureToolbar()
+    }
+
+    private func configureCloseButton() {
+        if presentingViewController != nil {
             let closeButton = UIBarButtonItem(image: UIImage(named: "close"), style: .plain, target: self, action: #selector(dismissAnimated))
             closeButton.accessibilityIdentifier = "close"
             navigationItem.rightBarButtonItem = closeButton
         }
+    }
+
+    private func configureToolbar() {
         navigationController?.isToolbarHidden = false
 
-        let themePreference = ThemePreference.instantiate()
-        themePreference.sizeToFit()
-        setToolbarItems([UIBarButtonItem(customView: themePreference)], animated: true)
+        let tableOfContents = UIBarButtonItem(image: UIImage(named: "toc"), style: .plain, target: self, action: #selector(openTableOfContents))
+        let language = UIBarButtonItem(image: UIImage(named: "language"), style: .plain, target: self, action: #selector(changeLanguage))
+        let save = UIBarButtonItem(image: articleCacheController.isCached(articleURL) ? UIImage(named: "save-filled") : UIImage(named: "save"), style: .plain, target: self, action: #selector(saveOrUnsave))
+        language.isEnabled = false
+        setToolbarItems([tableOfContents, language, save], animated: true)
+    }
 
-        let request = URLRequest(url: url, permanentlyPersistedCachePolicy: .ignorePermanentlyPersistedCacheData)
-        isWebViewHidden = true
-        webView.load(request)
+    @objc private func openTableOfContents() {
 
-        apply(theme: theme)
+    }
+
+    @objc private func changeLanguage() {
+
+    }
+
+    @objc private func saveOrUnsave() {
+
     }
 
     @objc private func dismissAnimated() {
@@ -199,47 +241,6 @@ class WebViewController: UIViewController {
 }
 
 extension WebViewController: WKNavigationDelegate {
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        #warning("Handle edit, reference links")
-        guard let url = navigationAction.request.url else {
-            decisionHandler(.allow)
-            return
-        }
-
-        guard url.host?.hasSuffix("wikipedia.org") ?? false else {
-            decisionHandler(.allow)
-            return
-        }
-
-        let pathComponents = url.pathComponents
-        guard pathComponents.count > 1, pathComponents[1] == "wiki" else {
-            decisionHandler(.allow)
-            return
-        }
-
-        guard let scheme = url.scheme else {
-            decisionHandler(.allow)
-            return
-        }
-
-        guard let revisedURL = Configuration.current.mobileAppsServicesPageResourceURLForArticle(with: url, scheme: scheme, resource: .mobileHTML) else {
-            decisionHandler(.allow)
-            return
-        }
-
-        decisionHandler(.cancel)
-
-        guard let indexOfLastSlash = url.path.lastIndex(of: "/") else {
-            decisionHandler(.allow)
-            return
-        }
-
-        let articleTitle = String(url.path[indexOfLastSlash...])
-
-        let webViewController = WebViewController(articleTitle: articleTitle, url: revisedURL, configuration: configuration, theme: theme)
-        navigationController?.pushViewController(webViewController, animated: true)
-    }
-
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         guard let requestError = RequestError.from(code: (error as NSError).code) else {
             showAlert(forError: error)
@@ -250,8 +251,14 @@ extension WebViewController: WKNavigationDelegate {
             showAlert(forError: error)
             loadRetryCount = 0
         case .timeout:
-            loadRetryCount += 1
-            let request = URLRequest(url: url, permanentlyPersistedCachePolicy: .usePermanentlyPersistedCacheData)
+            defer {
+                loadRetryCount += 1
+            }
+            guard let mobileHTMLURL = mobileHTMLURL else {
+                showAlert(forError: NSError(domain: "org.wikimedia.lite", code: NSURLErrorBadURL, userInfo: nil))
+                return
+            }
+            let request = URLRequest(url: mobileHTMLURL, permanentlyPersistedCachePolicy: .usePermanentlyPersistedCacheData)
             webView.load(request)
         default:
             break

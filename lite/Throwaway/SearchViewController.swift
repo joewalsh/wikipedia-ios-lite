@@ -10,11 +10,13 @@ final class SearchViewController: UIViewController {
     private let searchResultsFetcher: SearchResultsFetcher
     private let configuration: Configuration
     private let webViewConfiguration: WKWebViewConfiguration
+    private let articleCacheController: ArticleCacheController
 
-    init(session: Session, configuration: Configuration, webViewConfiguration: WKWebViewConfiguration) {
+    init(session: Session, configuration: Configuration, webViewConfiguration: WKWebViewConfiguration, articleCacheController: ArticleCacheController) {
         searchResultsFetcher = SearchResultsFetcher(session: session, configuration: configuration)
         self.configuration = configuration
         self.webViewConfiguration = webViewConfiguration
+        self.articleCacheController = articleCacheController
         super.init(nibName: nil, bundle: nil)
         resultsController.delegate = self
     }
@@ -48,13 +50,10 @@ extension SearchViewController: SearchResultsTableViewControllerDelegate {
         components.scheme = "https"
         components.host = "en.wikipedia.org"
         components.path = "/wiki/\(title)"
-        guard
-            let articleURL = components.url,
-            let mobileHTMLURL = configuration.mobileAppsServicesPageResourceURLForArticle(with: title, baseURL: articleURL, resource: .mobileHTML)
-        else {
+        guard let articleURL = components.url else {
             return
         }
-        let webViewController = WebViewController(articleTitle: title, url: mobileHTMLURL, configuration: webViewConfiguration, showsCloseButton: false, theme: theme)
+        let webViewController = WebViewController(articleTitle: title, articleURL: articleURL, articleCacheController: articleCacheController, configuration: configuration, webViewConfiguration: webViewConfiguration)
         webViewController.title = page.title
         navigationController?.pushViewController(webViewController, animated: true)
     }
