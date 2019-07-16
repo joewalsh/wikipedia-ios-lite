@@ -40,11 +40,34 @@ class WebViewController: UIViewController {
         }
         contentController.removeAllUserScripts()
     }
+    
+    var absoluteTime: CFAbsoluteTime = 0
+    
+    var isWebViewHidden: Bool = false {
+        didSet {
+            guard isWebViewHidden != webView.isHidden else {
+                return
+            }
+            if isWebViewHidden {
+                absoluteTime = CFAbsoluteTimeGetCurrent()
+            } else {
+                let delta = CFAbsoluteTimeGetCurrent() - absoluteTime
+                print("delta: \(delta)")
+            }
+            webView.isHidden = isWebViewHidden
+        }
+    }
 
     // TODO: This could be extracted into a WKUserContentController subclass.
     // It would have to delegate back to this VC so that it can 1) evaluateJavaScript 2) push other VCs.
     private lazy var contentController: WKUserContentController = {
         let contentController = WKUserContentController()
+//        let themeSetupUserScript = ThemeSetupUserScript(theme: theme) {
+//            guard self.fragment == nil else {
+//                return
+//            }
+//            self.isWebViewHidden = false
+//        }
         let pageSetupUserScript = PageSetupUserScript(theme: UserDefaults.standard.theme, dimImages: UserDefaults.standard.dimImages, expandTables: UserDefaults.standard.expandTables) {
             if let fragment = self.fragment {
                 self.webView.evaluateJavaScript(ScrollJavaScript.rectY(for: fragment)) { result, error in
@@ -59,11 +82,11 @@ class WebViewController: UIViewController {
                     UIView.animate(withDuration: 0, animations: {
                         self.webView.scrollView.setContentOffset(point, animated: false)
                     }, completion: { _ in
-                        self.webView.isHidden = false
+                        self.isWebViewHidden = false
                     })
                 }
             } else {
-                self.webView.isHidden = false
+                self.isWebViewHidden = false
             }
         }
         let footerSetupUserScript = FooterSetupUserScript(articleTitle: articleTitle)
@@ -118,6 +141,7 @@ class WebViewController: UIViewController {
                 self.present(alert, animated: true)
             }
         }
+        //contentController.addAndHandle(themeSetupUserScript)
         contentController.addAndHandle(pageSetupUserScript)
         contentController.addAndHandle(footerSetupUserScript)
         contentController.addAndHandle(interactionSetupUserScript)
@@ -126,7 +150,6 @@ class WebViewController: UIViewController {
     
     lazy var webView: WKWebView = {
         let webView = WKWebView(frame: .zero, configuration: configuration)
-        webView.isHidden = true
         webView.navigationDelegate = navigationDelegate
         return webView
     }()
@@ -147,6 +170,7 @@ class WebViewController: UIViewController {
         setToolbarItems([UIBarButtonItem(customView: themePreference)], animated: true)
 
         let request = URLRequest(url: url, permanentlyPersistedCachePolicy: .ignorePermanentlyPersistedCacheData)
+        isWebViewHidden = true
         webView.load(request)
 
         apply(theme: theme)

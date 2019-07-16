@@ -87,6 +87,19 @@ public class Theme {
         var jsName: String {
             return name.uppercased()
         }
+        
+        var cssClass: String {
+            switch self {
+            case .light:
+                return "pagelib_theme_light"
+            case .sepia:
+                return "pagelib_theme_sepia"
+            case .dark:
+                return "pagelib_theme_dark"
+            case .black:
+                return "pagelib_theme_black"
+            }
+        }
 
         var colors: Colors {
             switch self {

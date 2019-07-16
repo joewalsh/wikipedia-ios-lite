@@ -41,6 +41,7 @@
 		7AEA574C22300590004A4DF8 /* ThemePreference.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AEA574A22300590004A4DF8 /* ThemePreference.xib */; };
 		7AF232332224CFE500774812 /* CacheGroup+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AF232312224CFE500774812 /* CacheGroup+CoreDataProperties.swift */; };
 		7AF232342224CFE500774812 /* CacheItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AF232322224CFE500774812 /* CacheItem+CoreDataProperties.swift */; };
+		8320FACB22DE32BE00BDAB69 /* ThemeSetupUserScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8320FACA22DE32BE00BDAB69 /* ThemeSetupUserScript.swift */; };
 		D8C271D921B9612500BFD1BD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C271D821B9612500BFD1BD /* AppDelegate.swift */; };
 		D8C271E021B9612600BFD1BD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D8C271DF21B9612600BFD1BD /* Assets.xcassets */; };
 		D8C271E321B9612600BFD1BD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8C271E121B9612600BFD1BD /* LaunchScreen.storyboard */; };
@@ -96,6 +97,7 @@
 		7AEA574A22300590004A4DF8 /* ThemePreference.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ThemePreference.xib; path = lite/ThemePreference.xib; sourceTree = SOURCE_ROOT; };
 		7AF232312224CFE500774812 /* CacheGroup+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CacheGroup+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		7AF232322224CFE500774812 /* CacheItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CacheItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		8320FACA22DE32BE00BDAB69 /* ThemeSetupUserScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeSetupUserScript.swift; sourceTree = "<group>"; };
 		D8C271D521B9612500BFD1BD /* lite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = lite.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8C271D821B9612500BFD1BD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D8C271DF21B9612600BFD1BD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -160,6 +162,7 @@
 			isa = PBXGroup;
 			children = (
 				7AB780C822AFF97D0079A87C /* PageSetupUserScript.swift */,
+				8320FACA22DE32BE00BDAB69 /* ThemeSetupUserScript.swift */,
 				7ABAB3F222D7882100CBE8B1 /* InteractionSetupUserScript.swift */,
 				7A9F9BFC22D675260051EE8D /* FooterSetupUserScript.swift */,
 				7A673CCC223094E000A203F4 /* UserScriptWithCompletion.swift */,
@@ -363,6 +366,7 @@
 				7A75F66522DD28ED0081EFB4 /* SearchViewController.swift in Sources */,
 				7AC09D242224565700099FDB /* URL+KeyComponents.swift in Sources */,
 				7AF232332224CFE500774812 /* CacheGroup+CoreDataProperties.swift in Sources */,
+				8320FACB22DE32BE00BDAB69 /* ThemeSetupUserScript.swift in Sources */,
 				7A0C5471221F49DC002642A9 /* Fetcher.swift in Sources */,
 				D8C271F521BAA40E00BFD1BD /* PermanentlyPersistableURLCache.swift in Sources */,
 				7A673CCF2230A6C300A203F4 /* Theme.swift in Sources */,
