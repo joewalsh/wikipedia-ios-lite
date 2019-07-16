@@ -216,47 +216,6 @@ class WebViewController: UIViewController {
 }
 
 extension WebViewController: WKNavigationDelegate {
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        #warning("Handle edit, reference links")
-        guard let url = navigationAction.request.url else {
-            decisionHandler(.allow)
-            return
-        }
-
-        guard url.host?.hasSuffix("wikipedia.org") ?? false else {
-            decisionHandler(.allow)
-            return
-        }
-
-        let pathComponents = url.pathComponents
-        guard pathComponents.count > 1, pathComponents[1] == "wiki" else {
-            decisionHandler(.allow)
-            return
-        }
-
-        guard let scheme = url.scheme else {
-            decisionHandler(.allow)
-            return
-        }
-
-        guard let revisedURL = Configuration.current.mobileAppsServicesPageResourceURLForArticle(with: url, scheme: scheme, resource: .mobileHTML) else {
-            decisionHandler(.allow)
-            return
-        }
-
-        decisionHandler(.cancel)
-
-        guard let indexOfLastSlash = url.path.lastIndex(of: "/") else {
-            decisionHandler(.allow)
-            return
-        }
-
-        let articleTitle = String(url.path[indexOfLastSlash...])
-
-        let webViewController = WebViewController(articleTitle: articleTitle, articleURL: url, articleCacheController: articleCacheController, configuration: configuration, webViewConfiguration: webViewConfiguration)
-        navigationController?.pushViewController(webViewController, animated: true)
-    }
-
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         guard let requestError = RequestError.from(code: (error as NSError).code) else {
             showAlert(forError: error)
