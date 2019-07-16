@@ -54,19 +54,19 @@ class WebViewController: UIViewController {
         contentController.removeAllUserScripts()
     }
     
-    var absoluteTime: CFAbsoluteTime = 0
+    // var absoluteTime: CFAbsoluteTime = 0
     
     var isWebViewHidden: Bool = false {
         didSet {
             guard isWebViewHidden != webView.isHidden else {
                 return
             }
-            if isWebViewHidden {
-                absoluteTime = CFAbsoluteTimeGetCurrent()
-            } else {
-                let delta = CFAbsoluteTimeGetCurrent() - absoluteTime
-                print("delta: \(delta)")
-            }
+//            if isWebViewHidden {
+//                absoluteTime = CFAbsoluteTimeGetCurrent()
+//            } else {
+//                let delta = CFAbsoluteTimeGetCurrent() - absoluteTime
+//                print("delta: \(delta)")
+//            }
             webView.isHidden = isWebViewHidden
         }
     }
