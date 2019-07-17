@@ -252,16 +252,20 @@ class ArticleCacheController: NSObject {
     func toggleCache(for articleURL: URL) {
         assert(Thread.isMainThread)
         print("ArticlesController: toggled cache for \(articleURL)")
-        if isCached(articleURL) {
-            print("ArticlesController: cache for \(articleURL) exists, removing")
-            removeCachedArticle(with: articleURL)
-        } else {
+        toggleCache(isCached(articleURL), for: articleURL)
+    }
+
+    func toggleCache(_ cache: Bool, for articleURL: URL) {
+        if cache {
             print("ArticlesController: cache for \(articleURL) doesn't exist, fetching")
             cacheResource(.mobileHTML, for: articleURL)
             cacheResource(.references, for: articleURL)
             cacheResource(.sections, for: articleURL)
             cacheMedia(for: articleURL)
             cacheData(for: articleURL)
+        } else {
+            print("ArticlesController: cache for \(articleURL) exists, removing")
+            removeCachedArticle(with: articleURL)
         }
     }
 

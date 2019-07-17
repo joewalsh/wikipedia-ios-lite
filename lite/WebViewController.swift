@@ -15,6 +15,8 @@ class WebViewController: UIViewController {
 
     private var theme = Theme.standard
 
+    private var readMoreURLs = [String: URL]()
+
     private lazy var mobileHTMLURL: URL? = {
         return configuration.mobileAppsServicesPageResourceURLForArticle(with: articleURL, scheme: articleURL.scheme ?? "app", resource: .mobileHTML)
     }()
@@ -37,6 +39,8 @@ class WebViewController: UIViewController {
 
         NotificationCenter.default.addObserver(self, selector: #selector(themeWasUpdated(_:)), name: UserDefaults.didChangeThemeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dimImagesWasUpdated(_:)), name: UserDefaults.didUpdateDimImages, object: nil)
+
+        readMoreURLs.reserveCapacity(3)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -88,6 +92,7 @@ class WebViewController: UIViewController {
                 }
                 for title in titles {
                     if let articleURL = self.articleURL.replacingPageTitle(self.articleTitle, with: title) {
+                        self.readMoreURLs[title] = articleURL
                         self.webView.evaluateJavaScript(FooterJavaScript.updateReadMoreSaveButton(for: title, saved: self.articleCacheController.isCached(articleURL)))
                     }
                 }
@@ -124,6 +129,17 @@ class WebViewController: UIViewController {
                     let webViewController = WebViewController(articleTitle: title, articleURL: linkedArticleURL, articleCacheController: self.articleCacheController, configuration: self.configuration, webViewConfiguration: self.webViewConfiguration)
                     self.navigationController?.pushViewController(webViewController, animated: true)
                 }
+            case .saveOtherPage:
+                guard let title = interaction.data?["title"] as? String else {
+                    assertionFailure("Missing title")
+                    return
+                }
+                guard let articleURL = self.readMoreURLs[title] ?? self.articleURL.replacingPageTitle(self.articleTitle, with: title) else {
+                    return
+                }
+                let isCached = self.articleCacheController.isCached(articleURL)
+                self.articleCacheController.toggleCache(!isCached, for: articleURL)
+                self.webView.evaluateJavaScript(FooterJavaScript.updateReadMoreSaveButton(for: title, saved: !isCached))
             default:
                 let alert = UIAlertController(title: "Interaction", message: interaction.action.rawValue, preferredStyle: .alert)
                 let gotIt = UIAlertAction(title: "Got it", style: .default)
@@ -281,7 +297,7 @@ private extension WKWebView {
 private extension URL {
     func replacingPageTitle(_ oldTitle: String, with newTitle: String) -> URL? {
         var components = URLComponents(url: self, resolvingAgainstBaseURL: false)
-        components?.path = path.replacingOccurrences(of: oldTitle, with: newTitle)
+        components?.path = path.replacingOccurrences(of: oldTitle, with: newTitle.replacingOccurrences(of: " ", with: "_"))
         return components?.url
     }
 }
