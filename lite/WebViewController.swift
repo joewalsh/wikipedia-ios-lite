@@ -87,7 +87,9 @@ class WebViewController: UIViewController {
                     return
                 }
                 for title in titles {
-                    self.webView.evaluateJavaScript(FooterJavaScript.updateReadMoreSaveButton(for: title, saved: true))
+                    if let articleURL = self.articleURL.replacingPageTitle(self.articleTitle, with: title) {
+                        self.webView.evaluateJavaScript(FooterJavaScript.updateReadMoreSaveButton(for: title, saved: self.articleCacheController.isCached(articleURL)))
+                    }
                 }
             case .linkClicked:
                 guard let href = interaction.data?["href"] as? String else {
@@ -116,10 +118,10 @@ class WebViewController: UIViewController {
                         title = titleWithOptionalFragment
                         fragment = nil
                     }
-                    guard let linkedArticleURL = URL(string: self.articleURL.absoluteString.replacingOccurrences(of: self.articleTitle, with: title)) else {
+                    guard let linkedArticleURL = self.articleURL.replacingPageTitle(self.articleTitle, with: title) else {
                         return
                     }
-                    let webViewController = WebViewController.init(articleTitle: title, articleURL: linkedArticleURL, articleCacheController: self.articleCacheController, configuration: self.configuration, webViewConfiguration: self.webViewConfiguration)
+                    let webViewController = WebViewController(articleTitle: title, articleURL: linkedArticleURL, articleCacheController: self.articleCacheController, configuration: self.configuration, webViewConfiguration: self.webViewConfiguration)
                     self.navigationController?.pushViewController(webViewController, animated: true)
                 }
             default:
@@ -273,5 +275,13 @@ extension WebViewController: Themeable {
 private extension WKWebView {
     func apply(theme: Theme) {
         evaluateJavaScript(ThemeJavaScript.set(theme: theme))
+    }
+}
+
+private extension URL {
+    func replacingPageTitle(_ oldTitle: String, with newTitle: String) -> URL? {
+        var components = URLComponents(url: self, resolvingAgainstBaseURL: false)
+        components?.path = path.replacingOccurrences(of: oldTitle, with: newTitle)
+        return components?.url
     }
 }
