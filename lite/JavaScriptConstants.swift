@@ -12,7 +12,7 @@ struct ThemeJavaScript {
 
 struct FooterJavaScript {
     static func updateReadMoreSaveButton(for articleTitle: String, saved: Bool) -> String {
-        return "pagelib.c1.Footer.updateReadMoreSaveButtonForTitle(document, '\(articleTitle)', 'Saved for later', \(saved)"
+        return "pagelib.c1.Footer.updateReadMoreSaveButtonForTitle(document, '\(articleTitle)', 'Saved for later', \(saved))"
     }
 }
 
