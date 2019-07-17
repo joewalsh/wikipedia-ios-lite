@@ -176,9 +176,10 @@ class WebViewController: UIViewController {
         let tableOfContents = UIBarButtonItem(image: UIImage(named: "toc"), style: .plain, target: self, action: #selector(openTableOfContents))
         let language = UIBarButtonItem(image: UIImage(named: "language"), style: .plain, target: self, action: #selector(changeLanguage))
         let save = UIBarButtonItem(image: articleCacheController.isCached(articleURL) ? UIImage(named: "save-filled") : UIImage(named: "save"), style: .plain, target: self, action: #selector(saveOrUnsave))
+        let scrollToBottom = UIBarButtonItem(image: UIImage(named: "direction-down"), style: .plain, target: self, action: #selector(self.scrollToBottom))
         language.isEnabled = false
 
-        setToolbarItems([tableOfContents, language, save], animated: true)
+        setToolbarItems([tableOfContents, language, save, scrollToBottom], animated: true)
     }
 
     @objc private func openTableOfContents() {
@@ -191,6 +192,10 @@ class WebViewController: UIViewController {
 
     @objc private func saveOrUnsave() {
 
+    }
+
+    @objc private func scrollToBottom() {
+        webView.evaluateJavaScript("window.scrollTo(0, document.scrollingElement.scrollHeight)")
     }
 
     @objc private func dismissAnimated() {
