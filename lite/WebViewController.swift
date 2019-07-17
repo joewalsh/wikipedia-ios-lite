@@ -124,9 +124,7 @@ class WebViewController: UIViewController {
                 }
             default:
                 let alert = UIAlertController(title: "Interaction", message: interaction.action.rawValue, preferredStyle: .alert)
-                let gotIt = UIAlertAction(title: "Got it", style: .default) { _ in
-                    self.dismissAnimated()
-                }
+                let gotIt = UIAlertAction(title: "Got it", style: .default)
                 alert.addAction(gotIt)
                 self.present(alert, animated: true)
             }
