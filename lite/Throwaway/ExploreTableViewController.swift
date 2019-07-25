@@ -57,12 +57,17 @@ class ExploreTableViewController: UITableViewController {
 
     private struct Article: Item {
         let title: String?
+        let language: String
         let url: URL
 
-        init(title: String) {
+        init(title: String, language: String = "en"){
             self.title = title
-            let urlString = "app://en.wikipedia.org/wiki/\(title)"
-            self.url = URL(string: urlString)!
+            self.language = language
+            var components = URLComponents()
+            components.scheme = "app"
+            components.host = "\(language).wikipedia.org"
+            components.replacePercentEncodedPathWithPathComponents(["wiki", title])
+            self.url = components.url!
         }
     }
 
@@ -95,7 +100,8 @@ class ExploreTableViewController: UITableViewController {
             Article(title: "Cat"),
             Article(title: "Panda"),
             Article(title: "Unicorn"),
-            Article(title: "Barack_Obama")
+            Article(title: "Barack_Obama"),
+            Article(title: "Канада", language: "sr")
         ]
         return Section(title: "Explore", items: articles)
     }()

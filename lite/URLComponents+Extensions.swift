@@ -52,7 +52,7 @@ extension URLComponents {
             percentEncodedPath = "/"
             return
         }
-        let fullComponents = [""] + pathComponents
+        let fullComponents = [""] + pathComponents.compactMap({ $0.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlPathComponentAllowed) } )
         #if DEBUG
         for component in fullComponents {
             assert(!component.contains("/"))

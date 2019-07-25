@@ -160,6 +160,14 @@ class WebViewController: UIViewController {
         return webView
     }()
     
+    func preferredVariant(for articleURL: URL) -> String? {
+        if articleURL.host?.split(separator: ".").first == "sr" {
+            return "sr-el"
+        } else {
+            return nil
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -173,7 +181,10 @@ class WebViewController: UIViewController {
             return
         }
 
-        let request = URLRequest(url: mobileHTMLURL, permanentlyPersistedCachePolicy: .ignorePermanentlyPersistedCacheData)
+        var request = URLRequest(url: mobileHTMLURL, permanentlyPersistedCachePolicy: .ignorePermanentlyPersistedCacheData)
+        if let variant = preferredVariant(for: articleURL) {
+            request.setValue(variant, forHTTPHeaderField: "Accept-Language")
+        }
         webView.load(request)
 
         configureCloseButton()
