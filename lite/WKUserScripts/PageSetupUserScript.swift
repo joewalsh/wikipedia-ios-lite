@@ -6,7 +6,7 @@ final class PageSetupUserScript: UserScriptWithCompletion<() -> Void> {
 
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
         let source = """
-        pagelib.c1.PageMods.setMulti(document, {
+        pagelib.c1.Page.setup({
         platform: pagelib.c1.Platforms.IOS,
         clientVersion: '\(version)',
         l10n: {

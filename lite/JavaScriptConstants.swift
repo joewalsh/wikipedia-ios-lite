@@ -2,18 +2,18 @@ import WebKit
 
 struct ThemeJavaScript {
     static func set(theme: Theme) -> String {
-        return "pagelib.c1.PageMods.setTheme(document, pagelib.c1.Themes.\(theme.kind.jsName))"
+        return "pagelib.c1.Page.setTheme(pagelib.c1.Themes.\(theme.kind.jsName))"
     }
 
     static func dimImages(_ dim: Bool) -> String {
-        return "pagelib.c1.PageMods.setDimImages(document, \(dim))"
+        return "pagelib.c1.Page.setDimImages(\(dim))"
     }
 }
 
 struct FooterJavaScript {
     static func updateReadMoreSaveButton(for articleTitle: String, saved: Bool) -> String {
         let buttonTitle = saved ? "Saved for later" : "Save for later"
-        return "pagelib.c1.Footer.updateReadMoreSaveButtonForTitle(document, '\(articleTitle)', '\(buttonTitle)', \(saved))"
+        return "pagelib.c1.Footer.updateReadMoreSaveButtonForTitle('\(articleTitle)', '\(buttonTitle)', \(saved))"
     }
 }
 
