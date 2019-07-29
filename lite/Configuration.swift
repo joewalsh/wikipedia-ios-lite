@@ -110,10 +110,13 @@ public class Configuration: NSObject {
         struct Page {
             enum Resource: String {
                 case mobileHTML = "mobile-html"
-                case mobileHTMLPreview = "mobile-html-preview"
+                case mobileHTMLPreview = "html/to/mobile-html"
                 case media
                 case references
                 case sections = "mobile-sections"
+                var pathComponents: [String] {
+                    return rawValue.components(separatedBy: "/")
+                }
             }
         }
         enum Data {
@@ -174,14 +177,20 @@ public class Configuration: NSObject {
     }
 
     func mobileAppsServicesPageResourceURLForArticle(with title: String, scheme: String, host: String?, resource: MobileAppsServices.Page.Resource) -> URL? {
-        var components = mobileAppsServicesAPIURLComponentsForHost(host, appending: ["page", resource.rawValue, title])
+        var pathComponents = ["page"]
+        pathComponents.append(contentsOf: resource.pathComponents)
+        pathComponents.append(title)
+        var components = mobileAppsServicesAPIURLComponentsForHost(host, appending: pathComponents)
         components.scheme = scheme
         return components.url
     }
 
     func mobileAppsServicesPageResourceURLForArticle(with title: String, baseURL: URL, resource: MobileAppsServices.Page.Resource) -> URL? {
+        var pathComponents = ["page"]
+        pathComponents.append(contentsOf: resource.pathComponents)
+        pathComponents.append(title)
         let host = Configuration.Stage.current == .local ? baseURL.pathComponents[1] : baseURL.host
-        var components = mobileAppsServicesAPIURLComponentsForHost(host, appending: ["page", resource.rawValue, title])
+        var components = mobileAppsServicesAPIURLComponentsForHost(host, appending: pathComponents)
         components.scheme = baseURL.scheme
         return components.url
     }

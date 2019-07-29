@@ -39,7 +39,7 @@ extension SchemeHandler: WKURLSchemeHandler {
             return
         }
 
-        if components.path?.contains("mobile-html-preview") ?? false {
+        if components.path?.contains("html/to/mobile-html") ?? false {
             request.httpMethod = "POST"
             request.httpBody = try! Data(contentsOf: Bundle.main.url(forResource: "dog", withExtension: "html")!)
             request.setValue("text/html", forHTTPHeaderField: "Content-Type")
