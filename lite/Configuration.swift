@@ -110,6 +110,7 @@ public class Configuration: NSObject {
         struct Page {
             enum Resource: String {
                 case mobileHTML = "mobile-html"
+                case mobileHTMLPreview = "mobile-html-preview"
                 case media
                 case references
                 case sections = "mobile-sections"

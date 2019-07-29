@@ -18,7 +18,7 @@ class WebViewController: UIViewController {
     private var readMoreURLs = [String: URL]()
 
     private lazy var mobileHTMLURL: URL? = {
-        return configuration.mobileAppsServicesPageResourceURLForArticle(with: articleURL, scheme: articleURL.scheme ?? "app", resource: .mobileHTML)
+        return configuration.mobileAppsServicesPageResourceURLForArticle(with: articleURL, scheme: "http", resource: .mobileHTMLPreview)
     }()
 
     required init(articleTitle: String, articleURL: URL, articleFragment: String? = nil, articleCacheController: ArticleCacheController, configuration: Configuration, webViewConfiguration: WKWebViewConfiguration) {
@@ -155,7 +155,7 @@ class WebViewController: UIViewController {
     
     lazy var webView: WKWebView = {
         let webView = WKWebView(frame: .zero, configuration: webViewConfiguration)
-        webView.isHidden = true
+        //webView.isHidden = true
         webView.navigationDelegate = navigationDelegate
         return webView
     }()
@@ -182,6 +182,9 @@ class WebViewController: UIViewController {
         }
 
         var request = URLRequest(url: mobileHTMLURL, permanentlyPersistedCachePolicy: .ignorePermanentlyPersistedCacheData)
+        request.httpMethod = "POST"
+        request.httpBody = try! Data(contentsOf: Bundle.main.url(forResource: "dog", withExtension: "html")!)
+        request.setValue("text/html", forHTTPHeaderField: "Content-Type")
         if let variant = preferredVariant(for: articleURL) {
             request.setValue(variant, forHTTPHeaderField: "Accept-Language")
         }

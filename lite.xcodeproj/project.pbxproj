@@ -40,6 +40,7 @@
 		7AEA574C22300590004A4DF8 /* ThemePreference.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AEA574A22300590004A4DF8 /* ThemePreference.xib */; };
 		7AF232332224CFE500774812 /* CacheGroup+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AF232312224CFE500774812 /* CacheGroup+CoreDataProperties.swift */; };
 		7AF232342224CFE500774812 /* CacheItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AF232322224CFE500774812 /* CacheItem+CoreDataProperties.swift */; };
+		8347BF6D22EF205700B500DE /* dog.html in Resources */ = {isa = PBXBuildFile; fileRef = 8347BF6C22EF205700B500DE /* dog.html */; };
 		D8C271D921B9612500BFD1BD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C271D821B9612500BFD1BD /* AppDelegate.swift */; };
 		D8C271E021B9612600BFD1BD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D8C271DF21B9612600BFD1BD /* Assets.xcassets */; };
 		D8C271E321B9612600BFD1BD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8C271E121B9612600BFD1BD /* LaunchScreen.storyboard */; };
@@ -94,6 +95,7 @@
 		7AEA574A22300590004A4DF8 /* ThemePreference.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ThemePreference.xib; path = lite/ThemePreference.xib; sourceTree = SOURCE_ROOT; };
 		7AF232312224CFE500774812 /* CacheGroup+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CacheGroup+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		7AF232322224CFE500774812 /* CacheItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CacheItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		8347BF6C22EF205700B500DE /* dog.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = dog.html; sourceTree = "<group>"; };
 		D8C271D521B9612500BFD1BD /* lite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = lite.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8C271D821B9612500BFD1BD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D8C271DF21B9612600BFD1BD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -219,6 +221,7 @@
 				D8C271EE21B961D100BFD1BD /* SchemeHandler.swift */,
 				D8C271F021B9623600BFD1BD /* UIView+ConstrainedSubview.swift */,
 				D8C271F421BAA40D00BFD1BD /* PermanentlyPersistableURLCache.swift */,
+				8347BF6C22EF205700B500DE /* dog.html */,
 				D8C271DF21B9612600BFD1BD /* Assets.xcassets */,
 				D8C271E121B9612600BFD1BD /* LaunchScreen.storyboard */,
 				D8C271E421B9612600BFD1BD /* Info.plist */,
@@ -318,6 +321,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D8C271E321B9612600BFD1BD /* LaunchScreen.storyboard in Resources */,
+				8347BF6D22EF205700B500DE /* dog.html in Resources */,
 				7AEA574C22300590004A4DF8 /* ThemePreference.xib in Resources */,
 				D8C271E021B9612600BFD1BD /* Assets.xcassets in Resources */,
 			);
