@@ -18,7 +18,7 @@ class WebViewController: UIViewController {
     private var readMoreURLs = [String: URL]()
 
     private lazy var mobileHTMLURL: URL? = {
-        return configuration.mobileAppsServicesPageResourceURLForArticle(with: articleURL, scheme: "http", resource: .mobileHTMLPreview)
+        return configuration.mobileAppsServicesPageResourceURLForArticle(with: articleURL, scheme: "app", resource: .mobileHTMLPreview)
     }()
 
     required init(articleTitle: String, articleURL: URL, articleFragment: String? = nil, articleCacheController: ArticleCacheController, configuration: Configuration, webViewConfiguration: WKWebViewConfiguration) {
@@ -182,13 +182,11 @@ class WebViewController: UIViewController {
         }
 
         var request = URLRequest(url: mobileHTMLURL, permanentlyPersistedCachePolicy: .ignorePermanentlyPersistedCacheData)
-        request.httpMethod = "POST"
-        request.httpBody = try! Data(contentsOf: Bundle.main.url(forResource: "dog", withExtension: "html")!)
-        request.setValue("text/html", forHTTPHeaderField: "Content-Type")
         if let variant = preferredVariant(for: articleURL) {
             request.setValue(variant, forHTTPHeaderField: "Accept-Language")
         }
         webView.load(request)
+      
 
         configureCloseButton()
         configureToolbar()
@@ -253,6 +251,30 @@ class WebViewController: UIViewController {
 }
 
 extension WebViewController: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        guard let requestError = RequestError.from(code: (error as NSError).code) else {
+            showAlert(forError: error)
+            return
+        }
+        switch requestError {
+        case .timeout where loadRetryCount == maxLoadRetryCount:
+            showAlert(forError: error)
+            loadRetryCount = 0
+        case .timeout:
+            defer {
+                loadRetryCount += 1
+            }
+            guard let mobileHTMLURL = mobileHTMLURL else {
+                showAlert(forError: NSError(domain: "org.wikimedia.lite", code: NSURLErrorBadURL, userInfo: nil))
+                return
+            }
+            let request = URLRequest(url: mobileHTMLURL, permanentlyPersistedCachePolicy: .usePermanentlyPersistedCacheData)
+            webView.load(request)
+        default:
+            break
+        }
+    }
+    
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         guard let requestError = RequestError.from(code: (error as NSError).code) else {
             showAlert(forError: error)

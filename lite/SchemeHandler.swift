@@ -39,6 +39,11 @@ extension SchemeHandler: WKURLSchemeHandler {
             return
         }
 
+        if components.path?.contains("mobile-html-preview") ?? false {
+            request.httpMethod = "POST"
+            request.httpBody = try! Data(contentsOf: Bundle.main.url(forResource: "dog", withExtension: "html")!)
+            request.setValue("text/html", forHTTPHeaderField: "Content-Type")
+        }
         request.url = url
 
         let callback = Session.Callback(response: { task, response in
@@ -63,6 +68,7 @@ extension SchemeHandler: WKURLSchemeHandler {
         }
         task.resume()
     }
+    
     
     func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
         queue.async(flags: .barrier) {
