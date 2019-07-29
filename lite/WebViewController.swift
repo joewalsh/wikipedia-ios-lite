@@ -155,7 +155,7 @@ class WebViewController: UIViewController {
     
     lazy var webView: WKWebView = {
         let webView = WKWebView(frame: .zero, configuration: webViewConfiguration)
-        //webView.isHidden = true
+        webView.isHidden = true
         webView.navigationDelegate = navigationDelegate
         return webView
     }()
