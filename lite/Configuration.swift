@@ -110,7 +110,7 @@ public class Configuration: NSObject {
         struct Page {
             enum Resource: String {
                 case mobileHTML = "mobile-html"
-                case mobileHTMLPreview = "html/to/mobile-html"
+                case mobileHTMLPreview = "transform/html/to/mobile-html"
                 case media
                 case references
                 case sections = "mobile-sections"
@@ -192,6 +192,18 @@ public class Configuration: NSObject {
         let host = Configuration.Stage.current == .local ? baseURL.pathComponents[1] : baseURL.host
         var components = mobileAppsServicesAPIURLComponentsForHost(host, appending: pathComponents)
         components.scheme = baseURL.scheme
+        return components.url
+    }
+    
+    func mobileAppsServicesMobileHTMLPreviewURL(with articleURL: URL) -> URL? {
+        guard let title = mobileAppsServicesArticleTitle(from: articleURL) else {
+            return nil
+        }
+        var pathComponents = ["transform", "html", "to", "mobile-html"]
+        pathComponents.append(title)
+        let host = Configuration.Stage.current == .local ? articleURL.host : articleURL.pathComponents[1]
+        var components = mobileAppsServicesAPIURLComponentsForHost(host, appending: pathComponents)
+        components.scheme = articleURL.scheme
         return components.url
     }
 

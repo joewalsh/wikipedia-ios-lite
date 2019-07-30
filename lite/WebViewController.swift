@@ -18,7 +18,7 @@ class WebViewController: UIViewController {
     private var readMoreURLs = [String: URL]()
 
     private lazy var mobileHTMLURL: URL? = {
-        return configuration.mobileAppsServicesPageResourceURLForArticle(with: articleURL, scheme: "app", resource: .mobileHTMLPreview)
+        return configuration.mobileAppsServicesMobileHTMLPreviewURL(with: articleURL)
     }()
 
     required init(articleTitle: String, articleURL: URL, articleFragment: String? = nil, articleCacheController: ArticleCacheController, configuration: Configuration, webViewConfiguration: WKWebViewConfiguration) {
