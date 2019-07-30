@@ -62,7 +62,7 @@ class WebViewController: UIViewController {
     // It would have to delegate back to this VC so that it can 1) evaluateJavaScript 2) push other VCs.
     private lazy var contentController: WKUserContentController = {
         let contentController = WKUserContentController()
-        let pageSetupUserScript = PageSetupUserScript(theme: UserDefaults.standard.theme, dimImages: UserDefaults.standard.dimImages, expandTables: UserDefaults.standard.expandTables) {
+        let pageSetupUserScript = PageSetupUserScript(theme: UserDefaults.standard.theme, dimImages: UserDefaults.standard.dimImages, expandTables: UserDefaults.standard.expandTables) { [unowned self] in
             if let articleFragment = self.articleFragment {
                 self.webView.evaluateJavaScript(ScrollJavaScript.rectY(for: articleFragment)) { result, error in
                     guard
@@ -84,7 +84,7 @@ class WebViewController: UIViewController {
             }
         }
         let footerSetupUserScript = FooterSetupUserScript(articleTitle: articleTitle)
-        let interactionSetupUserScript = InteractionSetupUserScript { interaction in
+        let interactionSetupUserScript = InteractionSetupUserScript { [unowned self] interaction in
             switch interaction.action {
             case .readMoreTitlesRetrieved:
                 guard let titles = interaction.data?["titles"] as? [String] else {
