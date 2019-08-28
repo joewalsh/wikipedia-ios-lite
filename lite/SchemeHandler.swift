@@ -10,7 +10,7 @@ enum SchemeHandlerError: Error {
 class SchemeHandler: NSObject {
     let scheme: String
     let session: Session
-    var tasks: [URLRequest: URLSessionTask] = [:]
+    var activeSessionTasks: [URLRequest: URLSessionTask] = [:]
     private var activeSchemeTasks = NSMutableSet(array: [])
 
     required init(scheme: String, session: Session) {
@@ -32,10 +32,22 @@ class SchemeHandler: NSObject {
         assert(Thread.isMainThread)
         return activeSchemeTasks.contains(urlSchemeTask)
     }
+    
+    func addSessionTask(request: URLRequest, dataTask: URLSessionTask) {
+        assert(Thread.isMainThread)
+        activeSessionTasks[request] = dataTask
+    }
+    
+    func removeSessionTask(request: URLRequest) {
+        assert(Thread.isMainThread)
+        activeSessionTasks.removeValue(forKey: request)
+    }
+    
 }
 
 extension SchemeHandler: WKURLSchemeHandler {
     func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
+        assert(Thread.isMainThread)
         var request = urlSchemeTask.request
         guard let requestURL = request.url else {
             urlSchemeTask.didFailWithError(SchemeHandlerError.invalidParameters)
@@ -123,20 +135,29 @@ extension SchemeHandler: WKURLSchemeHandler {
         
         addSchemeTask(urlSchemeTask: urlSchemeTask)
         let task = session.dataTaskWith(request, callback: callback)
-        self.tasks[urlSchemeTask.request] = task
+        addSessionTask(request: urlSchemeTask.request, dataTask: task)
 
         task.resume()
     }
     
     
     func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
-        guard let task = self.tasks[urlSchemeTask.request] else {
-            return
+        assert(Thread.isMainThread)
+        
+        removeSchemeTask(urlSchemeTask: urlSchemeTask)
+        
+        if let task = activeSessionTasks[urlSchemeTask.request] {
+            removeSessionTask(request: urlSchemeTask.request)
+            
+            switch task.state {
+            case .canceling:
+                fallthrough
+            case .completed:
+                break
+            default:
+                task.cancel()
+            }
         }
-        if task.state == .running {
-            task.cancel()
-        }
-        self.tasks.removeValue(forKey: urlSchemeTask.request)
     }
 }
 
