@@ -327,13 +327,15 @@ extension WebViewController: WKNavigationDelegate {
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        markLoadStart()
         webView.evaluateJavaScript("""
             pagelib.c1.Page.setTheme(pagelib.c1.Themes.SEPIA)
-            pagelib.c1.Page.load('\(mobileHTMLURL?.absoluteString ?? "")').then(result => {
-                 window.webkit.messageHandlers.loadDone.postMessage({})
-            })
         """) { (result, error) in
+            self.markLoadStart()
+            webView.evaluateJavaScript("""
+                pagelib.c1.Page.load('\(self.mobileHTMLURL?.absoluteString ?? "")').then(result => {
+                    window.webkit.messageHandlers.loadDone.postMessage({})
+                })
+            """)
         }
     }
 
