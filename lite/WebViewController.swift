@@ -16,9 +16,12 @@ class WebViewController: UIViewController {
     private var theme = Theme.standard
 
     private var readMoreURLs = [String: URL]()
-
+    
+    private var loadStart: CFAbsoluteTime?
+    private var loadEnd: CFAbsoluteTime?
+    
     private lazy var mobileHTMLURL: URL? = {
-        // return configuration.mobileAppsServicesMobileHTMLPreviewURL(with: articleURL)
+        //return configuration.mobileAppsServicesMobileHTMLPreviewURL(with: articleURL)
         return configuration.mobileAppsServicesPageResourceURLForArticle(with: articleURL, scheme: "app", resource: .mobileHTML)
     }()
 
@@ -83,6 +86,7 @@ class WebViewController: UIViewController {
             } else {
                 self.webView.isHidden = false
             }
+            self.markLoadEnd()
         }
         let footerSetupUserScript = FooterSetupUserScript(articleTitle: articleTitle)
         let interactionSetupUserScript = InteractionSetupUserScript { [unowned self] interaction in
@@ -149,24 +153,39 @@ class WebViewController: UIViewController {
             }
         }
         contentController.addAndHandle(pageSetupUserScript)
-        contentController.addAndHandle(footerSetupUserScript)
-        contentController.addAndHandle(interactionSetupUserScript)
+        //contentController.addAndHandle(footerSetupUserScript)
+        //contentController.addAndHandle(interactionSetupUserScript)
         return contentController
     }()
     
     lazy var webView: WKWebView = {
         let webView = WKWebView(frame: .zero, configuration: webViewConfiguration)
-        webView.isHidden = true
+        //webView.isHidden = true
         webView.navigationDelegate = navigationDelegate
         return webView
     }()
     
+
     func preferredVariant(for articleURL: URL) -> String? {
-        if articleURL.host?.split(separator: ".").first == "sr" {
+        let code = articleURL.host?.split(separator: ".").first
+        if code == "sr" {
             return "sr-el"
+        } else if code == "zh" {
+            return "zh-hant"
         } else {
             return nil
         }
+    }
+    private func markLoadStart() {
+        loadStart = CFAbsoluteTimeGetCurrent()
+    }
+    
+    private func markLoadEnd() {
+        loadEnd = CFAbsoluteTimeGetCurrent()
+        guard let start = loadStart, let end = loadEnd else {
+            return
+        }
+        navigationItem.title = "\(end - start)"
     }
     
     override func viewDidLoad() {
@@ -186,6 +205,7 @@ class WebViewController: UIViewController {
         if let variant = preferredVariant(for: articleURL) {
             request.setValue(variant, forHTTPHeaderField: "Accept-Language")
         }
+        markLoadStart()
         webView.load(request)
       
 
