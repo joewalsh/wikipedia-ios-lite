@@ -1,7 +1,7 @@
 import UIKit
 import WebKit
 
-class WebViewController: UIViewController {
+class WebViewController: UIViewController, WKScriptMessageHandler {
     private let articleTitle: String
     private let articleURL: URL
     private let articleFragment: String?
@@ -152,15 +152,25 @@ class WebViewController: UIViewController {
                 self.present(alert, animated: true)
             }
         }
-        contentController.addAndHandle(pageSetupUserScript)
-        contentController.addAndHandle(footerSetupUserScript)
-        contentController.addAndHandle(interactionSetupUserScript)
+//        contentController.addAndHandle(pageSetupUserScript)
+//        contentController.addAndHandle(footerSetupUserScript)
+//        contentController.addAndHandle(interactionSetupUserScript)
+        contentController.add(self, name: "loadDone")
         return contentController
     }()
     
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        switch message.name {
+        case "loadDone":
+            markLoadEnd()
+        default:
+            break
+        }
+    }
+    
     lazy var webView: WKWebView = {
         let webView = WKWebView(frame: .zero, configuration: webViewConfiguration)
-        webView.isHidden = true
+        //webView.isHidden = true
         webView.navigationDelegate = navigationDelegate
         return webView
     }()
@@ -197,15 +207,11 @@ class WebViewController: UIViewController {
 
         view.addConstrainedSubview(webView)
 
-        guard let mobileHTMLURL = mobileHTMLURL else {
-            return
-        }
 
-        var request = URLRequest(url: mobileHTMLURL, permanentlyPersistedCachePolicy: .ignorePermanentlyPersistedCacheData)
+        var request = URLRequest(url: URL(string: "app://localhost:6927/en.wikipedia.org/v1/page/mobile-html-shell")!, permanentlyPersistedCachePolicy: .ignorePermanentlyPersistedCacheData)
         if let variant = preferredVariant(for: articleURL) {
             request.setValue(variant, forHTTPHeaderField: "Accept-Language")
         }
-        markLoadStart()
         webView.load(request)
       
 
@@ -317,6 +323,17 @@ extension WebViewController: WKNavigationDelegate {
             webView.load(request)
         default:
             break
+        }
+    }
+    
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        markLoadStart()
+        webView.evaluateJavaScript("""
+            pagelib.c1.Page.setTheme(pagelib.c1.Themes.SEPIA)
+            pagelib.c1.Page.load('\(mobileHTMLURL?.absoluteString ?? "")').then(result => {
+                 window.webkit.messageHandlers.loadDone.postMessage({})
+            })
+        """) { (result, error) in
         }
     }
 
