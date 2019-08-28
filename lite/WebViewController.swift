@@ -153,8 +153,8 @@ class WebViewController: UIViewController {
             }
         }
         contentController.addAndHandle(pageSetupUserScript)
-        //contentController.addAndHandle(footerSetupUserScript)
-        //contentController.addAndHandle(interactionSetupUserScript)
+        contentController.addAndHandle(footerSetupUserScript)
+        contentController.addAndHandle(interactionSetupUserScript)
         return contentController
     }()
     
