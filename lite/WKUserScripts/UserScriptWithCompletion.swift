@@ -1,10 +1,16 @@
 import WebKit
 
+extension WKUserScript {
+    static let clientVersion: String = {
+        return Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
+    }()
+}
+
 public class UserScriptWithCompletion<C>: WKUserScript, NamedScriptMessageHandler {
     typealias Completion = C
     let completion: Completion?
     public let messageHandlerName: String?
-
+    
     init(source: String, injectionTime: WKUserScriptInjectionTime, forMainFrameOnly: Bool, messageHandlerName: String?, completion: Completion?) {
         self.messageHandlerName = messageHandlerName
         self.completion = completion

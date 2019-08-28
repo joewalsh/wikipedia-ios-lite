@@ -3,12 +3,10 @@ import WebKit
 final class PageSetupUserScript: UserScriptWithCompletion<() -> Void> {
     init(theme: Theme, dimImages: Bool, expandTables: Bool, completion: Completion? = nil) {
         let messageHandlerName = "pageSetup"
-
-        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
         let source = """
         pagelib.c1.Page.setup({
         platform: pagelib.c1.Platforms.IOS,
-        clientVersion: '\(version)',
+        clientVersion: '\(WKUserScript.clientVersion)',
         l10n: {
             addTitleDescription: 'Titelbeschreibung bearbeiten',
             tableInfobox: 'Schnelle Fakten',
