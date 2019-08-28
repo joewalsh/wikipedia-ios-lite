@@ -11,11 +11,26 @@ class SchemeHandler: NSObject {
     let scheme: String
     let session: Session
     var tasks: [URLRequest: URLSessionTask] = [:]
-    var queue: DispatchQueue = DispatchQueue(label: "SchemeHandlerQueue", qos: .default, attributes: [.concurrent], autoreleaseFrequency: .workItem, target: nil)
-    
+    private var activeSchemeTasks = NSMutableSet(array: [])
+
     required init(scheme: String, session: Session) {
         self.scheme = scheme
         self.session = session
+    }
+    
+    func addSchemeTask(urlSchemeTask: WKURLSchemeTask) {
+        assert(Thread.isMainThread)
+        activeSchemeTasks.add(urlSchemeTask)
+    }
+    
+    func removeSchemeTask(urlSchemeTask: WKURLSchemeTask) {
+        assert(Thread.isMainThread)
+        activeSchemeTasks.remove(urlSchemeTask)
+    }
+    
+    func schemeTaskIsActive(urlSchemeTask: WKURLSchemeTask) -> Bool {
+        assert(Thread.isMainThread)
+        return activeSchemeTasks.contains(urlSchemeTask)
     }
 }
 
@@ -46,40 +61,82 @@ extension SchemeHandler: WKURLSchemeHandler {
         }
         request.url = url
 
-        let callback = Session.Callback(response: { task, response in
+        let callback = Session.Callback(response: { [weak urlSchemeTask] task, response in
             if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
                 let error = RequestError.from(code: httpResponse.statusCode) ?? .unknown
                 task.cancel()
-                urlSchemeTask.didFailWithError(error)
+                DispatchQueue.main.async {
+                    guard let urlSchemeTask = urlSchemeTask else {
+                        return
+                    }
+                    guard self.schemeTaskIsActive(urlSchemeTask: urlSchemeTask) else {
+                        return
+                    }
+                    urlSchemeTask.didFailWithError(error)
+                    self.removeSchemeTask(urlSchemeTask: urlSchemeTask)
+                }
             } else {
-                urlSchemeTask.didReceive(response)
+                DispatchQueue.main.async {
+                    guard let urlSchemeTask = urlSchemeTask else {
+                        return
+                    }
+                    guard self.schemeTaskIsActive(urlSchemeTask: urlSchemeTask) else {
+                        return
+                    }
+                    urlSchemeTask.didReceive(response)
+                }
             }
-        }, data: { data in
-            urlSchemeTask.didReceive(data)
-        }, success: {
-            urlSchemeTask.didFinish()
-        }) { task, error in
+        }, data: { [weak urlSchemeTask] data in
+            DispatchQueue.main.async {
+                guard let urlSchemeTask = urlSchemeTask else {
+                    return
+                }
+                guard self.schemeTaskIsActive(urlSchemeTask: urlSchemeTask) else {
+                    return
+                }
+                urlSchemeTask.didReceive(data)
+            }
+        }, success: { [weak urlSchemeTask] in
+            DispatchQueue.main.async {
+                guard let urlSchemeTask = urlSchemeTask else {
+                    return
+                }
+                guard self.schemeTaskIsActive(urlSchemeTask: urlSchemeTask) else {
+                    return
+                }
+                urlSchemeTask.didFinish()
+                self.removeSchemeTask(urlSchemeTask: urlSchemeTask)
+            }
+        }) { [weak urlSchemeTask] task, error in
             task.cancel()
-            urlSchemeTask.didFailWithError(error)
+            DispatchQueue.main.async {
+                guard let urlSchemeTask = urlSchemeTask else {
+                    return
+                }
+                guard self.schemeTaskIsActive(urlSchemeTask: urlSchemeTask) else {
+                    return
+                }
+                urlSchemeTask.didFailWithError(error)
+                self.removeSchemeTask(urlSchemeTask: urlSchemeTask)
+            }
         }
+        
+        addSchemeTask(urlSchemeTask: urlSchemeTask)
         let task = session.dataTaskWith(request, callback: callback)
-        queue.async(flags: .barrier) {
-            self.tasks[urlSchemeTask.request] = task
-        }
+        self.tasks[urlSchemeTask.request] = task
+
         task.resume()
     }
     
     
     func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
-        queue.async(flags: .barrier) {
-            guard let task = self.tasks[urlSchemeTask.request] else {
-                return
-            }
-            if task.state == .running {
-                task.cancel()
-            }
-            self.tasks.removeValue(forKey: urlSchemeTask.request)
+        guard let task = self.tasks[urlSchemeTask.request] else {
+            return
         }
+        if task.state == .running {
+            task.cancel()
+        }
+        self.tasks.removeValue(forKey: urlSchemeTask.request)
     }
 }
 
