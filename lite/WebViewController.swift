@@ -2,11 +2,11 @@ import UIKit
 import WebKit
 
 class WebViewController: UIViewController, WKScriptMessageHandler {
-    private let articleTitle: String
-    private let articleURL: URL
+    private var articleTitle: String
+    private var articleURL: URL
     private let articleFragment: String?
     private let articleCacheController: ArticleCacheController
-
+    private var isFirstLoad = true
     private let configuration: Configuration
 
     private let webViewConfiguration: WKWebViewConfiguration
@@ -19,11 +19,6 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
     
     private var loadStart: CFAbsoluteTime?
     private var loadEnd: CFAbsoluteTime?
-    
-    private lazy var mobileHTMLURL: URL? = {
-        //return configuration.mobileAppsServicesMobileHTMLPreviewURL(with: articleURL)
-        return configuration.mobileAppsServicesPageResourceURLForArticle(with: articleURL, scheme: "app", resource: .mobileHTML)
-    }()
 
     required init(articleTitle: String, articleURL: URL, articleFragment: String? = nil, articleCacheController: ArticleCacheController, configuration: Configuration, webViewConfiguration: WKWebViewConfiguration) {
         self.articleTitle = articleTitle
@@ -46,7 +41,12 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
 
         readMoreURLs.reserveCapacity(3)
     }
-
+    
+    private var mobileHTMLURL: URL? {
+        //return configuration.mobileAppsServicesMobileHTMLPreviewURL(with: articleURL)
+        return configuration.mobileAppsServicesPageResourceURLForArticle(with: articleURL, scheme: "app", resource: .mobileHTML)
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -131,8 +131,7 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
                     guard let linkedArticleURL = self.articleURL.replacingPageTitle(self.articleTitle, with: title) else {
                         return
                     }
-                    let webViewController = WebViewController(articleTitle: title, articleURL: linkedArticleURL, articleCacheController: self.articleCacheController, configuration: self.configuration, webViewConfiguration: self.webViewConfiguration)
-                    self.navigationController?.pushViewController(webViewController, animated: true)
+                    self.loadArticle(with: linkedArticleURL)
                 }
             case .saveOtherPage:
                 guard let title = interaction.data?["title"] as? String else {
@@ -154,7 +153,7 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
         }
 //        contentController.addAndHandle(pageSetupUserScript)
 //        contentController.addAndHandle(footerSetupUserScript)
-//        contentController.addAndHandle(interactionSetupUserScript)
+        contentController.addAndHandle(interactionSetupUserScript)
         contentController.add(self, name: "loadDone")
         return contentController
     }()
@@ -170,7 +169,7 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
     
     lazy var webView: WKWebView = {
         let webView = WKWebView(frame: .zero, configuration: webViewConfiguration)
-        //webView.isHidden = true
+        webView.isHidden = true
         webView.navigationDelegate = navigationDelegate
         return webView
     }()
@@ -326,17 +325,31 @@ extension WebViewController: WKNavigationDelegate {
         }
     }
     
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+
+    
+    func loadArticle(with articleURLToLoad: URL) {
+        articleURL = articleURLToLoad
+        articleTitle = configuration.mobileAppsServicesArticleTitle(from: articleURLToLoad) ?? ""
+        let configURL = configuration.mobileAppsServicesPageResourceURLForArticle(with: articleURL, scheme: "app", resource: .mobileHTML)
         webView.evaluateJavaScript("""
             pagelib.c1.Page.setTheme(pagelib.c1.Themes.SEPIA)
         """) { (result, error) in
+            self.webView.isHidden = false
             self.markLoadStart()
-            webView.evaluateJavaScript("""
-                pagelib.c1.Page.load('\(self.mobileHTMLURL?.absoluteString ?? "")').then(result => {
-                    window.webkit.messageHandlers.loadDone.postMessage({})
+            self.webView.evaluateJavaScript("""
+                pagelib.c1.Page.load('\(configURL?.absoluteString ?? "")').then(result => {
+                window.webkit.messageHandlers.loadDone.postMessage({})
                 })
-            """)
+                """)
         }
+    }
+    
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        guard isFirstLoad else {
+            return
+        }
+        isFirstLoad = false
+        loadArticle(with: articleURL)
     }
 
     private func showAlert(forError error: Error) {
