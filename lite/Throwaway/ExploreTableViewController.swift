@@ -103,6 +103,7 @@ class ExploreTableViewController: UITableViewController {
             Article(title: "Zippuli"),
             Article(title: "Basel"),
             Article(title: "United_States"),
+            Article(title: "George_Washington"),
             Article(title: "Канада", language: "sr")
         ]
         return Section(title: "Explore", items: articles)
