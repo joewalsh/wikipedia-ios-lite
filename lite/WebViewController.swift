@@ -1,7 +1,7 @@
 import UIKit
 import WebKit
 
-class WebViewController: UIViewController {
+class WebViewController: UIViewController, WKScriptMessageHandler {
     private let articleTitle: String
     private let articleURL: URL
     private let articleFragment: String?
@@ -61,100 +61,157 @@ class WebViewController: UIViewController {
         }
         contentController.removeAllUserScripts()
     }
+    
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard message.name == ActionHandlerScript.messageHandlerName else {
+            return
+        }
+        guard let body = message.body as? [String: Any] else {
+            return
+        }
+        guard let action = body["action"] as? String else {
+            return
+        }
+        switch action {
+        case "preloaded":
+            onPreload()
+        case "setup":
+            onSetup()
+        case "postloaded":
+            onPostLoad()
+        default:
+            break
+        }
+    }
+    
+    func onPreload() {
+        webView.evaluateJavaScript(
+        """
+            wpl_pcs.c1.Page.setup({
+            platform: wpl_pcs.c1.Platforms.IOS,
+            clientVersion: '0.0.0',
+            l10n: {
+            addTitleDescription: 'Titelbeschreibung bearbeiten',
+            tableInfobox: 'Schnelle Fakten',
+            tableOther: 'Weitere Informationen',
+            tableClose: 'Schließen'
+            },
+            theme: wpl_pcs.c1.Themes.\(theme.kind.jsName),
+            dimImages: false,
+            margins: { top: '32px', right: '32px', bottom: '32px', left: '32px' },
+            areTablesCollapsed: false,
+            scrollTop: 64
+            }, () => {
+                window.webkit.messageHandlers.action.postMessage({action: 'setup'})
+            })
+        """)
+    }
+
+    func onSetup() {
+        markLoadEnd()
+        webView.isHidden = false
+    }
+    
+    func onPostLoad() {
+        
+    }
 
     // TODO: This could be extracted into a WKUserContentController subclass.
     // It would have to delegate back to this VC so that it can 1) evaluateJavaScript 2) push other VCs.
     private lazy var contentController: WKUserContentController = {
         let contentController = WKUserContentController()
-        let pageSetupUserScript = PageSetupUserScript(theme: UserDefaults.standard.theme, dimImages: UserDefaults.standard.dimImages, expandTables: UserDefaults.standard.expandTables) { [unowned self] in
-            if let articleFragment = self.articleFragment {
-                self.webView.evaluateJavaScript(ScrollJavaScript.rectY(for: articleFragment)) { result, error in
-                    guard
-                        error == nil,
-                        let result = result as? [String: Any],
-                        let rectY = result["rectY"] as? CGFloat
-                    else {
-                        return
-                    }
-                    let point = CGPoint(x: self.webView.scrollView.contentOffset.x, y: rectY + floor(self.webView.scrollView.contentOffset.y))
-                    UIView.animate(withDuration: 0, animations: {
-                        self.webView.scrollView.setContentOffset(point, animated: false)
-                    }, completion: { _ in
-                        self.webView.isHidden = false
-                    })
-                }
-            } else {
-                self.webView.isHidden = false
-            }
-            self.markLoadEnd()
-        }
-        let footerSetupUserScript = FooterSetupUserScript(articleTitle: articleTitle)
-        let interactionSetupUserScript = InteractionSetupUserScript { [unowned self] interaction in
-            switch interaction.action {
-            case .readMoreTitlesRetrieved:
-                guard let titles = interaction.data?["titles"] as? [String] else {
-                    return
-                }
-                for title in titles {
-                    if let articleURL = self.articleURL.replacingPageTitle(self.articleTitle, with: title) {
-                        self.readMoreURLs[title] = articleURL
-                        self.webView.evaluateJavaScript(FooterJavaScript.updateReadMoreSaveButton(for: title, saved: self.articleCacheController.isCached(articleURL)))
-                    }
-                }
-            case .linkClicked:
-                guard let href = interaction.data?["href"] as? String else {
-                    assertionFailure("Unhandled link data")
-                    return
-                }
-                guard let firstIndexOfForwardSlash = href.firstIndex(of: "/") else {
-                    assertionFailure("Unhandled link type")
-                    return
-                }
-                let distance = href.distance(from: href.startIndex, to: firstIndexOfForwardSlash)
-                if distance == 0 { // external?
-                    print()
-                } else if String(href[href.startIndex..<firstIndexOfForwardSlash]) == "." { // internal?
-                    guard let scheme = self.articleURL.scheme else {
-                        assertionFailure("Missing scheme")
-                        return
-                    }
-                    let titleWithOptionalFragment = String(href[href.index(firstIndexOfForwardSlash, offsetBy: 1)...])
-                    let title: String
-                    let fragment: String?
-                    if let indexOfLastHash = titleWithOptionalFragment.lastIndex(of: "#") {
-                        title = String(titleWithOptionalFragment[titleWithOptionalFragment.startIndex..<indexOfLastHash])
-                        fragment = String(titleWithOptionalFragment[titleWithOptionalFragment.index(indexOfLastHash, offsetBy: 1)...])
-                    } else {
-                        title = titleWithOptionalFragment
-                        fragment = nil
-                    }
-                    guard let linkedArticleURL = self.articleURL.replacingPageTitle(self.articleTitle, with: title) else {
-                        return
-                    }
-                    let webViewController = WebViewController(articleTitle: title, articleURL: linkedArticleURL, articleCacheController: self.articleCacheController, configuration: self.configuration, webViewConfiguration: self.webViewConfiguration)
-                    self.navigationController?.pushViewController(webViewController, animated: true)
-                }
-            case .saveOtherPage:
-                guard let title = interaction.data?["title"] as? String else {
-                    assertionFailure("Missing title")
-                    return
-                }
-                guard let articleURL = self.readMoreURLs[title] ?? self.articleURL.replacingPageTitle(self.articleTitle, with: title) else {
-                    return
-                }
-                let isCached = self.articleCacheController.isCached(articleURL)
-                self.articleCacheController.toggleCache(!isCached, for: articleURL)
-                self.webView.evaluateJavaScript(FooterJavaScript.updateReadMoreSaveButton(for: title, saved: !isCached))
-            default:
-                let alert = UIAlertController(title: "Interaction", message: interaction.action.rawValue, preferredStyle: .alert)
-                let gotIt = UIAlertAction(title: "Got it", style: .default)
-                alert.addAction(gotIt)
-                self.present(alert, animated: true)
-            }
-        }
-        contentController.addAndHandle(pageSetupUserScript)
-        contentController.addAndHandle(footerSetupUserScript)
-        contentController.addAndHandle(interactionSetupUserScript)
+        let actionHandlerScript = ActionHandlerScript()
+        contentController.addUserScript(actionHandlerScript)
+        contentController.add(self, name: ActionHandlerScript.messageHandlerName)
+//        let pageSetupUserScript = PageSetupUserScript(theme: UserDefaults.standard.theme, dimImages: UserDefaults.standard.dimImages, expandTables: UserDefaults.standard.expandTables) { [unowned self] in
+//            if let articleFragment = self.articleFragment {
+//                self.webView.evaluateJavaScript(ScrollJavaScript.rectY(for: articleFragment)) { result, error in
+//                    guard
+//                        error == nil,
+//                        let result = result as? [String: Any],
+//                        let rectY = result["rectY"] as? CGFloat
+//                    else {
+//                        return
+//                    }
+//                    let point = CGPoint(x: self.webView.scrollView.contentOffset.x, y: rectY + floor(self.webView.scrollView.contentOffset.y))
+//                    UIView.animate(withDuration: 0, animations: {
+//                        self.webView.scrollView.setContentOffset(point, animated: false)
+//                    }, completion: { _ in
+//                        self.webView.isHidden = false
+//                    })
+//                }
+//            } else {
+//                self.webView.isHidden = false
+//            }
+//            self.markLoadEnd()
+//        }
+//        let footerSetupUserScript = FooterSetupUserScript(articleTitle: articleTitle)
+//        let interactionSetupUserScript = InteractionSetupUserScript { [unowned self] interaction in
+//            switch interaction.action {
+//            case .readMoreTitlesRetrieved:
+//                guard let titles = interaction.data?["titles"] as? [String] else {
+//                    return
+//                }
+//                for title in titles {
+//                    if let articleURL = self.articleURL.replacingPageTitle(self.articleTitle, with: title) {
+//                        self.readMoreURLs[title] = articleURL
+//                        self.webView.evaluateJavaScript(FooterJavaScript.updateReadMoreSaveButton(for: title, saved: self.articleCacheController.isCached(articleURL)))
+//                    }
+//                }
+//            case .linkClicked:
+//                guard let href = interaction.data?["href"] as? String else {
+//                    assertionFailure("Unhandled link data")
+//                    return
+//                }
+//                guard let firstIndexOfForwardSlash = href.firstIndex(of: "/") else {
+//                    assertionFailure("Unhandled link type")
+//                    return
+//                }
+//                let distance = href.distance(from: href.startIndex, to: firstIndexOfForwardSlash)
+//                if distance == 0 { // external?
+//                    print()
+//                } else if String(href[href.startIndex..<firstIndexOfForwardSlash]) == "." { // internal?
+//                    guard let scheme = self.articleURL.scheme else {
+//                        assertionFailure("Missing scheme")
+//                        return
+//                    }
+//                    let titleWithOptionalFragment = String(href[href.index(firstIndexOfForwardSlash, offsetBy: 1)...])
+//                    let title: String
+//                    let fragment: String?
+//                    if let indexOfLastHash = titleWithOptionalFragment.lastIndex(of: "#") {
+//                        title = String(titleWithOptionalFragment[titleWithOptionalFragment.startIndex..<indexOfLastHash])
+//                        fragment = String(titleWithOptionalFragment[titleWithOptionalFragment.index(indexOfLastHash, offsetBy: 1)...])
+//                    } else {
+//                        title = titleWithOptionalFragment
+//                        fragment = nil
+//                    }
+//                    guard let linkedArticleURL = self.articleURL.replacingPageTitle(self.articleTitle, with: title) else {
+//                        return
+//                    }
+//                    let webViewController = WebViewController(articleTitle: title, articleURL: linkedArticleURL, articleCacheController: self.articleCacheController, configuration: self.configuration, webViewConfiguration: self.webViewConfiguration)
+//                    self.navigationController?.pushViewController(webViewController, animated: true)
+//                }
+//            case .saveOtherPage:
+//                guard let title = interaction.data?["title"] as? String else {
+//                    assertionFailure("Missing title")
+//                    return
+//                }
+//                guard let articleURL = self.readMoreURLs[title] ?? self.articleURL.replacingPageTitle(self.articleTitle, with: title) else {
+//                    return
+//                }
+//                let isCached = self.articleCacheController.isCached(articleURL)
+//                self.articleCacheController.toggleCache(!isCached, for: articleURL)
+//                self.webView.evaluateJavaScript(FooterJavaScript.updateReadMoreSaveButton(for: title, saved: !isCached))
+//            default:
+//                let alert = UIAlertController(title: "Interaction", message: interaction.action.rawValue, preferredStyle: .alert)
+//                let gotIt = UIAlertAction(title: "Got it", style: .default)
+//                alert.addAction(gotIt)
+//                self.present(alert, animated: true)
+//            }
+//        }
+//        contentController.addAndHandle(pageSetupUserScript)
+//        contentController.addAndHandle(footerSetupUserScript)
+//        contentController.addAndHandle(interactionSetupUserScript)
         return contentController
     }()
     
