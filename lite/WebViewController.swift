@@ -85,26 +85,7 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
     }
     
     func onPreload() {
-        webView.evaluateJavaScript(
-        """
-            wpl_pcs.c1.Page.setup({
-            platform: wpl_pcs.c1.Platforms.IOS,
-            clientVersion: '0.0.0',
-            l10n: {
-            addTitleDescription: 'Titelbeschreibung bearbeiten',
-            tableInfobox: 'Schnelle Fakten',
-            tableOther: 'Weitere Informationen',
-            tableClose: 'Schließen'
-            },
-            theme: wpl_pcs.c1.Themes.\(theme.kind.jsName),
-            dimImages: false,
-            margins: { top: '32px', right: '32px', bottom: '32px', left: '32px' },
-            areTablesCollapsed: false,
-            scrollTop: 64
-            }, () => {
-                window.webkit.messageHandlers.action.postMessage({action: 'setup'})
-            })
-        """)
+
     }
 
     func onSetup() {
