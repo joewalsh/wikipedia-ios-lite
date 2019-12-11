@@ -252,7 +252,7 @@ class ArticleCacheController: NSObject {
     func toggleCache(for articleURL: URL) {
         assert(Thread.isMainThread)
         print("ArticlesController: toggled cache for \(articleURL)")
-        toggleCache(isCached(articleURL), for: articleURL)
+        toggleCache(!isCached(articleURL), for: articleURL)
     }
 
     func toggleCache(_ cache: Bool, for articleURL: URL) {

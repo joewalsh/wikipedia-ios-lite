@@ -80,11 +80,11 @@ class WebViewController: UIViewController {
                     UIView.animate(withDuration: 0, animations: {
                         self.webView.scrollView.setContentOffset(point, animated: false)
                     }, completion: { _ in
-                        self.webView.isHidden = false
+                        //self.webView.isHidden = false
                     })
                 }
             } else {
-                self.webView.isHidden = false
+                //self.webView.isHidden = false
             }
             self.markLoadEnd()
         }
@@ -160,7 +160,7 @@ class WebViewController: UIViewController {
     
     lazy var webView: WKWebView = {
         let webView = WKWebView(frame: .zero, configuration: webViewConfiguration)
-        webView.isHidden = true
+        //webView.isHidden = true
         webView.navigationDelegate = navigationDelegate
         return webView
     }()
